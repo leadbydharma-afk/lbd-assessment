@@ -1079,6 +1079,19 @@ function computeScores() {
 //  REPORT GENERATOR
 // ════════════════════════════════════════════════════
 function generateReport() {
+  const email = prompt('Enter your email to receive your report (optional — press Cancel to skip):');
+  if (email && email.includes('@')) {
+    // Send to a Google Form or Formspree endpoint
+    fetch('https://formspree.io/f/YOUR_FORM_ID', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        name: candidateName,
+        email: email,
+        timestamp: new Date().toISOString()
+      })
+    }).catch(() => {}); // silent fail — never block the report
+  }
   const dims = computeScores();
   document.getElementById('assessmentSections').style.display = 'none';
 
