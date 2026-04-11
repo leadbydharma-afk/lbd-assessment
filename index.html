@@ -1082,7 +1082,7 @@ function generateReport() {
   const email = prompt('Enter your email to receive your report (optional — press Cancel to skip):');
   if (email && email.includes('@')) {
     // Send to a Google Form or Formspree endpoint
-    fetch('https://formspree.io/f/YOUR_FORM_ID', {
+    fetch('https://formspree.io/f/xeepyprw', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
