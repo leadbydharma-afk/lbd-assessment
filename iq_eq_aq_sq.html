@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lead By Dharma — Intelligence Profile Assessment</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{
+  --navy:#1a3a5c;--navy2:#0d1f35;--gold:#c9a84c;--gold2:#e8c87a;
+  --cream:#faf5e8;--cream2:#f0e8d0;--ink:#1a1a14;--ash:#7a7a6a;
+  --green:#1a5c2e;--red:#8b1a1a;--amber:#8b5c00;--white:#ffffff;
+  --iq:#1a3a5c;--eq:#5c1a3a;--aq:#1a5c3a;--sq:#3a1a5c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(--ink);min-height:100vh}
+.hdr{background:var(--navy2);padding:2rem 1.5rem 1.5rem;text-align:center;border-bottom:4px solid var(--gold);position:relative}
+.hdr::before{content:'';position:absolute;top:0;left:0;width:6px;height:100%;background:var(--gold)}
+.hdr-lbl{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--gold);letter-spacing:.25em;text-transform:uppercase;margin-bottom:.6rem}
+.hdr h1{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.4rem);color:var(--white);margin-bottom:.4rem}
+.hdr h1 span{color:var(--gold)}
+.hdr-sub{font-size:.95rem;color:#aabbcc;font-style:italic;margin-bottom:.8rem}
+.hdr-meta{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap}
+.hdr-meta span{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:rgba(255,255,255,.5)}
+.hdr-meta b{color:var(--gold2)}
+.prog-wrap{background:var(--navy);padding:.6rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.prog-lbl{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--gold);white-space:nowrap;min-width:70px}
+.prog-track{flex:1;height:4px;background:rgba(255,255,255,.12);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .4s ease;width:0%}
+.prog-pct{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--gold2);min-width:32px;text-align:right}
+.wrap{max-width:820px;margin:0 auto;padding:1.5rem 1.2rem 4rem}
+/* INTRO */
+.intro-box{background:var(--white);border:1px solid rgba(26,58,92,.12);border-radius:3px;padding:1.8rem;margin:1.5rem 0}
+.intro-box h3{font-family:'Playfair Display',serif;color:var(--navy);font-size:1.2rem;margin-bottom:1rem}
+.quad-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+.quad-card{padding:1rem 1.2rem;border-radius:2px;border-left:4px solid}
+.quad-iq{background:rgba(26,58,92,.05);border-color:var(--iq)}
+.quad-eq{background:rgba(92,26,58,.05);border-color:var(--eq)}
+.quad-aq{background:rgba(26,92,58,.05);border-color:var(--aq)}
+.quad-sq{background:rgba(58,26,92,.05);border-color:var(--sq)}
+.quad-card .qc-lbl{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem}
+.quad-iq .qc-lbl{color:var(--iq)}
+.quad-eq .qc-lbl{color:var(--eq)}
+.quad-aq .qc-lbl{color:var(--aq)}
+.quad-sq .qc-lbl{color:var(--sq)}
+.quad-card .qc-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;margin-bottom:.2rem}
+.quad-card .qc-desc{font-size:.82rem;color:var(--ash)}
+.disc{background:linear-gradient(135deg,var(--navy2),var(--navy));border-left:4px solid var(--gold);padding:1rem 1.3rem;color:#c8d8e8;font-size:.85rem;line-height:1.7;margin:1.2rem 0;border-radius:0 2px 2px 0}
+.name-inp{width:100%;padding:.75rem 1rem;font-family:'Crimson Pro',serif;font-size:1rem;border:1.5px solid rgba(26,58,92,.2);border-radius:2px;background:var(--cream);color:var(--ink);outline:none;transition:border-color .2s;margin-bottom:.4rem}
+.name-inp:focus{border-color:var(--navy)}
+.btn{font-family:'Playfair Display',serif;font-size:.95rem;padding:.7rem 1.8rem;border:none;cursor:pointer;border-radius:2px;transition:all .2s}
+.btn-primary{background:var(--navy);color:var(--gold);border:1px solid var(--navy)}
+.btn-primary:hover{background:var(--navy2)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-outline{background:transparent;color:var(--navy);border:1px solid var(--navy)}
+.btn-outline:hover{background:var(--cream2)}
+/* SECTION */
+.sec-hdr{display:flex;align-items:flex-start;gap:.8rem;margin:2rem 0 1.2rem;padding-bottom:.8rem;border-bottom:1px solid rgba(26,58,92,.12)}
+.sec-badge{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--white);padding:.25rem .55rem;border-radius:2px;white-space:nowrap;margin-top:.2rem}
+.badge-iq{background:var(--iq)}
+.badge-eq{background:var(--eq)}
+.badge-aq{background:var(--aq)}
+.badge-sq{background:var(--sq)}
+.sec-hdr h2{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:.2rem}
+.sec-hdr p{font-size:.84rem;color:var(--ash);font-style:italic}
+/* QUESTION CARD */
+.q-card{background:var(--white);border:1px solid rgba(26,58,92,.1);border-radius:3px;padding:1.2rem 1.4rem;margin-bottom:.9rem;transition:border-color .2s,box-shadow .2s}
+.q-card:hover{border-color:rgba(26,58,92,.25);box-shadow:0 2px 10px rgba(26,58,92,.07)}
+.q-card.answered{border-left:3px solid var(--green)}
+.q-top{display:flex;gap:.6rem;margin-bottom:.9rem}
+.q-num{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--ash);margin-top:.2rem;white-space:nowrap}
+.q-text{font-size:.98rem;color:var(--ink);line-height:1.52;font-weight:500}
+.q-tag{font-family:'JetBrains Mono',monospace;font-size:.57rem;color:var(--ash);background:var(--cream);padding:.12rem .4rem;border-radius:20px;display:inline-block;margin-bottom:.5rem}
+/* MCQ OPTIONS */
+.mcq-opts{display:flex;flex-direction:column;gap:.35rem}
+.mcq-btn{display:flex;align-items:flex-start;gap:.7rem;padding:.65rem .9rem;border:1.5px solid rgba(26,58,92,.12);border-radius:2px;background:var(--cream);cursor:pointer;text-align:left;font-family:'Crimson Pro',serif;font-size:.92rem;color:var(--ink);transition:all .15s;line-height:1.4}
+.mcq-btn:hover{border-color:var(--navy);background:var(--white)}
+.mcq-btn.selected{border-color:var(--navy);background:var(--navy);color:var(--white)}
+.mcq-btn.selected .mcq-lt{background:var(--gold);color:var(--navy)}
+.mcq-lt{font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:500;background:rgba(26,58,92,.1);color:var(--navy);min-width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.05rem;transition:all .15s}
+/* SCALE */
+.scale-wrap{margin-top:.4rem}
+.scale-lbls{display:flex;justify-content:space-between;font-size:.68rem;color:var(--ash);margin-bottom:.35rem;font-style:italic}
+.scale-opts{display:flex;gap:.4rem}
+.scale-btn{flex:1;height:36px;border:1.5px solid rgba(26,58,92,.12);border-radius:2px;background:var(--cream);cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--ash);text-align:center;line-height:36px;transition:all .15s;user-select:none}
+.scale-btn:hover{border-color:var(--navy);color:var(--navy);background:var(--cream2)}
+.scale-btn.sel-1,.scale-btn.sel-2{background:rgba(139,26,26,.1);border-color:var(--red);color:var(--red)}
+.scale-btn.sel-3{background:rgba(139,92,0,.1);border-color:var(--amber);color:var(--amber)}
+.scale-btn.sel-4,.scale-btn.sel-5{background:rgba(26,92,46,.1);border-color:var(--green);color:var(--green)}
+/* NAV */
+.nav-wrap{display:flex;justify-content:space-between;align-items:center;margin-top:1.8rem;padding-top:1.2rem;border-top:1px solid rgba(26,58,92,.1)}
+.nav-info{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--ash)}
+/* REPORT */
+.rpt-cover{background:var(--navy2);padding:2rem 1.5rem;text-align:center;border-bottom:4px solid var(--gold);margin-bottom:1.5rem;position:relative}
+.rpt-cover::before{content:'';position:absolute;top:0;left:0;width:6px;height:100%;background:var(--gold)}
+.rpt-cover h2{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white);margin-bottom:.3rem}
+.rpt-name{font-size:2rem;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif;margin:.4rem 0}
+.rpt-date{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:rgba(255,255,255,.4);letter-spacing:.15em}
+.quad-scores{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.2rem 0}
+.qs-card{padding:1.3rem;border-radius:3px;text-align:center}
+.qs-iq{background:rgba(26,58,92,.08);border:1.5px solid var(--iq)}
+.qs-eq{background:rgba(92,26,58,.08);border:1.5px solid var(--eq)}
+.qs-aq{background:rgba(26,92,58,.08);border:1.5px solid var(--aq)}
+.qs-sq{background:rgba(58,26,92,.08);border:1.5px solid var(--sq)}
+.qs-card .qs-lbl{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:.4rem}
+.qs-iq .qs-lbl{color:var(--iq)}
+.qs-eq .qs-lbl{color:var(--eq)}
+.qs-aq .qs-lbl{color:var(--aq)}
+.qs-sq .qs-lbl{color:var(--sq)}
+.qs-score{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;line-height:1}
+.qs-iq .qs-score{color:var(--iq)}
+.qs-eq .qs-score{color:var(--eq)}
+.qs-aq .qs-score{color:var(--aq)}
+.qs-sq .qs-score{color:var(--sq)}
+.qs-max{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--ash)}
+.qs-bar-track{height:6px;background:rgba(0,0,0,.08);border-radius:3px;margin:.6rem 0 .3rem;overflow:hidden}
+.qs-bar-fill{height:100%;border-radius:3px;transition:width 1s ease .3s}
+.qs-iq .qs-bar-fill{background:var(--iq)}
+.qs-eq .qs-bar-fill{background:var(--eq)}
+.qs-aq .qs-bar-fill{background:var(--aq)}
+.qs-sq .qs-bar-fill{background:var(--sq)}
+.qs-flag{font-family:'JetBrains Mono',monospace;font-size:.6rem;padding:.12rem .4rem;border-radius:20px;display:inline-block;margin-top:.2rem}
+.flag-s{background:rgba(26,92,46,.1);color:var(--green)}
+.flag-m{background:rgba(139,92,0,.1);color:var(--amber)}
+.flag-w{background:rgba(139,26,26,.1);color:var(--red)}
+.rpt-sec{background:var(--white);border:1px solid rgba(26,58,92,.1);border-radius:3px;padding:1.3rem 1.5rem;margin:.9rem 0}
+.rpt-sec h3{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--navy);margin-bottom:.8rem;padding-bottom:.5rem;border-bottom:1px solid rgba(26,58,92,.1)}
+.rpt-sec p{font-size:.92rem;color:#444438;line-height:1.7;margin-bottom:.6rem}
+.rpt-sec p:last-child{margin-bottom:0}
+.highlight{background:var(--cream);border-left:3px solid var(--navy);padding:.6rem .9rem;margin:.6rem 0;font-style:italic;border-radius:0 2px 2px 0;font-size:.88rem}
+.print-btn{display:inline-block;margin-top:1.2rem;background:var(--navy);color:var(--gold);padding:.65rem 1.5rem;font-family:'Playfair Display',serif;font-size:.88rem;cursor:pointer;border:none;border-radius:2px}
+.lgl-ftr{background:#f0ece0;border-top:1px solid #d4c8a8;padding:1rem 1.5rem;font-family:'Crimson Pro',serif;font-size:.76rem;color:#6a5a40;line-height:1.7;text-align:center;margin-top:1.5rem}
+.ftr{text-align:center;padding:1.5rem;font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--ash);letter-spacing:.1em;border-top:1px solid rgba(26,58,92,.1);margin-top:1.5rem}
+.hidden{display:none}
+@media(max-width:560px){.quad-grid,.quad-scores{grid-template-columns:1fr}.scale-opts{gap:.25rem}.scale-btn{font-size:.65rem}}
+
+  /* PAYMENT GATE */
+  .pay-gate{background:var(--white);border:1.5px solid var(--border);border-radius:3px;
+    padding:2rem 1.8rem;margin:1.5rem 0;text-align:center}
+  .pg-icon{font-size:2.8rem;margin-bottom:.8rem}
+  .pg-title{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--navy);
+    font-weight:700;margin-bottom:.4rem}
+  .pg-price{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:700;
+    color:var(--navy);margin:.6rem 0 .2rem}
+  .pg-price sup{font-size:1.2rem;vertical-align:top;margin-top:.6rem;display:inline-block}
+  .pg-sub{font-size:.9rem;color:var(--ash);font-style:italic;margin-bottom:1.4rem}
+  .pg-includes{display:flex;justify-content:center;gap:1.2rem;flex-wrap:wrap;
+    margin:.8rem 0 1.4rem}
+  .pg-inc{background:var(--cream);border:1px solid var(--border);border-radius:2px;
+    padding:.45rem .9rem;font-family:'JetBrains Mono',monospace;font-size:.65rem;
+    color:var(--navy);letter-spacing:.08em}
+  .pg-note{font-size:.78rem;color:var(--ash);font-style:italic;margin-top:.8rem;
+    line-height:1.6}
+  .pay-unlock{background:var(--cream2);border:1.5px dashed rgba(201,168,76,.5);
+    border-radius:3px;padding:1.5rem 1.8rem;margin:1.2rem 0;text-align:center}
+  .pu-title{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--navy);
+    margin-bottom:.4rem}
+  .pu-sub{font-size:.84rem;color:var(--ash);font-style:italic;margin-bottom:1rem}
+  .pu-row{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+  .code-inp{padding:.65rem .9rem;font-family:'JetBrains Mono',monospace;font-size:.9rem;
+    border:1.5px solid var(--border);border-radius:2px;background:var(--cream);
+    color:var(--ink);outline:none;width:220px;text-align:center;
+    letter-spacing:.12em;text-transform:uppercase;transition:border-color .2s}
+  .code-inp:focus{border-color:var(--navy)}
+  .code-err{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--red);
+    margin-top:.4rem;display:none}
+  .demo-link{font-size:.82rem;color:var(--ash);margin-top:.9rem}
+  .demo-link button{background:none;border:1px solid var(--border);border-radius:2px;
+    padding:.2rem .6rem;font-family:'JetBrains Mono',monospace;font-size:.65rem;
+    color:var(--ash);cursor:pointer;margin-left:.4rem;transition:all .15s}
+  .demo-link button:hover{border-color:var(--navy);color:var(--navy)}
+
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-lbl">Lead By Dharma — Intelligence Assessment</div>
+  <h1>Know Your <span>Intelligence Profile</span></h1>
+  <div class="hdr-sub">IQ · EQ · AQ · SQ — Four dimensions that determine officer potential</div>
+  <div class="hdr-meta">
+    <span><b>80</b> Questions</span>
+    <span><b>4</b> Dimensions</span>
+    <span><b>~30 min</b></span>
+    <span>Col Aniruddha Rao HR (Retd)</span>
+  </div>
+</div>
+<div class="prog-wrap">
+  <div class="prog-lbl">PROGRESS</div>
+  <div class="prog-track"><div class="prog-fill" id="pFill"></div></div>
+  <div class="prog-pct" id="pPct">0%</div>
+</div>
+<div class="wrap">
+
+<!-- INTRO -->
+
+<!-- PAYMENT GATE -->
+<div id="payGate">
+  <div class="pay-gate">
+    <div class="pg-icon">&#129504;</div>
+    <div class="pg-title">Intelligence Profile Assessment</div>
+    <div class="pg-price"><sup>&#8377;</sup>199</div>
+    <div class="pg-sub">One-time access &middot; Instant report &middot; No login required</div>
+    <div class="pg-includes">
+      <span class="pg-inc">IQ &mdash; 20 Questions</span>
+      <span class="pg-inc">EQ &mdash; 20 Questions</span>
+      <span class="pg-inc">AQ &mdash; 20 Questions</span>
+      <span class="pg-inc">SQ &mdash; 20 Questions</span>
+    </div>
+    <a href="https://rzp.io/l/lbd-iq-assessment" target="_blank">
+      <button class="btn btn-primary" style="font-size:1rem;padding:.85rem 2.4rem"
+        onclick="showUnlockAfterPay()">Pay &#8377;199 &amp; Get Access &rarr;</button>
+    </a>
+    <div class="pg-note">
+      After payment, check your email for an access code.<br>
+      WhatsApp +91 98789 30879 if you need help.
+    </div>
+  </div>
+
+  <div class="pay-unlock" id="unlockBox">
+    <div class="pu-title">Enter Your Access Code</div>
+    <div class="pu-sub">Check your email. Code arrives within a few minutes of payment.</div>
+    <div class="pu-row">
+      <input class="code-inp" id="iqCodeInput" type="text" placeholder="LBD-XXXX"
+        onkeydown="if(event.key==='Enter') redeemIQCode()"/>
+      <button class="btn btn-primary" onclick="redeemIQCode()">Unlock &rarr;</button>
+    </div>
+    <div class="code-err" id="iqCodeErr">Invalid or already used code. Contact leadbydharma@gmail.com</div>
+    <div class="demo-link">
+      Want to try first?
+      <button onclick="launchIQDemo()">Take free 8-question demo</button>
+    </div>
+  </div>
+</div>
+
+<div id="introPage" class="hidden">
+  <div class="disc">
+    <strong style="color:var(--gold2)">Educational assessment — not a clinical instrument.</strong> This tool is provided by Lead By Dharma for self-awareness and development purposes only. It does not constitute professional psychological advice. Results are indicative and should not be used as the sole basis for any significant decision. Not affiliated with SSB, MoD, or DIPR. All data processed locally in your browser.
+  </div>
+  <div class="intro-box">
+    <h3>What This Measures</h3>
+    <div class="quad-grid">
+      <div class="quad-card quad-iq"><div class="qc-lbl">IQ — Cognitive Intelligence</div><div class="qc-title">How You Think</div><div class="qc-desc">Logical reasoning, pattern recognition, numerical ability, verbal reasoning, spatial awareness</div></div>
+      <div class="quad-card quad-eq"><div class="qc-lbl">EQ — Emotional Intelligence</div><div class="qc-title">How You Feel</div><div class="qc-desc">Self-awareness, empathy, emotional regulation, social reading, impulse control</div></div>
+      <div class="quad-card quad-aq"><div class="qc-lbl">AQ — Adversity Quotient</div><div class="qc-title">How You Respond</div><div class="qc-desc">Resilience under pressure, ownership of outcomes, control orientation, persistence</div></div>
+      <div class="quad-card quad-sq"><div class="qc-lbl">SQ — Social Intelligence</div><div class="qc-title">How You Connect</div><div class="qc-desc">Group reading, influence without authority, adaptability, cooperation, social conscience</div></div>
+    </div>
+    <p style="font-size:.85rem;color:var(--ash);line-height:1.7;margin-top:1rem"><strong style="color:var(--ink)">Scale:</strong> Most questions use a 1–5 agreement scale (1 = Strongly Disagree, 5 = Strongly Agree). Some use multiple choice. Answer as you genuinely are — not as you think an officer should be.</p>
+  </div>
+  <div style="margin:1.2rem 0">
+    <label style="font-family:'Playfair Display';font-size:.95rem;color:var(--navy);font-weight:600;display:block;margin-bottom:.4rem">Your Name</label>
+    <input class="name-inp" id="cName" type="text" placeholder="Enter your full name..."/>
+    <div style="font-size:.78rem;color:var(--ash);font-style:italic">For personalising your report only. Not stored or transmitted.</div>
+  </div>
+  <div style="text-align:right;margin-top:1.2rem">
+    <button class="btn btn-primary" onclick="startTest()" style="font-size:1rem;padding:.85rem 2.2rem">Begin Assessment →</button>
+  </div>
+</div>
+
+<!-- SECTIONS -->
+<div id="testSections" class="hidden"></div>
+
+<!-- REPORT -->
+<div id="report" class="hidden"></div>
+
+<div class="ftr">© 2026 LEAD BY DHARMA · leadbydharma.com · Col Aniruddha Rao HR (Retd) · Maratha Light Infantry<br><span style="font-size:.58rem;opacity:.7">Educational use only · Not a clinical assessment · Not affiliated with SSB, MoD, or DIPR</span></div>
+</div>
+
+<script>
+// =====================================================
+// IQ PAYMENT GATE
+// =====================================================
+var IQ_UNLOCKED = false;
+var IQ_DEMO = false;
+
+var IQ_CODES = {
+  "COLRAO-OWNER": {used: false, owner: true},  // Owner master code — full access
+  "DEMO-IQ-1": {used: false, demo: true}
+};
+
+function showUnlockAfterPay() {
+  setTimeout(function() {
+    document.getElementById("unlockBox").style.display = "block";
+    document.getElementById("iqCodeInput").focus();
+  }, 800);
+}
+
+function redeemIQCode() {
+  var code = document.getElementById("iqCodeInput").value.trim().toUpperCase();
+  var errEl = document.getElementById("iqCodeErr");
+  errEl.style.display = "none";
+  if (!code) return;
+  if (code === "DEMO-IQ-1" || code === "LBD-DEMO-IQ") {
+    launchIQDemo(); return;
+  }
+  if (IQ_CODES[code] && !IQ_CODES[code].used) {
+    if (!IQ_CODES[code].owner) IQ_CODES[code].used = true;  // owner code never expires
+    IQ_UNLOCKED = true;
+    document.getElementById("payGate").classList.add("hidden");
+    document.getElementById("introPage").classList.remove("hidden");
+  } else if (IQ_CODES[code] && IQ_CODES[code].used) {
+    errEl.textContent = "This code has already been used.";
+    errEl.style.display = "block";
+  } else {
+    errEl.style.display = "block";
+  }
+}
+
+function launchIQDemo() {
+  IQ_DEMO = true;
+  IQ_UNLOCKED = true;
+  document.getElementById("payGate").classList.add("hidden");
+  document.getElementById("introPage").classList.remove("hidden");
+  for (var i = 0; i < DOMAINS.length; i++) {
+    DOMAINS[i].questions = DOMAINS[i].questions.slice(0, 2);
+    DOMAINS[i].desc = DOMAINS[i].desc.replace("(20 questions)", "(2 questions - demo)");
+  }
+  var banner = document.createElement("div");
+  banner.style.cssText = "background:rgba(139,92,0,.08);border:1px solid rgba(139,92,0,.25);border-radius:2px;padding:.5rem 1rem;font-family:JetBrains Mono,monospace;font-size:.68rem;color:var(--amber);text-align:center;margin:.8rem 0";
+  banner.textContent = "DEMO MODE - 2 questions per domain (8 total). Purchase for full 80-question assessment.";
+  document.getElementById("introPage").prepend(banner);
+}
+
+// ═══════════════════════════════════════════
+//  QUESTION BANK — 80 questions, 4 domains, 20 each
+// ═══════════════════════════════════════════
+const DOMAINS = [
+  {
+    id:'IQ', label:'Cognitive Intelligence (IQ)',
+    badge:'badge-iq', color:'var(--iq)',
+    desc:'Measures logical reasoning, pattern recognition, numerical ability, and verbal reasoning. (20 questions)',
+    questions:[
+      {id:'IQ1',type:'mcq',text:'If all Roses are Flowers and some Flowers fade quickly, which must be true?',
+       opts:['All roses fade quickly','Some roses may fade quickly','No roses fade quickly','All flowers are roses'],scores:[1,5,1,1]},
+      {id:'IQ2',type:'mcq',text:'Complete the series: 2, 6, 12, 20, 30, __',
+       opts:['38','40','42','44'],scores:[1,1,5,1]},
+      {id:'IQ3',type:'mcq',text:'Which word is the odd one out: Honest, Truthful, Sincere, Cunning, Frank',
+       opts:['Honest','Truthful','Cunning','Frank'],scores:[1,1,5,1]},
+      {id:'IQ4',type:'mcq',text:'A train 150m long passes a pole in 15 seconds. How long to pass a 300m platform?',
+       opts:['30 seconds','35 seconds','45 seconds','25 seconds'],scores:[1,1,5,1]},
+      {id:'IQ5',type:'mcq',text:'If FRIEND is coded as HUMJTK, how is CANDLE coded?',
+       opts:['EDRIRL','DCQFMH','EDRJQF','FCPFMG'],scores:[1,1,5,1]},
+      {id:'IQ6',type:'scale',text:'I can identify the core issue in a complex problem faster than most people I know.',reverse:false},
+      {id:'IQ7',type:'scale',text:'When I read or hear an argument, I can quickly identify whether the logic holds.',reverse:false},
+      {id:'IQ8',type:'mcq',text:'Which number is missing? 4, 9, 25, 49, __, 169',
+       opts:['81','100','121','144'],scores:[1,1,5,1]},
+      {id:'IQ9',type:'mcq',text:'Pointing to a man, a woman says "His mother is the only daughter of my mother." How is the woman related to the man?',
+       opts:['Grandmother','Sister','Mother','Aunt'],scores:[1,1,5,1]},
+      {id:'IQ10',type:'scale',text:'I can hold and manipulate multiple pieces of information in my mind simultaneously without confusion.',reverse:false},
+      {id:'IQ11',type:'mcq',text:'Choose the word most opposite to TACITURN:',
+       opts:['Silent','Talkative','Reserved','Thoughtful'],scores:[1,5,1,1]},
+      {id:'IQ12',type:'mcq',text:'A man walks 5km north, turns right and walks 3km, turns right again and walks 5km. How far is he from the start?',
+       opts:['1km','3km','6km','8km'],scores:[1,5,1,1]},
+      {id:'IQ13',type:'scale',text:'I regularly notice inconsistencies or errors that others miss — in plans, documents, or conversations.',reverse:false},
+      {id:'IQ14',type:'mcq',text:'If 6 workers can build a wall in 12 days, how many days will 9 workers take?',
+       opts:['6','8','10','18'],scores:[1,5,1,1]},
+      {id:'IQ15',type:'mcq',text:'Statement: All managers are leaders. Some leaders are visionaries. Conclusion: Some managers are visionaries.',
+       opts:['Definitely true','Possibly true','Definitely false','Cannot determine'],scores:[1,5,1,1]},
+      {id:'IQ16',type:'scale',text:'I understand complex written material on first reading without needing to re-read.',reverse:false},
+      {id:'IQ17',type:'mcq',text:'What comes next: AZ, BY, CX, DW, __',
+       opts:['EV','FU','EW','VE'],scores:[5,1,1,1]},
+      {id:'IQ18',type:'scale',text:'In mathematics or logic problems, I can find a shortcut or elegant solution where others work the long way.',reverse:false},
+      {id:'IQ19',type:'mcq',text:'The ratio of boys to girls in a class is 3:2. If there are 30 boys, how many total students?',
+       opts:['40','45','50','60'],scores:[1,1,5,1]},
+      {id:'IQ20',type:'scale',text:'I learn new systems, tools, or processes significantly faster than my peers.',reverse:false},
+    ]
+  },
+  {
+    id:'EQ', label:'Emotional Intelligence (EQ)',
+    badge:'badge-eq', color:'var(--eq)',
+    desc:'Measures self-awareness, empathy, emotional regulation, and social reading. (20 questions)',
+    questions:[
+      {id:'EQ1',type:'scale',text:'I can accurately name the specific emotion I am feeling at any given moment — not just "good" or "bad".',reverse:false},
+      {id:'EQ2',type:'scale',text:'When I am angry or upset, I can pause before responding and choose my words deliberately.',reverse:false},
+      {id:'EQ3',type:'scale',text:'I notice when someone is masking distress behind a calm exterior.',reverse:false},
+      {id:'EQ4',type:'scale',text:'I can listen to someone express a view I strongly disagree with without becoming visibly uncomfortable.',reverse:false},
+      {id:'EQ5',type:'mcq',text:'A team member delivers poor work and seems deflated. What is most emotionally intelligent?',
+       opts:['Point out every error in detail so they understand what went wrong','Acknowledge the effort, address the gaps privately, and support improvement','Let it pass this time to avoid conflict','Report the issue to a superior'],
+       scores:[2,5,1,1]},
+      {id:'EQ6',type:'scale',text:'I can feel genuine compassion for someone whose choices I disapprove of.',reverse:false},
+      {id:'EQ7',type:'scale',text:'I know which of my emotional reactions are proportionate and which are larger than the situation warrants.',reverse:false},
+      {id:'EQ8',type:'mcq',text:'You receive sharp criticism from a senior in front of peers. Your instinctive response is:',
+       opts:['Immediately defend yourself','Feel the sting, stay composed, and process it privately later','Show no reaction whatsoever — you are completely unaffected','Ask why they chose to raise it publicly'],
+       scores:[1,5,2,1]},
+      {id:'EQ9',type:'scale',text:'I can adjust the emotional tone of a conversation — making it warmer, lighter, or more serious — when the situation calls for it.',reverse:false},
+      {id:'EQ10',type:'scale',text:'I rarely hold grudges. When a conflict is resolved, I move forward without residual resentment.',reverse:false},
+      {id:'EQ11',type:'scale',text:'I am aware of the specific people, situations, and topics that trigger disproportionate emotional responses in me.',reverse:false},
+      {id:'EQ12',type:'mcq',text:'During a tense group disagreement, you notice one member has gone completely silent. You:',
+       opts:['Ignore it — they chose not to contribute','Directly ask them their view in front of the group','Find a moment to check in with them privately','Ask the group to wait while you address it'],
+       scores:[1,2,5,1]},
+      {id:'EQ13',type:'scale',text:'When I make a mistake, I can acknowledge it honestly without either excessive self-criticism or defensive justification.',reverse:false},
+      {id:'EQ14',type:'scale',text:'I can accurately sense when someone needs practical help versus when they simply need to be heard.',reverse:false},
+      {id:'EQ15',type:'scale',text:'My mood does not significantly affect the quality of my work or the way I treat others.',reverse:false},
+      {id:'EQ16',type:'mcq',text:'A peer you are competing with for a position receives the role instead of you. What is most emotionally intelligent?',
+       opts:['Congratulate them genuinely and reflect on what you can develop','Be professionally polite but privately acknowledge the disappointment and move on','Show you are unaffected — emotions are a sign of weakness','Ask for detailed feedback from the decision-maker immediately'],
+       scores:[5,4,1,2]},
+      {id:'EQ17',type:'scale',text:'I can read the emotional atmosphere of a room within minutes of entering it.',reverse:false},
+      {id:'EQ18',type:'scale',text:'When someone shares a problem with me, my default is to understand before I advise.',reverse:false},
+      {id:'EQ19',type:'scale',text:'I notice when my own biases are shaping my emotional responses to a person or situation.',reverse:false},
+      {id:'EQ20',type:'mcq',text:'Your closest team member tells you something about themselves that surprises and slightly unsettles you. You:',
+       opts:['Express your surprise honestly','Listen without judgment, thank them for trusting you, and reflect privately','Change the subject to make them more comfortable','Ask direct questions to understand better'],
+       scores:[2,5,1,3]},
+    ]
+  },
+  {
+    id:'AQ', label:'Adversity Quotient (AQ)',
+    badge:'badge-aq', color:'var(--aq)',
+    desc:'Measures resilience under pressure, ownership of outcomes, persistence, and control orientation. (20 questions)',
+    questions:[
+      {id:'AQ1',type:'scale',text:'When a plan fails, my first instinct is to analyse what I could have done differently — not to identify who else contributed to the failure.',reverse:false},
+      {id:'AQ2',type:'scale',text:'I have continued pursuing a difficult goal after a significant setback without being told to.',reverse:false},
+      {id:'AQ3',type:'mcq',text:'You have prepared extensively for an important presentation. Technical failure makes it impossible to proceed. You:',
+       opts:['Apologise and reschedule','Deliver the presentation from memory without the visual aid','Request a short break to solve the technical issue','Offer to share the materials by email instead'],
+       scores:[1,5,3,1]},
+      {id:'AQ4',type:'scale',text:'Stressful conditions tend to sharpen my focus rather than diminish it.',reverse:false},
+      {id:'AQ5',type:'scale',text:'I take genuine ownership of bad outcomes I am part of — even when others were also responsible.',reverse:false},
+      {id:'AQ6',type:'mcq',text:'You are given an extremely difficult task with inadequate resources and a tight deadline. You:',
+       opts:['Push back on the timeline — this sets you up to fail','Do what you can with what you have and report progress honestly','Ask which parts of the task can be deprioritised','Accept the task without comment and find a way'],
+       scores:[2,3,2,5]},
+      {id:'AQ7',type:'scale',text:'I believe that most outcomes in my life are significantly within my control, regardless of circumstances.',reverse:false},
+      {id:'AQ8',type:'scale',text:'I can function effectively in a state of significant physical or mental fatigue.',reverse:false},
+      {id:'AQ9',type:'mcq',text:'Despite working extremely hard, you receive negative feedback three times in a row. You:',
+       opts:['Consider whether this role or path is right for you','Seek detailed feedback and adjust your approach','Attribute it to unfair assessment and continue unchanged','Work harder doing the same thing — persistence is the key'],
+       scores:[2,5,1,2]},
+      {id:'AQ10',type:'scale',text:'Uncertainty and ambiguity make me more engaged — not more anxious.',reverse:false},
+      {id:'AQ11',type:'scale',text:'I have completed things that required months of sustained effort without external encouragement or deadline pressure.',reverse:false},
+      {id:'AQ12',type:'mcq',text:'You are in the middle of a long and difficult task when you discover a fundamental error in your approach. You:',
+       opts:['Start again with the correct approach regardless of time already spent','Complete the current approach and redo it correctly afterward','Abandon the task — the investment is too large to redo','Continue the flawed approach but document the issue'],
+       scores:[5,2,1,1]},
+      {id:'AQ13',type:'scale',text:'When I fail, the recovery time — time before I am fully functional again — is short relative to most people I know.',reverse:false},
+      {id:'AQ14',type:'scale',text:'I do not require external praise or recognition to maintain my effort and commitment.',reverse:false},
+      {id:'AQ15',type:'scale',text:'Obstacles make me more determined, not less.',reverse:false},
+      {id:'AQ16',type:'mcq',text:'You are physically and mentally exhausted but the task is not yet complete. You:',
+       opts:['Stop — rest is essential for performance quality','Push through and complete it despite the cost','Identify the minimum acceptable state and complete to that standard','Delegate what remains and recuperate'],
+       scores:[2,4,5,2]},
+      {id:'AQ17',type:'scale',text:'I rarely catastrophise — I can distinguish between a serious setback and an actual disaster.',reverse:false},
+      {id:'AQ18',type:'scale',text:'In genuinely difficult situations, the people around me tend to look to me rather than away from me.',reverse:false},
+      {id:'AQ19',type:'mcq',text:'An important goal you have been working toward for a long time becomes unreachable due to factors completely outside your control. You:',
+       opts:['Experience significant and prolonged distress','Accept the outcome, extract the learning, and redirect the effort','Identify who or what was responsible','Move on immediately without processing it'],
+       scores:[1,5,1,2]},
+      {id:'AQ20',type:'scale',text:'I do not need the path ahead to be clear before I start moving.',reverse:false},
+    ]
+  },
+  {
+    id:'SQ', label:'Social Intelligence (SQ)',
+    badge:'badge-sq', color:'var(--sq)',
+    desc:'Measures group reading, influence without authority, social adaptability, and cooperation. (20 questions)',
+    questions:[
+      {id:'SQ1',type:'scale',text:'I can quickly read the social dynamics of a group I have just joined — who holds real influence, where the tensions are, what is unsaid.',reverse:false},
+      {id:'SQ2',type:'scale',text:'I can change the direction of a group conversation without appearing to do so.',reverse:false},
+      {id:'SQ3',type:'mcq',text:'You join a new team mid-project. Two members have a long-standing conflict affecting performance. You:',
+       opts:['Raise it in the next team meeting to force resolution','Speak to each individually, understand their perspectives, then create a shared task that requires genuine cooperation','Report it to the team leader — conflict management is their responsibility','Ignore it and focus on your own work'],
+       scores:[2,5,1,1]},
+      {id:'SQ4',type:'scale',text:'I find it easy to work warmly with people I personally dislike.',reverse:false},
+      {id:'SQ5',type:'scale',text:'I am genuinely curious about people from different backgrounds — not merely tolerant.',reverse:false},
+      {id:'SQ6',type:'mcq',text:'In a group discussion, the majority is converging on a decision you believe is wrong. You:',
+       opts:['Stay silent — the group has spoken','State your view once clearly, explain your reasoning, then respect the group decision','Refuse to endorse the decision','Seek out a sympathetic ally to help shift the group view'],
+       scores:[1,5,1,3]},
+      {id:'SQ7',type:'scale',text:'I can build genuine rapport with strangers quickly — not through charm but through authentic interest.',reverse:false},
+      {id:'SQ8',type:'scale',text:'I actively make the people around me look better, not just myself.',reverse:false},
+      {id:'SQ9',type:'mcq',text:'Your team achieves something significant. A senior asks who deserves credit. You contributed equally with two others. You:',
+       opts:['Name yourself first','Name all three equally with accurate descriptions of each contribution','Say it was a team effort without naming anyone','Defer entirely — let others describe the contributions'],
+       scores:[2,5,3,1]},
+      {id:'SQ10',type:'scale',text:'I can tell when someone is performing social confidence versus genuinely feeling it.',reverse:false},
+      {id:'SQ11',type:'scale',text:'I have never deliberately undermined someone to make myself look better.',reverse:false},
+      {id:'SQ12',type:'mcq',text:'You are in a group where one quiet member has a genuinely good idea but is unable to articulate it effectively. You:',
+       opts:['Let them struggle — they need to develop their own voice','Help them develop the idea and ensure they get the credit for it','Take the idea and present it yourself — execution is what matters','Ask the group to give them more time'],
+       scores:[1,5,1,3]},
+      {id:'SQ13',type:'scale',text:'I subordinate my personal goals to group objectives when the stakes are high.',reverse:false},
+      {id:'SQ14',type:'scale',text:'I notice when a group\'s mood shifts and I can identify what caused the shift.',reverse:false},
+      {id:'SQ15',type:'scale',text:'People from very different backgrounds — different class, language, region — feel comfortable around me quickly.',reverse:false},
+      {id:'SQ16',type:'mcq',text:'You are leading a group and notice morale is declining. The task is still important and the deadline is fixed. You:',
+       opts:['Ignore morale — performance is what matters','Acknowledge the difficulty honestly, make a small gesture that changes the energy, then recommit to the task','Give the group a break and regroup','Motivate through authority — remind them what is expected'],
+       scores:[1,5,3,2]},
+      {id:'SQ17',type:'scale',text:'I can adjust my communication style — from direct to indirect, formal to informal — without it feeling forced.',reverse:false},
+      {id:'SQ18',type:'scale',text:'I notice when I am in a social situation that brings out a less-than-ideal version of me.',reverse:false},
+      {id:'SQ19',type:'mcq',text:'A colleague from a very different cultural background behaves in a way that is unfamiliar and slightly off-putting to you. You:',
+       opts:['Maintain professional distance','Get curious — seek to understand the context behind the behaviour before drawing conclusions','Raise it indirectly so they can adjust','Accept it without engaging — different people operate differently'],
+       scores:[2,5,1,3]},
+      {id:'SQ20',type:'scale',text:'In social situations I genuinely enjoy, I lose track of time — social energy does not drain me.',reverse:false},
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+let resp={}, curSec=0, name='';
+
+function totalQ(){ return DOMAINS.reduce((n,d)=>n+d.questions.length,0); }
+function answered(){ return Object.keys(resp).length; }
+function updateProg(){
+  const p=Math.round((answered()/totalQ())*100);
+  document.getElementById('pFill').style.width=p+'%';
+  document.getElementById('pPct').textContent=p+'%';
+}
+
+// ═══════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════
+function startTest(){
+  if (!IQ_UNLOCKED) {
+    document.getElementById("unlockBox").style.display = "block";
+    document.getElementById("iqCodeInput").focus();
+    return;
+  }
+  name=document.getElementById('cName').value.trim()||'Candidate';
+  document.getElementById('introPage').classList.add('hidden');
+  document.getElementById('testSections').classList.remove('hidden');
+  renderSec(0);
+}
+
+function renderSec(idx){
+  curSec=idx;
+  const d=DOMAINS[idx];
+  const wrap=document.getElementById('testSections');
+  let h=`<div class="sec-hdr">
+    <span class="sec-badge ${d.badge}">${d.id} — ${idx+1}/${DOMAINS.length}</span>
+    <div><h2>${d.label}</h2><p>${d.desc}</p></div>
+  </div>`;
+
+  d.questions.forEach((q,qi)=>{
+    const gn=DOMAINS.slice(0,idx).reduce((n,dd)=>n+dd.questions.length,0)+qi+1;
+    const ans=resp[q.id]!==undefined;
+    if(q.type==='mcq'){
+      h+=`<div class="q-card ${ans?'answered':''}" id="c-${q.id}">
+        <div class="q-top"><div class="q-num">Q${gn}</div>
+        <div><div class="q-tag">${d.id} · Multiple Choice</div><div class="q-text">${q.text}</div></div></div>
+        <div class="mcq-opts">${q.opts.map((o,oi)=>{
+          const lt=['A','B','C','D'][oi];
+          const sel=resp[q.id]===q.scores[oi]&&ans?'selected':'';
+          // need to store which option was selected for UI
+          const selAlt=resp[q.id+'_oi']===oi?'selected':'';
+          return`<button class="mcq-btn ${selAlt}" onclick="recMCQ('${q.id}',${oi},${q.scores[oi]},this)">
+            <span class="mcq-lt">${lt}</span>${o}</button>`;
+        }).join('')}</div></div>`;
+    } else {
+      h+=`<div class="q-card ${ans?'answered':''}" id="c-${q.id}">
+        <div class="q-top"><div class="q-num">Q${gn}</div>
+        <div><div class="q-tag">${d.id} · 1–5 Scale</div><div class="q-text">${q.text}</div></div></div>
+        <div class="scale-wrap">
+          <div class="scale-lbls"><span>Strongly Disagree</span><span>Strongly Agree</span></div>
+          <div class="scale-opts">${[1,2,3,4,5].map(v=>{
+            const cur=resp[q.id];
+            const sel=cur===v?(q.reverse?(6-v):v)===resp[q.id]?`sel-${v}`:'':'';
+            const selB=resp[q.id]===( q.reverse?(6-v):v )?`sel-${v}`:'';
+            return`<label class="scale-btn ${resp[q.id+'_raw']===v?`sel-${v}`:''}" onclick="recScale('${q.id}',${v},${q.reverse||false},this)">${v}</label>`;
+          }).join('')}</div>
+        </div></div>`;
+    }
+  });
+
+  const un=d.questions.filter(q=>resp[q.id]===undefined).length;
+  h+=`<div class="nav-wrap">
+    ${idx>0?`<button class="btn btn-outline" onclick="goSec(${idx-1})">← Previous</button>`:'<span></span>'}
+    <div class="nav-info" id="navInfo">${un===0?'✓ All answered':`${un} remaining`}</div>
+    ${idx<DOMAINS.length-1
+      ?`<button class="btn btn-primary" onclick="goSec(${idx+1})">Next →</button>`
+      :`<button class="btn btn-primary" id="subBtn" onclick="genReport()" ${un>0?'disabled':''}>Generate Report →</button>`}
+  </div>`;
+
+  wrap.innerHTML=h;
+  window.scrollTo({top:0,behavior:'smooth'});
+  updateProg();
+}
+
+function goSec(idx){ renderSec(idx); }
+
+function recMCQ(qid,oi,score,el){
+  resp[qid]=score;
+  resp[qid+'_oi']=oi;
+  const card=document.getElementById('c-'+qid);
+  card.querySelectorAll('.mcq-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  card.classList.add('answered');
+  updateProg(); chkSec();
+}
+
+function recScale(qid,val,rev,el){
+  resp[qid]=rev?(6-val):val;
+  resp[qid+'_raw']=val;
+  const card=document.getElementById('c-'+qid);
+  card.querySelectorAll('.scale-btn').forEach((b,i)=>{
+    b.className='scale-btn';
+    if(i+1===val) b.classList.add(`sel-${val}`);
+  });
+  card.classList.add('answered');
+  updateProg(); chkSec();
+}
+
+function chkSec(){
+  const d=DOMAINS[curSec];
+  const un=d.questions.filter(q=>resp[q.id]===undefined).length;
+  const ni=document.getElementById('navInfo');
+  if(ni) ni.textContent=un===0?'✓ All answered':`${un} remaining`;
+  const sb=document.getElementById('subBtn');
+  if(sb) sb.disabled=un>0;
+}
+
+// ═══════════════════════════════════════════
+//  SCORING
+// ═══════════════════════════════════════════
+function score(domainId){
+  const d=DOMAINS.find(x=>x.id===domainId);
+  let tot=0,cnt=0;
+  d.questions.forEach(q=>{
+    const v=resp[q.id]!==undefined?resp[q.id]:3;
+    tot+=v; cnt++;
+  });
+  const avg=tot/cnt;
+  const pct=Math.round((avg/5)*100);
+  return{avg,pct};
+}
+
+function flag(pct){
+  if(pct>=75) return['flag-s','Strong'];
+  if(pct>=52) return['flag-m','Developing'];
+  return['flag-w','Needs Work'];
+}
+
+// ═══════════════════════════════════════════
+//  REPORT
+// ═══════════════════════════════════════════
+function analysis(id,pct){
+  const texts={
+    IQ:{
+      h:`Your cognitive intelligence profile is strong — and I want to be specific about what that means beyond the number.
+
+The SSB OIR test is Stage 1 screening. It is binary: you either clear it and proceed to Day 2, or you do not. Your profile suggests you will clear it — not comfortably in the sense of coasting, but because you process reasoning problems, numerical sequences, and verbal logic at a speed and accuracy that falls within the required range. That is the foundation everything else rests on.
+
+In the GTO's Group Planning Exercise, cognitive intelligence shows not in speaking most or loudest but in grasping the problem most completely. The exercise gives seven candidates the same map, the same constraints, and ten minutes to produce a coherent plan. The candidate who identifies the critical variable — the one constraint that makes four other solutions impossible — within two minutes is the one the GTO observes as intellectually effective. Your profile suggests you are that candidate.
+
+In the Personal Interview, effective intelligence shows when the Interviewing Officer poses a complex situational question and you do not immediately reach for a rehearsed answer. You think, you reason out loud, you reach a conclusion. That is what officers do every day in the field. Assessors recognise it.`,
+      m:`Your cognitive intelligence is functional — adequate in broad terms, with specific areas that need deliberate work before you appear before a board.
+
+The most direct test is this: can you complete 50 OIR-format questions — reasoning, numerical, verbal — accurately, in 30 minutes, without rushing? If not, you are not yet ready for Stage 1 screening. The OIR does not reward intelligence in the abstract. It rewards developed cognitive speed applied to specific question types. That is a trainable capability.
+
+The likely gap is not in reasoning ability per se but in one of its applied forms — either numerical processing under time pressure, or verbal reasoning accuracy, or organising ability when multiple variables are present simultaneously. Identify which one is weakest by taking timed practice tests across all three types. Then practise the weakest type daily for eight weeks. The improvement will be measurable.
+
+One important note: in the GTO Group Planning Exercise, your plan will reveal your organising ability directly. A plan that is either too vague to execute or too detailed to brief in three minutes both fail. The intellectual requirement here is precision under time pressure — not depth of knowledge.`,
+      w:`Your cognitive intelligence profile shows gaps that need immediate and sustained attention before you consider attending an SSB board.
+
+I want to be honest with you about what this means. The OIR test in Stage 1 is a filter, not a test of potential. Many exceptional people — people who would make outstanding officers — perform poorly on timed cognitive assessments because they have never developed the specific habits these tests measure. Developed habits, not innate intelligence. The distinction matters because developed habits can be changed.
+
+The work is specific: timed practice, daily, across all three cognitive domains — reasoning, numerical, verbal — for a minimum of twelve weeks. Not occasional revision. Not reading about strategies. Timed practice at increasing difficulty. Track your accuracy and speed separately. Most people who do this consistently see significant improvement within six weeks.
+
+Do not attempt an SSB board until you are reliably clearing timed practice sets. The OIR is binary. Everything else depends on clearing it first.`
+    },
+    EQ:{
+      h:`Your emotional intelligence profile is high — and this is not a soft finding. EQ at this level directly predicts performance across all five days of SSB in ways that are measurable and specific.
+
+In the TAT and SRT psychology tests on Day 2, high EQ shows as stories and responses that are emotionally coherent — where the characters respond to situations in ways that are psychologically plausible, where the responses to stress are appropriate rather than either suppressed or explosive. The SSB psychologist reads these tests specifically for emotional patterns. A high-EQ candidate's psychology tests are internally consistent and reveal someone who processes emotional reality honestly.
+
+In GTO group tasks, EQ shows in the small interactions that most candidates do not notice are being observed — the way you respond when someone cuts across your contribution, the way you acknowledge a weaker member's effort, the way your energy responds to the group's morale. A trained GTO officer sees all of this. It cannot be performed. It is who you are.
+
+In the Personal Interview, EQ shows when you are asked about failure, about weakness, about a time you were wrong. A high-EQ candidate can answer these questions directly and honestly without defensiveness or excessive self-criticism. That quality — emotional honesty under mild pressure — is what the IO is specifically watching for.`,
+      m:`Your emotional intelligence is developing — present in some forms, absent or inconsistent in others. Here is what that pattern looks like at SSB and what to do about it.
+
+The most common form of moderate EQ is this: good self-awareness combined with inadequate regulation. You know what you are feeling. You understand the emotions of others. But under pressure — when a group task goes wrong, when someone challenges you unfairly, when you are tired and frustrated — the regulation does not hold consistently. The awareness stays, but the composure slips.
+
+In SSB terms, this shows as a candidate who is impressive in low-stakes group moments and slightly less impressive in high-stakes ones. The GTO observes both. The psychologist, reading your SRT and TAT responses, will find traces of emotional reactivity in situations that call for equanimity. These are small signals but trained readers see them clearly.
+
+The development work is specific: for the next three months, practise pausing before responding in any emotionally charged interaction. Not pausing to suppress the emotion — pausing to acknowledge it internally and choose your response. This is a trainable habit. It is also precisely what the SRT is designed to assess — how you respond instinctively to pressure. Change the instinct, and the assessment changes.`,
+      w:`Your emotional intelligence profile is below the threshold the SSB requires — and this is actually the most important gap to address, because EQ is both the most consequential and the most developable of the four dimensions.
+
+Here is what low EQ looks like across the five SSB days. In the Day 2 psychology tests, emotional deficits show as TAT stories where characters respond to stress inappropriately — either by suppression (ignoring emotional reality), or by explosion (disproportionate reactions). In group tasks, it shows as a candidate who misreads social signals, responds poorly to conflict, or withdraws when the group energy drops. In the PI, it shows as a candidate who cannot discuss failure or weakness with honest equanimity.
+
+The work required is foundational: begin by building an accurate emotional vocabulary. Most people with low EQ scores describe their emotional states in crude terms — good, bad, stressed, fine. Officers need to operate with emotional precision — identifying not just that they are under pressure but what specific form that pressure is taking and why. Start there. Keep a brief daily record of what you felt and why. This sounds small. It is not. It is the beginning of the most important development work you can do.`
+    },
+    AQ:{
+      h:`Your adversity quotient profile is high — and I can tell you from 25 years of service what this quality means in actual military life.
+
+The early years of an officer's service are, by design, an adversity experience. Operational postings in difficult terrain. Soldiers under your command whose problems become your responsibility. Superiors whose decisions you must implement without always understanding or agreeing with them. Equipment that fails. Plans that break on contact with reality. Physical conditions that test the limits of what you thought your body could sustain.
+
+The officer who thrives in these conditions is not the one who does not suffer. It is the one who continues to function effectively while suffering. Your profile shows this quality. You own outcomes rather than externalise them. You persist without requiring certainty. You maintain functional capacity when conditions are difficult. These are not personality traits that appear only under moderate stress — your responses suggest they hold under genuine pressure.
+
+In SSB terms, your AQ shows in how you respond to the accumulated stress of four days before the Conference. By that point, candidates are physically tired, socially drained, and living with uncertainty about how they have been assessed. The high-AQ candidate wakes up on Day 4 and performs at the same level as Day 1. Assessors notice. It is one of the clearest differentiators between borderline and recommended candidates.`,
+      m:`Your adversity quotient is moderate — functional under normal pressure, but revealing under sustained or unexpected adversity. Here is the specific pattern and what it means for your SSB preparation.
+
+Moderate AQ typically shows as good recovery from setbacks combined with inconsistent performance under sustained stress. You can absorb a single difficult experience — a task failure, a negative interaction, an unexpected obstacle — and bounce back. But when adversity accumulates over days, or when it comes in unfamiliar forms, the performance begins to dip.
+
+In SSB terms, this is a Day 3 and Day 4 risk. The first two days of assessment tend to be manageable for most candidates. By Day 3, cumulative fatigue, social friction, and the uncertainty about how you are being assessed begin to compound. For a candidate with moderate AQ, this is where gaps begin to show — slightly less initiative in the afternoon group task, slightly less engagement in the evening informal period, slightly more visible frustration when things go wrong.
+
+The development work is experiential, not preparational. In the months before your board, deliberately take on challenges that push your capacity — physically demanding activities, leadership roles in unfamiliar contexts, commitments that require sustained effort without immediate reward. Every time you complete something difficult, your AQ threshold rises slightly. Accumulate enough of those experiences, and by the time SSB stresses accumulate on Day 3, your baseline capacity is higher.`,
+      w:`Your adversity quotient is low — and this assessment is giving you the most important information possible, because AQ is the quality most directly predictive of officer performance under operational conditions.
+
+Let me be honest with you about what military service actually requires. It requires you to function effectively when you are exhausted, uncertain, undermanned, under-resourced, and responsible for people who are counting on you. Not for an hour or a day — sometimes for weeks. The officer who cannot sustain performance under those conditions is a liability, regardless of their other qualities.
+
+The SSB assesses AQ across five days specifically because a five-day assessment reveals what a single interview cannot: whether the candidate's qualities hold under accumulated pressure. Low AQ shows progressively over the five days as declining engagement, increasing externalization of blame, visible fatigue effects on decision quality, and reduced initiative in the later tasks.
+
+The development work is the most demanding of the four dimensions. It requires genuinely placing yourself in sustained adversity — not simulated adversity, but real difficulty with real consequences — repeatedly over months. Physical challenge programmes. Leadership of difficult groups. Sustained commitment to goals that require months of effort without external validation. This is not preparation in the conventional sense. It is the actual work.`
+    },
+    SQ:{
+      h:`Your social intelligence profile is strong — and in the context of SSB assessment, this is potentially your most visible quality across the five days.
+
+Social intelligence is the dimension that is hardest to fake and most continuously observable. From the moment you arrive at the SSB centre, your social behaviour is being noted — not formally assessed, but filed. How you interact during registration, during the informal mixing, during meals. By the time formal assessment begins on Day 2, the assessors already have informal observations to compare against your formal performance. For a high-SQ candidate, the informal and formal observations are consistent. That consistency is itself a data point.
+
+In the GTO tasks, your specific strengths — reading group dynamics accurately, influencing without coercion, facilitating cooperation rather than demanding it — are the qualities that assessors are specifically trained to identify and credit. Not the loudest voice in the group. The most useful one.
+
+What your profile tells an experienced assessor is this: this candidate will function in the field. They will manage the social complexity of leading soldiers from every corner of India, with every kind of background and temperament, in conditions ranging from routine to extreme. That capacity is not common. It is not teachable in a coaching centre. It is either there or it is not. In your case, it is there.`,
+      m:`Your social intelligence is developing — you have the basic social capability, but it is not yet at the level where it becomes a positive differentiator in your SSB assessment.
+
+The distinction that matters is between transactional social behaviour and genuine social intelligence. Transactional social behaviour is following the social rules — being polite, cooperating when asked, not undermining others. Genuine social intelligence is actively serving the group's success — anticipating where friction will emerge, helping others contribute their best, adjusting your communication specifically for each individual rather than using a single approach for everyone.
+
+The SSB GTO observes both. A candidate with transactional social behaviour passes unremarked. A candidate with genuine social intelligence is noted and credited. At present, your profile suggests you are in the transactional range — not a liability, but not an asset.
+
+The development work is the most interesting of the four: it requires expanding your social range. Spend the next months deliberately engaging with people significantly different from you — different backgrounds, different temperaments, different worldviews. Not to practise tolerance. To practise genuine curiosity. The candidate who finds other people genuinely interesting, regardless of how different they are, is the candidate with officer-grade social intelligence.`,
+      w:`Your social intelligence profile needs significant development — and I want to address this directly because it is the area most difficult to address through conventional preparation.
+
+An officer's role is fundamentally social. You lead people. Not abstract people — specific people with specific backgrounds, specific fears, specific strengths, specific ways of communicating. Your ability to read them accurately, adapt to them effectively, and inspire genuine cooperation from them is not a secondary quality. It is the primary one.
+
+Low social intelligence at the SSB level does not mean you are cold or unfriendly. It typically means your social range is narrow — that you function well with people similar to you and significantly less well with people different from you. In a military unit drawing from across India, that range is not sufficient.
+
+The SSB will observe your social intelligence across every single interaction for five days. There is no stage of the assessment where it is not relevant. In the group tasks, in the meals, in the informal moments, in the conference — social intelligence or its absence is continuously visible.
+
+The only real development path is experiential: place yourself in sustained social situations significantly outside your comfort range, over months, with genuine engagement rather than polite endurance. The military — in its diversity of people, backgrounds, and circumstances — will demand this of you for your entire career. Begin building the capacity now.`
+    }
+  };
+  const lvl=pct>=75?'h':pct>=52?'m':'w';
+  return texts[id][lvl];
+}
+
+function genReport(){
+  const iq=score('IQ'), eq=score('EQ'), aq=score('AQ'), sq=score('SQ');
+  const overall=Math.round((iq.pct+eq.pct+aq.pct+sq.pct)/4);
+
+  let verdict,vclass;
+  if(overall>=72){verdict='Strong Intelligence Profile — Officer-Ready Foundations';vclass='flag-s';}
+  else if(overall>=54){verdict='Developing Profile — Targeted Work Required';vclass='flag-m';}
+  else{verdict='Foundational Gaps — Sustained Development Needed';vclass='flag-w';}
+
+  document.getElementById('testSections').classList.add('hidden');
+  const rDiv=document.getElementById('report');
+  rDiv.classList.remove('hidden');
+
+  rDiv.innerHTML=`
+    <div class="rpt-cover">
+      <div class="hdr-lbl" style="margin-bottom:.4rem">INTELLIGENCE PROFILE REPORT</div>
+      <h2>IQ · EQ · AQ · SQ</h2>
+      <div class="rpt-name">${name}</div>
+      <div class="rpt-date">LEAD BY DHARMA · ${new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'}).toUpperCase()}</div>
+    </div>
+    <div class="rpt-sec" style="text-align:center;padding:1.5rem">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--ash);margin-bottom:.4rem">OVERALL PROFILE</div>
+      <div style="font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:var(--navy)">${overall}<span style="font-size:1.2rem;color:var(--ash)">%</span></div>
+      <div class="qs-flag ${vclass}" style="font-size:.75rem;padding:.25rem .8rem;margin-top:.5rem">${verdict}</div>
+    </div>
+    <div class="quad-scores">
+      ${[
+        {id:'IQ',label:'Cognitive Intelligence',s:iq,cls:'qs-iq'},
+        {id:'EQ',label:'Emotional Intelligence',s:eq,cls:'qs-eq'},
+        {id:'AQ',label:'Adversity Quotient',s:aq,cls:'qs-aq'},
+        {id:'SQ',label:'Social Intelligence',s:sq,cls:'qs-sq'},
+      ].map(({id,label,s,cls})=>{
+        const [fc,fl]=flag(s.pct);
+        return`<div class="qs-card ${cls}">
+          <div class="qs-lbl">${id} — ${label}</div>
+          <div class="qs-score">${s.pct}<span style="font-size:1rem;font-family:'JetBrains Mono',monospace">%</span></div>
+          <div class="qs-bar-track"><div class="qs-bar-fill" style="width:0%" data-w="${s.pct}%"></div></div>
+          <div class="qs-flag ${fc}">${fl}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    ${['IQ','EQ','AQ','SQ'].map(id=>{
+      const s=score(id);
+      const d=DOMAINS.find(x=>x.id===id);
+      return`<div class="rpt-sec">
+        <h3>${d.label} — ${s.pct}%</h3>
+        <p>${analysis(id,s.pct)}</p>
+      </div>`;
+    }).join('')}
+    <div class="rpt-sec">
+      <h3>What This Means for Your SSB Preparation</h3>
+      <p>The four dimensions of this profile map directly onto the SSB's four OLQ factor clusters. Cognitive Intelligence (IQ) underpins Factor I — Planning and Organising. Emotional Intelligence (EQ) and Social Intelligence (SQ) together constitute Factor II and Factor III — Social Adjustment and Social Effectiveness. Adversity Quotient (AQ) is the foundation of Factor IV — Dynamism.</p>
+      <p>A candidate who is strong across all four dimensions will produce a consistent, authentic profile across all five days of SSB — in the psychology tests, in GTO tasks, and in the personal interview. A candidate who is strong in one dimension but weak in another will show inconsistency that trained assessors will detect.</p>
+      <div class="highlight">"The SSB does not select the most intelligent candidate or the most resilient one. It selects the one who is most authentically and consistently ready to lead." — Col Aniruddha Rao HR (Retd)</div>
+      <p>For structured mentorship that develops all four dimensions over 3+ months: <strong>leadbydharma.com</strong></p>
+    </div>
+
+    <div class="rpt-sec">
+      <h3>What Your Profile Means for SSB</h3>
+      <p>The four dimensions measured here map directly onto the SSB's four OLQ Factor clusters, which govern assessment across every stage of the five-day process.</p>
+      <p><strong>IQ → Factor I: Planning &amp; Organising.</strong> Feeds directly into OIR performance at Stage 1 screening, the Group Planning Exercise in GTO Days 3-4, and the intellectual quality of your Personal Interview. If this is your weakest dimension, Stage 1 is your primary risk.</p>
+      <p><strong>EQ → Factors II &amp; III: Social Adjustment &amp; Social Effectiveness.</strong> The single most continuously observable quality across all five days. Shapes your TAT and SRT psychology responses on Day 2, your GTO group behaviour on Days 3-4, and the emotional honesty of your Personal Interview on Days 4-5. Cannot be performed consistently across five days &mdash; SSB psychologists are trained to detect sustained performance.</p>
+      <p><strong>AQ → Factor IV: Dynamism.</strong> The quality that separates a Day 1 impression from a Day 4-5 assessment. High AQ candidates maintain performance quality as the five days accumulate. Low AQ candidates decline visibly. The Conference, where all three assessors compare independent observations, captures this trajectory precisely.</p>
+      <p><strong>SQ → Factor III: Social Effectiveness (Group Leadership dimension).</strong> Directly assessed in Group Discussion, Group Planning Exercise, Progressive Group Task, Half Group Task, and Final Group Task across GTO Days 3-4. The GTO observes 8-10 candidates simultaneously. The candidate with high SQ is the one who serves the group's success. That candidate is visible to a trained observer. Always.</p>
+    </div>
+    <div class="rpt-sec" style="border:2px solid var(--gold);background:rgba(201,168,76,.04)">
+      <h3>A Personal Note from Col Rao</h3>
+      <p>I built this assessment because I believe India's best young people deserve to understand themselves honestly before they stand before a board. Not to perform better. To be more real.</p>
+      <p>If your profile is strong across all four dimensions: you have the foundations. The next step is structured mentorship that stress-tests those qualities under conditions this instrument cannot simulate. The Lead By Dharma programme is designed for exactly this stage. Apply at leadbydharma.com.</p>
+      <p>If your profile shows meaningful gaps: they are bridgeable, but not through preparation in the conventional sense. They require genuine personal development over six to twelve months. This is the work the programme is built to support &mdash; not coaching, not mock tests, but honest and sustained character development with structured feedback.</p>
+      <p>If your profile shows significant gaps: read the analysis above carefully. The most important thing you can do is not register for an SSB coaching programme. It is to begin the foundational work described in this report. When you are ready for mentorship, apply. I will tell you honestly where you stand.</p>
+      <div style="background:var(--cream);border-left:3px solid var(--gold);padding:.7rem 1rem;margin-top:1rem;border-radius:0 2px 2px 0">
+        <strong>leadbydharma.com</strong> &middot; leadbydharma@gmail.com &middot; +91 98789 30879<br>
+        <em style="font-size:.88rem">Entry by assessment, not payment. I read every application personally.</em>
+      </div>
+    </div>
+    <div style="text-align:center;padding:1.2rem;background:var(--cream2);border-radius:2px;margin:.9rem 0">
+      <div style="font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--navy);font-style:italic;margin-bottom:.4rem">
+        &ldquo;The SSB does not select the most prepared candidate. It selects the most real one.&rdquo;
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--ash);letter-spacing:.1em">
+        &mdash; Colonel Aniruddha Rao HR (Retd.) &middot; Maratha Light Infantry &middot; Lead By Dharma
+      </div>
+    </div>
+    <div class="lgl-ftr">
+      <strong>Legal Notice:</strong> This report is produced by the Lead By Dharma Intelligence Assessment, an independent educational tool created by Colonel Aniruddha Rao HR (Retd.), Maratha Light Infantry. It is provided for personal educational and self-development purposes only. It is not a clinical psychological assessment, does not constitute professional advice, and carries no guarantee of accuracy or of any particular outcome in any selection process. Not affiliated with or endorsed by the SSB, Ministry of Defence, or the Indian Armed Forces. All responses were processed locally in your browser and were not transmitted to any server. © 2026 Lead By Dharma · leadbydharma.com
+    </div>
+    <div style="text-align:center;padding:1.2rem 0">
+      <button class="print-btn" onclick="window.print()">Print / Save Report</button>
+    </div>
+  `;
+
+  window.scrollTo({top:0,behavior:'smooth'});
+  document.getElementById('pFill').style.width='100%';
+  document.getElementById('pPct').textContent='100%';
+  setTimeout(()=>{
+    document.querySelectorAll('.qs-bar-fill[data-w]').forEach(b=>{
+      b.style.width=b.dataset.w;
+    });
+  },200);
+}
+</script>
+</body>
+</html>

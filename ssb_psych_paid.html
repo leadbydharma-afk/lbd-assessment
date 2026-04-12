@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lead By Dharma — SSB Psychology Practice Suite</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{--navy:#1a3a5c;--navy2:#0d1f35;--gold:#c9a84c;--gold2:#e8c87a;--cream:#faf5e8;--cream2:#f0e8d0;--ink:#1a1a14;--ash:#7a7a6a;--green:#1a5c2e;--red:#8b1a1a;--amber:#8b5c00;--white:#ffffff;--border:rgba(26,58,92,.12)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Crimson Pro,Georgia,serif;background:var(--cream);color:var(--ink);min-height:100vh}
+.hdr{background:var(--navy2);padding:2rem 1.5rem 1.5rem;text-align:center;border-bottom:4px solid var(--gold);position:relative}
+.hdr::before{content:'';position:absolute;top:0;left:0;width:6px;height:100%;background:var(--gold)}
+.hdr-lbl{font-family:JetBrains Mono,monospace;font-size:.65rem;color:var(--gold);letter-spacing:.25em;text-transform:uppercase;margin-bottom:.6rem}
+.hdr h1{font-family:Playfair Display,serif;font-size:clamp(1.6rem,4vw,2.4rem);color:var(--white);margin-bottom:.4rem}
+.hdr h1 span{color:var(--gold)}
+.hdr-sub{font-size:.95rem;color:#aabbcc;font-style:italic}
+.wrap{max-width:820px;margin:0 auto;padding:1.5rem 1.2rem 4rem}
+.btn{font-family:Playfair Display,serif;font-size:.95rem;padding:.7rem 1.8rem;border:none;cursor:pointer;border-radius:2px;transition:all .2s}
+.btn-primary{background:var(--navy);color:var(--gold);border:1px solid var(--navy)}
+.btn-primary:hover{background:var(--navy2)}
+.btn-outline{background:transparent;color:var(--navy);border:1px solid var(--navy)}
+.btn-outline:hover{background:var(--cream2)}
+.btn-sm{font-size:.82rem;padding:.5rem 1.2rem}
+.menu-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin:1.5rem 0}
+.menu-card{background:var(--white);border:1.5px solid var(--border);border-radius:3px;padding:1.4rem;cursor:pointer;transition:all .2s;text-align:center}
+.menu-card:hover{border-color:var(--navy);box-shadow:0 2px 12px rgba(26,58,92,.1)}
+.mc-icon{font-size:2rem;margin-bottom:.6rem}
+.mc-title{font-family:Playfair Display,serif;font-size:1.1rem;color:var(--navy);font-weight:600;margin-bottom:.3rem}
+.mc-desc{font-size:.82rem;color:var(--ash)}
+.set-sel{display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem 0}
+.set-btn{font-family:JetBrains Mono,monospace;font-size:.72rem;padding:.35rem .75rem;border:1.5px solid var(--border);border-radius:2px;background:var(--cream);cursor:pointer;color:var(--navy);transition:all .15s}
+.set-btn:hover,.set-btn.active{background:var(--navy);color:var(--gold);border-color:var(--navy)}
+.timer-bar{background:var(--navy);padding:.5rem 1.5rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+.timer-lbl{font-family:JetBrains Mono,monospace;font-size:.65rem;color:var(--gold)}
+.timer-val{font-family:JetBrains Mono,monospace;font-size:1.1rem;color:var(--white);font-weight:500}
+.timer-val.warn{color:#ff9944}
+.timer-val.urgent{color:#ff4444;animation:pulse .5s infinite alternate}
+@keyframes pulse{from{opacity:1}to{opacity:.5}}
+.srt-intro{background:var(--navy);color:var(--cream);padding:1rem 1.3rem;border-radius:2px;margin-bottom:1rem;font-size:.88rem;line-height:1.7;font-style:italic}
+.srt-q{background:var(--white);border:1px solid var(--border);border-radius:3px;padding:1.2rem 1.4rem;margin-bottom:.8rem}
+.srt-num{font-family:JetBrains Mono,monospace;font-size:.65rem;color:var(--ash);margin-bottom:.4rem}
+.srt-sit{font-size:.98rem;color:var(--ink);line-height:1.55;font-weight:500;margin-bottom:.7rem}
+.srt-ans{width:100%;padding:.55rem .8rem;font-family:Crimson Pro,serif;font-size:.95rem;border:1.5px solid var(--border);border-radius:2px;background:var(--cream);color:var(--ink);outline:none;resize:vertical;min-height:52px;transition:border-color .2s}
+.srt-ans:focus{border-color:var(--navy)}
+.srt-ans.filled{border-left:3px solid var(--green)}
+.wat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem;margin-bottom:1rem}
+.wat-item{background:var(--white);border:1px solid var(--border);border-radius:3px;padding:.9rem 1rem}
+.wat-word{font-family:Playfair Display,serif;font-size:1.1rem;font-weight:600;color:var(--navy);margin-bottom:.4rem}
+.wat-inp{width:100%;padding:.4rem .6rem;font-family:Crimson Pro,serif;font-size:.9rem;border:1.5px solid var(--border);border-radius:2px;background:var(--cream);color:var(--ink);outline:none;transition:border-color .2s}
+.wat-inp:focus{border-color:var(--navy)}
+.wat-inp.filled{border-left:2px solid var(--green)}
+.wat-num{font-family:JetBrains Mono,monospace;font-size:.62rem;color:var(--ash);margin-top:.2rem}
+.sdt-intro{background:var(--cream2);border-left:4px solid var(--gold);padding:1rem 1.3rem;margin-bottom:1rem;font-size:.9rem;line-height:1.7;border-radius:0 2px 2px 0}
+.sdt-field{margin-bottom:1.2rem}
+.sdt-label{font-family:Playfair Display,serif;font-size:1rem;font-weight:600;color:var(--navy);margin-bottom:.4rem}
+.sdt-sublbl{font-size:.82rem;color:var(--ash);font-style:italic;margin-bottom:.5rem}
+.sdt-ta{width:100%;padding:.7rem .9rem;font-family:Crimson Pro,serif;font-size:.95rem;border:1.5px solid var(--border);border-radius:2px;background:var(--cream);color:var(--ink);outline:none;resize:vertical;min-height:80px;line-height:1.65;transition:border-color .2s}
+.sdt-ta:focus{border-color:var(--navy)}
+.rpt-hdr{background:var(--navy2);padding:1.5rem;text-align:center;border-bottom:4px solid var(--gold);margin-bottom:1.2rem;position:relative}
+.rpt-hdr::before{content:'';position:absolute;top:0;left:0;width:6px;height:100%;background:var(--gold)}
+.rpt-box{background:var(--white);border:1px solid var(--border);border-radius:3px;padding:1.3rem 1.5rem;margin:.9rem 0}
+.rpt-box h3{font-family:Playfair Display,serif;font-size:1.05rem;color:var(--navy);margin-bottom:.8rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.rpt-box p{font-size:.92rem;color:#444;line-height:1.7;margin-bottom:.6rem}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem}
+.stat-row:last-child{border-bottom:none}
+.stat-val{font-family:JetBrains Mono,monospace;font-size:.82rem;color:var(--navy);font-weight:600}
+.q-stat{display:flex;gap:.5rem;align-items:flex-start;padding:.4rem 0;border-bottom:1px solid var(--border)}
+.q-stat:last-child{border-bottom:none}
+.q-s-num{font-family:JetBrains Mono,monospace;font-size:.65rem;color:var(--ash);min-width:28px;padding-top:.15rem}
+.q-s-sit{font-size:.85rem;color:var(--ink);flex:1;font-style:italic}
+.q-s-ans{font-size:.85rem;color:var(--navy);font-weight:500;min-width:120px;text-align:right}
+.q-s-blank{font-size:.8rem;color:var(--red);font-style:italic}
+.disc{background:linear-gradient(135deg,var(--navy2),var(--navy));border-left:4px solid var(--gold);padding:1rem 1.3rem;color:#c8d8e8;font-size:.85rem;line-height:1.7;margin:1.2rem 0;border-radius:0 2px 2px 0}
+.lgl-ftr{background:#f0ece0;border-top:1px solid #d4c8a8;padding:1rem 1.5rem;font-size:.76rem;color:#6a5a40;line-height:1.7;text-align:center;margin-top:1.5rem}
+.ftr{text-align:center;padding:1.5rem;font-family:JetBrains Mono,monospace;font-size:.62rem;color:var(--ash);letter-spacing:.1em;border-top:1px solid var(--border);margin-top:1.5rem}
+.hidden{display:none}
+@media(max-width:560px){.menu-grid{grid-template-columns:1fr}.wat-grid{grid-template-columns:1fr 1fr}}
+
+  /* PRICING STORE */
+  .store-hero{background:var(--navy2);border:2px solid var(--gold);border-radius:3px;padding:2rem 1.8rem;text-align:center;margin:1.5rem 0;position:relative}
+  .store-hero::before{content:'';position:absolute;top:0;left:0;width:6px;height:100%;background:var(--gold);border-radius:3px 0 0 3px}
+  .store-title{font-family:Playfair Display,serif;font-size:1.5rem;color:var(--white);margin-bottom:.3rem}
+  .store-sub{font-size:.9rem;color:#aabbcc;font-style:italic;margin-bottom:1.2rem}
+  .what-included{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.7rem;margin:1rem 0 1.5rem}
+  .wi-card{background:rgba(255,255,255,.07);border:1px solid rgba(201,168,76,.3);border-radius:2px;padding:.75rem .9rem;text-align:center}
+  .wi-icon{font-size:1.4rem;margin-bottom:.3rem}
+  .wi-title{font-family:Playfair Display,serif;font-size:.95rem;color:var(--gold);font-weight:600}
+  .wi-desc{font-size:.75rem;color:#aabbcc;margin-top:.2rem}
+  .pricing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.75rem;margin:1.2rem 0}
+  .price-card{background:var(--white);border:2px solid var(--border);border-radius:3px;padding:1.1rem 1rem;cursor:pointer;transition:all .2s;text-align:center;position:relative}
+  .price-card:hover{border-color:var(--navy);box-shadow:0 3px 14px rgba(26,58,92,.12)}
+  .price-card.selected{border-color:var(--gold);background:rgba(201,168,76,.06)}
+  .price-card.best-value{border-color:var(--gold)}
+  .bv-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--navy);font-family:JetBrains Mono,monospace;font-size:.58rem;font-weight:600;padding:.15rem .55rem;border-radius:20px;white-space:nowrap;letter-spacing:.06em}
+  .pc-sets{font-family:JetBrains Mono,monospace;font-size:.65rem;color:var(--ash);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem}
+  .pc-label{font-family:Playfair Display,serif;font-size:.9rem;color:var(--navy);font-weight:600;margin-bottom:.5rem}
+  .pc-price{font-family:Playfair Display,serif;font-size:1.6rem;font-weight:700;color:var(--navy);line-height:1}
+  .pc-orig{font-size:.75rem;color:var(--ash);text-decoration:line-through;margin-top:.1rem}
+  .pc-save{font-family:JetBrains Mono,monospace;font-size:.62rem;color:var(--green);margin-top:.2rem;font-weight:600}
+  .pc-per{font-size:.72rem;color:var(--ash);margin-top:.3rem}
+  .order-summary{background:var(--cream2);border:1px solid var(--border);border-radius:3px;padding:1.2rem 1.4rem;margin:1rem 0}
+  .os-row{display:flex;justify-content:space-between;align-items:center;padding:.3rem 0;font-size:.92rem}
+  .os-total{font-family:Playfair Display,serif;font-size:1.3rem;font-weight:700;color:var(--navy)}
+  .os-save-tag{font-family:JetBrains Mono,monospace;font-size:.65rem;color:var(--green);background:rgba(26,92,46,.1);padding:.15rem .5rem;border-radius:20px}
+  .razorpay-note{background:rgba(26,58,92,.05);border:1px solid var(--border);border-radius:2px;padding:.8rem 1rem;font-size:.8rem;color:var(--ash);line-height:1.65;margin:.8rem 0}
+  .razorpay-note strong{color:var(--navy)}
+  .sets-list{font-size:.82rem;color:var(--ash);margin:.4rem 0 .8rem;font-style:italic}
+  /* UNLOCK GATE */
+  .unlock-gate{background:var(--cream2);border:2px dashed rgba(201,168,76,.5);border-radius:3px;padding:2rem;text-align:center;margin:1.5rem 0}
+  .ug-icon{font-size:2.5rem;margin-bottom:.6rem}
+  .ug-title{font-family:Playfair Display,serif;font-size:1.2rem;color:var(--navy);margin-bottom:.4rem}
+  .ug-sub{font-size:.88rem;color:var(--ash);font-style:italic;margin-bottom:1rem}
+  /* DEMO BANNER */
+  .demo-banner{background:rgba(139,92,0,.08);border:1px solid rgba(139,92,0,.25);border-radius:2px;padding:.6rem 1rem;font-family:JetBrains Mono,monospace;font-size:.68rem;color:var(--amber);text-align:center;margin:.6rem 0}
+  @media(max-width:560px){.what-included{grid-template-columns:1fr}.pricing-grid{grid-template-columns:1fr 1fr}}
+
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-lbl">Lead By Dharma — SSB Psychology Practice</div>
+  <h1>SSB Day 2 <span>Psychology Practice Suite</span></h1>
+  <div class="hdr-sub">SRT · WAT · SDT — 7 sets each · Timed · Indicative report</div>
+</div>
+<div class="wrap">
+<div class="disc">
+  <strong style="color:var(--gold2)">Practice tool — not an official SSB test.</strong>
+  This suite replicates the format of SSB Day 2 psychology tests for practice only.
+  It is an independent educational tool by Lead By Dharma and is not affiliated with,
+  endorsed by, or connected to the Services Selection Board, the Ministry of Defence,
+  or the Indian Armed Forces. Results are indicative and for personal development only.
+  © 2026 Lead By Dharma · leadbydharma.com
+</div>
+
+<!-- STORE PAGE -->
+<div id="storePage">
+  <div class="store-hero">
+    <div class="store-title">SSB Psychology Practice Suite</div>
+    <div class="store-sub">One set = one SRT + one WAT + one SDT &middot; More sets, bigger savings</div>
+    <div class="what-included">
+      <div class="wi-card"><div class="wi-icon">&#9889;</div><div class="wi-title">SRT</div><div class="wi-desc">60 situations &middot; 30 min</div></div>
+      <div class="wi-card"><div class="wi-icon">&#128161;</div><div class="wi-title">WAT</div><div class="wi-desc">60 words &middot; 15 min</div></div>
+      <div class="wi-card"><div class="wi-icon">&#129391;</div><div class="wi-title">SDT</div><div class="wi-desc">5 sections &middot; 15 min</div></div>
+    </div>
+  </div>
+  <div id="pricingGrid" class="pricing-grid"></div>
+  <div class="order-summary" id="orderSummary" style="display:none">
+    <div class="os-row">
+      <span style="font-weight:600;font-family:Playfair Display,serif;color:var(--navy)">Your Selection</span>
+      <span id="osSetsLabel" style="font-family:JetBrains Mono,monospace;font-size:.75rem;color:var(--navy)"></span>
+    </div>
+    <div class="sets-list" id="osSetsDetail"></div>
+    <div class="os-row">
+      <span style="color:var(--ash)">Original price</span>
+      <span id="osOrig" style="color:var(--ash);text-decoration:line-through;font-family:JetBrains Mono,monospace;font-size:.82rem"></span>
+    </div>
+    <div class="os-row" id="osSaveRow" style="display:none">
+      <span style="color:var(--green)">You save</span>
+      <span id="osSave" class="os-save-tag"></span>
+    </div>
+    <div class="os-row" style="border-top:1px solid var(--border);padding-top:.6rem;margin-top:.3rem">
+      <span style="font-family:Playfair Display,serif;font-size:1rem;font-weight:600;color:var(--navy)">Total</span>
+      <span class="os-total" id="osTotal"></span>
+    </div>
+    <div class="razorpay-note">
+      <strong>Payment via Razorpay</strong> &mdash; UPI, Net Banking, Cards, Wallets accepted.<br>
+      After payment you will receive an <strong>access code by email</strong> within minutes. Enter the code below to unlock your sets.<br>
+      <em>Need help? WhatsApp: +91 98789 30879</em>
+    </div>
+    <div style="text-align:center;margin-top:1rem">
+      <button class="btn btn-primary" onclick="proceedToPayment()" style="font-size:1rem;padding:.85rem 2.5rem">Proceed to Payment &#8594;</button>
+    </div>
+  </div>
+  <div class="demo-banner" id="demoBanner">
+    Want to try before you buy? &nbsp;<button onclick="launchDemo()" style="background:none;border:1px solid var(--amber);color:var(--amber);font-family:JetBrains Mono,monospace;font-size:.65rem;padding:.2rem .6rem;border-radius:2px;cursor:pointer">Try Free Demo (Set 1)</button>
+  </div>
+</div>
+
+<!-- UNLOCK GATE -->
+<div id="unlockGate" class="hidden">
+  <div class="unlock-gate">
+    <div class="ug-icon">&#128274;</div>
+    <div class="ug-title">Enter Your Access Code</div>
+    <div class="ug-sub">Check your email for the code sent after payment. WhatsApp +91 98789 30879 if you need help.</div>
+    <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:.8rem">
+      <input class="inp" id="accessCodeInput" type="text" placeholder="Enter access code..."
+        style="max-width:260px;text-align:center;font-family:JetBrains Mono,monospace;letter-spacing:.15em;text-transform:uppercase"
+        onkeydown="if(event.key==='Enter') redeemCode()"/>
+      <button class="btn btn-primary" onclick="redeemCode()">Unlock &#8594;</button>
+    </div>
+    <div id="codeError" style="color:var(--red);font-family:JetBrains Mono,monospace;font-size:.72rem;margin-top:.5rem;display:none">Invalid or already used code. Contact leadbydharma@gmail.com</div>
+    <div style="margin-top:.8rem"><button class="btn btn-outline" style="font-size:.82rem;padding:.4rem 1rem" onclick="goStore()">&#8592; Back to store</button></div>
+  </div>
+</div>
+
+
+<div id="mainMenu" class="hidden">
+  <div style="background:rgba(26,92,46,.07);border:1px solid rgba(26,92,46,.2);border-radius:2px;padding:.6rem 1rem;font-family:JetBrains Mono,monospace;font-size:.7rem;color:var(--green);margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
+    <span id="unlockedLabel">&#10003; Sets unlocked</span>
+    <button onclick="goStore()" style="background:none;border:1px solid rgba(26,92,46,.3);color:var(--green);font-family:JetBrains Mono,monospace;font-size:.62rem;padding:.15rem .5rem;border-radius:2px;cursor:pointer">Buy more sets</button>
+  </div>
+  <h2 style="font-family:Playfair Display,serif;font-size:1.3rem;color:var(--navy);margin:0 0 .4rem">Select Your Practice Test</h2>
+  <p style="font-size:.88rem;color:var(--ash);margin-bottom:1rem;font-style:italic">Each test uses one set from your unlocked sets.</p>
+  <div id="setUsageInfo" style="font-size:.8rem;color:var(--ash);font-style:italic;margin-bottom:.8rem;padding:.5rem .7rem;background:var(--cream2);border-radius:2px"></div>
+  <div class="menu-grid">
+    <div class="menu-card" onclick="selectTest('SRT')">
+      <div class="mc-icon">&#9889;</div>
+      <div class="mc-title">SRT</div>
+      <div class="mc-desc">Situation Reaction Test<br>60 situations &middot; 30 min<br>React — don't deliberate</div>
+    </div>
+    <div class="menu-card" onclick="selectTest('WAT')">
+      <div class="mc-icon">&#128161;</div>
+      <div class="mc-title">WAT</div>
+      <div class="mc-desc">Word Association Test<br>60 words &middot; 15 min<br>First thought wins</div>
+    </div>
+    <div class="menu-card" onclick="selectTest('SDT')">
+      <div class="mc-icon">&#129391;</div>
+      <div class="mc-title">SDT</div>
+      <div class="mc-desc">Self Description Test<br>5 sections &middot; 15 min<br>Be ruthlessly honest</div>
+    </div>
+  </div>
+</div>
+
+<div id="testArea" class="hidden"></div>
+<div id="reportArea" class="hidden"></div>
+
+<div class="ftr">
+  &copy; 2026 LEAD BY DHARMA &middot; leadbydharma.com &middot; Col Aniruddha Rao HR (Retd) &middot; Maratha Light Infantry<br>
+  <span style="font-size:.58rem;opacity:.7">Educational practice tool only &middot; Not an official SSB test &middot; Not affiliated with SSB or MoD</span>
+</div>
+</div>
+
+<script>
+// =====================================================
+// PRICING & ACCESS CONTROL
+// =====================================================
+var PRICING = [
+  {sets:1, price:149, orig:149, save:0, pct:0, label:"Single Set", bestValue:false},
+  {sets:2, price:289, orig:298, save:9, pct:3, label:"Duo Pack", bestValue:false},
+  {sets:3, price:399, orig:447, save:48, pct:11, label:"Triple Pack", bestValue:false},
+  {sets:4, price:499, orig:596, save:97, pct:16, label:"Quad Pack", bestValue:false},
+  {sets:5, price:599, orig:745, save:146, pct:20, label:"Five Set Pack", bestValue:false},
+  {sets:6, price:679, orig:894, save:215, pct:24, label:"Six Set Pack", bestValue:false},
+  {sets:7, price:729, orig:1043, save:314, pct:30, label:"Complete Pack (All 7)", bestValue:true}
+];
+
+// Access codes — in production these should be server-validated
+// Format: CODE -> sets unlocked
+// YOU manage these codes and email them after Razorpay payment confirmation
+// Example codes below — replace with your actual code list
+// Code format: LBD-XXXX-N (last digit = number of sets)
+var VALID_CODES = {
+  // OWNER MASTER CODE — full access, never expires, never used-up
+  "COLRAO-OWNER": {sets:7, used:false, owner:true},
+  // DEMO codes (always valid, set 1 only)
+  "DEMO-FREE-1": {sets:1, used:false, demo:true},
+  // Production codes — generate and manage these yourself
+  // Add new codes here as you sell packs
+  // "LBD-A1B2-1": {sets:1, used:false},
+  // "LBD-C3D4-3": {sets:3, used:false},
+  // "LBD-E5F6-7": {sets:7, used:false},
+};
+
+var selectedPlan = null;
+var unlockedSets = 0;
+var setsUsed = 0;   // tracks how many complete sets (SRT+WAT+SDT) have been used
+var isDemoMode = false;
+
+// ── RENDER PRICING GRID ──────────────────────────────────────
+function renderPricingGrid() {
+  var grid = document.getElementById("pricingGrid");
+  var html = "";
+  for (var i = 0; i < PRICING.length; i++) {
+    var p = PRICING[i];
+    var perSet = Math.round(p.price / p.sets);
+    html += '<div class="price-card' + (p.bestValue ? " best-value" : "") + '" id="pc_' + p.sets + '" onclick="selectPlan(' + p.sets + ')">'
+      + (p.bestValue ? '<div class="bv-badge">BEST VALUE</div>' : "")
+      + '<div class="pc-sets">' + p.sets + (p.sets === 1 ? " SET" : " SETS") + '</div>'
+      + '<div class="pc-label">' + p.label + '</div>'
+      + '<div class="pc-price">&#8377;' + p.price + '</div>'
+      + (p.save > 0 ? '<div class="pc-orig">&#8377;' + p.orig + '</div><div class="pc-save">SAVE &#8377;' + p.save + ' (' + p.pct + '% off)</div>' : '<div class="pc-save" style="visibility:hidden">-</div>')
+      + '<div class="pc-per">&#8377;' + perSet + ' per set</div>'
+      + '</div>';
+  }
+  grid.innerHTML = html;
+}
+
+function selectPlan(sets) {
+  selectedPlan = sets;
+  // Highlight selected
+  for (var i = 0; i < PRICING.length; i++) {
+    var el = document.getElementById("pc_" + PRICING[i].sets);
+    if (el) el.classList.toggle("selected", PRICING[i].sets === sets);
+  }
+  // Update order summary
+  var plan = null;
+  for (var i = 0; i < PRICING.length; i++) {
+    if (PRICING[i].sets === sets) { plan = PRICING[i]; break; }
+  }
+  if (!plan) return;
+  document.getElementById("orderSummary").style.display = "block";
+  document.getElementById("osSetsLabel").textContent = plan.sets + " set" + (plan.sets > 1 ? "s" : "") + " selected";
+  // List which sets
+  var setNames = [];
+  for (var i = 1; i <= plan.sets; i++) setNames.push("Set " + i);
+  document.getElementById("osSetsDetail").textContent = "Includes: " + setNames.join(", ") + " (SRT + WAT + SDT each)";
+  document.getElementById("osOrig").textContent = "₹" + plan.orig;
+  document.getElementById("osTotal").textContent = "₹" + plan.price;
+  var saveRow = document.getElementById("osSaveRow");
+  if (plan.save > 0) {
+    saveRow.style.display = "flex";
+    document.getElementById("osSave").textContent = "₹" + plan.save + " (" + plan.pct + "% off)";
+  } else {
+    saveRow.style.display = "none";
+  }
+}
+
+function proceedToPayment() {
+  if (!selectedPlan) { alert("Please select a pack first."); return; }
+  var plan = null;
+  for (var i = 0; i < PRICING.length; i++) {
+    if (PRICING[i].sets === selectedPlan) { plan = PRICING[i]; break; }
+  }
+  // Razorpay Payment Link — replace YOUR_RAZORPAY_LINK with your actual Razorpay Payment Page URL
+  // Create a Razorpay Payment Page at razorpay.com/payment-pages
+  // Set up dynamic pricing OR create one page per pack
+  var razorpayLinks = {
+    1: "https://rzp.io/l/lbd-ssb-1set",    // Replace with your actual Razorpay links
+    2: "https://rzp.io/l/lbd-ssb-2sets",
+    3: "https://rzp.io/l/lbd-ssb-3sets",
+    4: "https://rzp.io/l/lbd-ssb-4sets",
+    5: "https://rzp.io/l/lbd-ssb-5sets",
+    6: "https://rzp.io/l/lbd-ssb-6sets",
+    7: "https://rzp.io/l/lbd-ssb-7sets"
+  };
+  var link = razorpayLinks[selectedPlan];
+  // Show instruction + show unlock gate
+  var msg = "You will be taken to the payment page for the " + plan.label + " (&#8377;" + plan.price + ")."
+    + "\n\nAfter payment, you will receive an access code by email within a few minutes."
+    + "\n\nEnter the code on the next screen to unlock your sets."
+    + "\n\nClick OK to go to the payment page.";
+  if (confirm("Pack: " + plan.label + " - Rs." + plan.price + ". After payment you will receive an access code by email. Click OK to proceed to payment.")) {
+    // In production: window.open(link, "_blank");
+    // Show unlock gate with instruction
+    showUnlockGate("Payment page would open here. After completing payment, enter your access code below.");
+  }
+}
+
+function launchDemo() {
+  isDemoMode = true;
+  unlockedSets = 1;
+  setsUsed = 0;
+  document.getElementById("storePage").classList.add("hidden");
+  document.getElementById("demoBanner").style.display = "none";
+  document.getElementById("mainMenu").classList.remove("hidden");
+  document.getElementById("unlockedLabel").textContent = "&#128288; DEMO MODE — Set 1 only (SRT + WAT + SDT)";
+  document.getElementById("setUsageInfo").textContent = "Demo: You have access to Set 1 of each test. Purchase a pack to unlock more sets.";
+}
+
+function showUnlockGate(msg) {
+  document.getElementById("storePage").classList.add("hidden");
+  document.getElementById("unlockGate").classList.remove("hidden");
+  if (msg) {
+    var note = document.createElement("div");
+    note.style.cssText = "background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);border-radius:2px;padding:.6rem .9rem;font-size:.8rem;color:var(--amber);margin:.6rem 0;font-family:JetBrains Mono,monospace";
+    note.textContent = msg;
+    var gate = document.getElementById("unlockGate").querySelector(".unlock-gate");
+    gate.insertBefore(note, gate.querySelector(".ug-title").nextSibling);
+  }
+}
+
+function redeemCode() {
+  var code = document.getElementById("accessCodeInput").value.trim().toUpperCase();
+  document.getElementById("codeError").style.display = "none";
+  if (!code) { return; }
+
+  // Check demo code
+  if (code === "LBD-DEMO-1" || code === "DEMO-FREE-1") {
+    launchDemo();
+    document.getElementById("unlockGate").classList.add("hidden");
+    return;
+  }
+
+  // Check valid codes (in production this should be server-side validation)
+  if (VALID_CODES[code] && !VALID_CODES[code].used) {
+    var entry = VALID_CODES[code];
+    if (!entry.owner) entry.used = true;  // owner code never expires
+    unlockedSets = entry.sets;
+    setsUsed = 0;
+    isDemoMode = false;
+    document.getElementById("unlockGate").classList.add("hidden");
+    document.getElementById("mainMenu").classList.remove("hidden");
+    document.getElementById("unlockedLabel").innerHTML = "&#10003; " + unlockedSets + " set" + (unlockedSets > 1 ? "s" : "") + " unlocked";
+    document.getElementById("setUsageInfo").textContent = "You have " + unlockedSets + " set" + (unlockedSets > 1 ? "s" : "") + " available. Each complete session (SRT + WAT + SDT) uses one set.";
+  } else if (VALID_CODES[code] && VALID_CODES[code].used) {
+    document.getElementById("codeError").textContent = "This code has already been used.";
+    document.getElementById("codeError").style.display = "block";
+  } else {
+    document.getElementById("codeError").style.display = "block";
+  }
+}
+
+function goStore() {
+  document.getElementById("mainMenu").classList.add("hidden");
+  document.getElementById("unlockGate").classList.add("hidden");
+  document.getElementById("storePage").classList.remove("hidden");
+}
+
+// Override selectTest to check set availability
+var _origSelectTest = null; // will be set after original is defined
+
+// =====================================================
+// =====================================================
+// DATA — SRT SETS (7 x 60)
+// =====================================================
+const SRT = [
+ ["You are leading a patrol and your radio fails mid-mission in enemy territory.",
+  "A team member collapses from exhaustion during a critical exercise.",
+  "Your commanding officer gives you an order you believe is factually wrong.",
+  "You discover a fellow cadet cheating in a written examination.",
+  "You are asked to lead a group of soldiers who have more experience than you.",
+  "Your vehicle breaks down while transporting injured soldiers to the medical post.",
+  "A junior soldier refuses to follow an order in front of the rest of the team.",
+  "You witness a senior officer behave unethically toward a civilian.",
+  "You have been incorrectly blamed for a mistake made by your team.",
+  "Your group is lost in unfamiliar terrain at night with limited supplies.",
+  "You must deliver bad news to a soldier about a family emergency.",
+  "Two team members get into a physical altercation during a field exercise.",
+  "You have been given an impossible deadline with inadequate resources.",
+  "A fire breaks out in the barracks at 2am. You are the first to wake up.",
+  "You must choose between following orders and protecting a civilian from harm.",
+  "Your team loses an important competition due to a decision you made.",
+  "A new recruit under your command is being bullied by seniors.",
+  "You are asked to give a speech in front of 500 people with five minutes to prepare.",
+  "Your closest friend confesses to a serious breach of military regulations.",
+  "You find a wallet containing Rs 50,000 and the owner's contact details.",
+  "You are the only person present when a child is drowning nearby.",
+  "Your superior takes credit for a plan you developed entirely yourself.",
+  "You are posted to a remote area with no communication for three months.",
+  "A civilian complains that your unit has damaged their property.",
+  "You must decide whether to continue an exercise in deteriorating weather.",
+  "Your team is panicking before an important evaluation. You are the calm one.",
+  "You notice a structural defect in a building that others are about to enter.",
+  "A soldier in your unit shows signs of serious mental distress.",
+  "You are offered a significant bribe to disclose classified information.",
+  "Your equipment malfunctions at the start of a critical timed exercise.",
+  "A crowd becomes hostile toward your unit during a peacekeeping exercise.",
+  "You are asked to assess a peer whose work is genuinely substandard.",
+  "You have made a significant mistake. No one has noticed yet.",
+  "You must lead a team that has recently suffered a demoralising setback.",
+  "An injured colleague cannot continue but refuses to fall behind the group.",
+  "You disagree with a popular group decision that you believe will fail.",
+  "You are tired, hungry, and wet but the mission is not yet complete.",
+  "A senior instructs you to falsify a report to avoid administrative trouble.",
+  "You witness a soldier behaving courageously but directly against orders.",
+  "You are new to a unit where everyone already has established friendships.",
+  "Your team is ahead in a competition but a shortcut would confirm the win unfairly.",
+  "You must manage a soldier who is technically excellent but socially disruptive.",
+  "You are called upon to arbitrate a dispute between two equal-ranking officers.",
+  "A civilian asks you for help with a problem that is outside your mandate.",
+  "You discover that your unit's supplies have been incorrectly documented.",
+  "You must continue an important briefing after learning disturbing personal news.",
+  "You are given command of a mission you believe is poorly planned.",
+  "A highly capable team member constantly undermines group decisions.",
+  "You find a security breach in your unit's communications system.",
+  "A fellow officer takes an unnecessary risk that endangers the entire unit.",
+  "You are the last person who can raise an objection before a bad decision is finalised.",
+  "Your group is significantly behind schedule due to factors outside your control.",
+  "A soldier asks you for advice on a serious personal problem during operations.",
+  "You must complete a task for which you have no training or experience.",
+  "Your unit is being unfairly treated by a superior from another unit.",
+  "You are exhausted but a junior soldier needs immediate guidance.",
+  "A dangerous rumour about your unit is spreading among civilians.",
+  "You must give a negative performance review to someone who is your friend.",
+  "You catch a junior soldier stealing from the stores.",
+  "At the end of a very long and difficult exercise, you are asked to give one more effort."],
+ ["You are leading a night march when two soldiers begin arguing loudly.",
+  "You receive conflicting orders from two superior officers simultaneously.",
+  "A bridge your patrol must cross appears structurally unsafe.",
+  "You discover your team has been given faulty maps for an important exercise.",
+  "A senior soldier with more experience than you refuses to take you seriously.",
+  "You must complete a mission even though you are running a high fever.",
+  "Your team has captured a prisoner who appears injured and frightened.",
+  "You notice a fellow cadet has been losing sleep and appetite for two weeks.",
+  "You are given 10 minutes to plan and brief an operation with incomplete information.",
+  "A civilian offers you hospitality in a conflict zone. Your orders say refuse.",
+  "Your vehicle is ambushed. Three soldiers are wounded. Communications are down.",
+  "You are publicly embarrassed by a senior officer in front of your team.",
+  "You witness a fellow officer accept gifts from a supplier.",
+  "Your team achieves an outstanding result but nobody acknowledges your contribution.",
+  "A junior soldier under your command performs exceptionally under pressure.",
+  "You must navigate a political dispute between two local communities.",
+  "Your relief does not arrive and you must continue your post for 12 more hours.",
+  "A critically important piece of equipment breaks down with no spare available.",
+  "You are asked to lead a mission against your better tactical judgment.",
+  "A visiting dignitary makes an offensive remark to one of your soldiers.",
+  "You find that your predecessor left a serious administrative error in the records.",
+  "An exercise takes a dangerous turn and soldiers are looking to you for leadership.",
+  "You must motivate a team that has been on operations for three weeks with no rest.",
+  "You discover that a decision you made last month has caused unexpected problems.",
+  "A senior officer asks you to recommend a junior for promotion. You have reservations.",
+  "Your unit is blamed for an incident caused by another unit entirely.",
+  "You are asked to speak at a memorial for a soldier killed under your command.",
+  "A soldier confides that he has been using alcohol to cope with operational stress.",
+  "You must leave behind equipment to save a wounded soldier. The equipment is critical.",
+  "Your team completes a task but through a method you had explicitly forbidden.",
+  "A young recruit breaks down crying during a particularly difficult exercise.",
+  "You are asked to evaluate your own performance for a promotion board.",
+  "Two soldiers from your unit are found fighting off-duty.",
+  "Your commanding officer makes a decision you believe will endanger lives.",
+  "You must communicate a casualty to a soldier's family through a senior officer.",
+  "A new policy you must enforce is deeply unpopular with your entire team.",
+  "You are the only officer available when a medical emergency occurs.",
+  "Your most capable soldier wants to quit after a demoralising failure.",
+  "An unauthorised shortcut by your team actually produced a better outcome.",
+  "You are asked to provide information that is technically correct but misleading.",
+  "You are posted to a unit with a culture you find ethically uncomfortable.",
+  "A civilian insists on crossing a danger zone your unit has secured.",
+  "Your team wins an important exercise by the slimmest possible margin.",
+  "You must manage a soldier who is brilliant under pressure but difficult in peacetime.",
+  "A fellow officer confides they are considering leaving the service.",
+  "You must account for equipment that has gone missing under your watch.",
+  "You are asked to give an honest assessment of a senior officer's plan. It is poor.",
+  "Your unit is visited by inspectors without prior notice.",
+  "A project you worked on for months is cancelled without explanation.",
+  "You must integrate a soldier returning from personal leave into an ongoing operation.",
+  "A mistake in your orders causes you to be in the wrong position for an exercise.",
+  "Two officers in your unit have a rivalry that is affecting team performance.",
+  "You receive an anonymous complaint about your leadership style.",
+  "You must maintain the morale of a team that knows it is about to receive bad news.",
+  "A junior officer makes an excellent decision that contradicts your standing orders.",
+  "An important guest fails to arrive for an event you have planned extensively.",
+  "You are asked to transfer to a posting you do not want.",
+  "A language barrier prevents you from communicating with local civilians.",
+  "You must act on intelligence that may be unreliable.",
+  "You are the last officer standing after multiple casualties in a training exercise."],
+ ["You are asked to lead a group you have just met into a high-pressure exercise.",
+  "An explosion occurs nearby during a field exercise. No one is hurt but everyone is shaken.",
+  "You must refuse a direct request from a person you deeply respect.",
+  "A competition you were expected to win is lost due to a last-minute error.",
+  "You discover that your promotion was given due to an administrative mix-up.",
+  "A plan you believe in strongly is rejected by the committee.",
+  "You must continue working alongside someone who has treated you unfairly.",
+  "An important exercise begins with critical equipment missing.",
+  "You are asked to make a presentation on a subject you know little about.",
+  "A member of your team openly questions your decision in front of the group.",
+  "You have 48 hours to complete a task that normally takes one week.",
+  "You are responsible for a junior who makes a serious error on your watch.",
+  "A fellow officer asks you to cover for their absence without explanation.",
+  "You receive news of a family emergency in the middle of a critical exercise.",
+  "An exercise requires you to physically restrain someone who is resisting.",
+  "You must work with someone who was recently passed over for promotion in your favour.",
+  "A technical failure occurs at the most critical moment of an important demonstration.",
+  "You are given command of a unit where the previous leader was highly popular.",
+  "A civilian journalist wants to ask questions you are not authorised to answer.",
+  "You find yourself isolated from your unit with a new set of instructions.",
+  "A colleague who helped you significantly now asks a favour you should not grant.",
+  "You must make a rapid decision with only 30 seconds and incomplete information.",
+  "Your entire team fails an important evaluation. You were the leader.",
+  "A junior soldier shows more potential than any senior in the unit.",
+  "You are asked to do something that is legal but that you believe is wrong.",
+  "Your commanding officer is absent and you must make a critical call.",
+  "You witness a soldier receiving unfair treatment from a senior.",
+  "A task you are given puts your team's safety at marginal risk.",
+  "You are asked to train soldiers in a skill you yourself need to improve.",
+  "An important piece of intelligence arrives after the decision has already been made.",
+  "You must lead a field exercise in genuinely dangerous weather.",
+  "A young soldier confesses that they joined the army for the wrong reasons.",
+  "An equipment malfunction occurs just as an inspection begins.",
+  "You are the only person available to translate but your language skills are limited.",
+  "A decision you supported strongly turns out to have been wrong.",
+  "You must complete a route march with a sprained ankle without showing it.",
+  "You must make a decision that benefits the group but disadvantages you personally.",
+  "A soldier is performing poorly for reasons you suspect are personal.",
+  "You must maintain your position in the face of strong group pressure to abandon it.",
+  "You discover that a rumour you inadvertently started has caused serious harm.",
+  "Your team succeeds in an exercise but by ignoring your instructions.",
+  "You must choose between two equally capable candidates for a single position.",
+  "A task requires you to work through the night alone.",
+  "Your judgment is questioned by someone with less experience than you.",
+  "You must apologise publicly for a mistake that was not entirely yours.",
+  "A soldier disobeys an order but the outcome of the disobedience was better.",
+  "You are separated from your team and must navigate back independently.",
+  "A team member reveals confidential information to an outsider.",
+  "You must improvise equipment from available materials to complete a task.",
+  "You are asked to evaluate someone whose personal situation you know is very difficult.",
+  "A fire drill occurs in the middle of a timed critical exercise.",
+  "You discover a fellow officer has been lying to the commanding officer.",
+  "You must maintain authority over a group that is larger and older than expected.",
+  "A supply chain failure means your team will not eat properly for two days.",
+  "You are asked to represent your unit in a public forum on short notice.",
+  "A task you have prepared extensively for is changed completely at the last minute.",
+  "Your team is demoralised after a failure. The next task begins tomorrow.",
+  "You are required to work with a unit from a different service branch.",
+  "A new regulation contradicts something you have been telling your team for months.",
+  "You must physically push your limits to complete a task that requires it."],
+ ["You wake up to find a significant document has gone missing from your possession.",
+  "A new recruit who lacks confidence shows exceptional judgment in a crisis.",
+  "You must remove a soldier who has become a friend during a difficult posting.",
+  "Your plan is publicly criticised by a more experienced officer.",
+  "You are stranded in a remote area with a soldier who is mentally breaking down.",
+  "A task force you are part of has a serious disagreement about strategy.",
+  "You are asked to go beyond your authority to resolve an urgent situation.",
+  "A senior officer praises junior work that you know is flawed.",
+  "A new command structure means you must now report to someone you were equal to.",
+  "You must pass on an order you believe will produce unnecessary hardship.",
+  "Your convoy encounters an obstruction and is running two hours late.",
+  "A piece of classified information is accidentally revealed to a civilian.",
+  "You must enforce discipline on a group of soldiers after a morale-breaking event.",
+  "A foreign officer visiting your unit makes a serious cultural mistake.",
+  "You must coordinate three separate teams simultaneously toward one objective.",
+  "An administrative error means your team is under-resourced for a major exercise.",
+  "You discover a popular long-standing practice in your unit is against regulations.",
+  "A soldier collapses on a long march. The group cannot stop to wait.",
+  "You must deliver an honest assessment that will end someone's career.",
+  "Your communications equipment is jammed during a critical phase of an exercise.",
+  "You are asked to justify a decision you made that seemed right at the time.",
+  "A strategic retreat is required but your team views it as giving up.",
+  "You must lead a team through a task none of you have trained for.",
+  "An error in resource allocation means your team has half the supplies needed.",
+  "You are asked to act as mediator between two officers of equal rank.",
+  "A dangerous shortcut would save significant time in a deteriorating situation.",
+  "You must keep information from your team that would undermine their confidence.",
+  "A personal mistake in judgment caused a mission setback. The team does not know.",
+  "You are leading a group and realise mid-exercise your initial assessment was wrong.",
+  "A soldier asks you a technical question you cannot answer.",
+  "You receive an order that seems to contradict the mission objective.",
+  "Your team is told they must redo an exercise they just completed exhaustedly.",
+  "A local community refuses to cooperate with your unit during a joint exercise.",
+  "You are in command when an unexpected opportunity to gain advantage appears.",
+  "Two of your best soldiers want to transfer out after a disagreement.",
+  "Another unit has been taking credit for your team's work.",
+  "You must decide whether to report a minor infraction or handle it internally.",
+  "A new policy requires changing a procedure your team was doing correctly.",
+  "Your team is asked to compete against a team that has been preparing longer.",
+  "You must decline a social invitation from a senior officer without causing offence.",
+  "An error in your planning is discovered by a junior officer during execution.",
+  "You are the last person to leave a burning building. One person remains inside.",
+  "You must complete a physical task that you are not certain you can perform safely.",
+  "A soldier breaks down emotionally in front of the rest of the group.",
+  "You are accused of showing favouritism, which is untrue.",
+  "An important operation is put at risk by a junior's well-intentioned initiative.",
+  "You must manage an extremely capable soldier who constantly challenges authority.",
+  "A decision you delayed making has now become more complicated.",
+  "Your team is in the lead in an important exercise when a setback occurs.",
+  "You are the most senior officer available when a conflict between units breaks out.",
+  "A junior soldier impresses everyone during a crisis but then behaves poorly afterward.",
+  "You must complete a report accurately when the accurate version reflects badly on your unit.",
+  "A plan that everyone else supported has failed as you predicted.",
+  "You are asked to make a permanent decision based on temporary information.",
+  "A highly respected officer in your unit behaves in a way you find deeply wrong.",
+  "Your team is frightened before a genuinely dangerous exercise.",
+  "You must translate technical expertise into terms non-experts can act on.",
+  "An exercise that was going well suddenly changes conditions drastically.",
+  "You are tired, in pain, and behind schedule. There are four hours left.",
+  "A soldier under your command behaves heroically but also recklessly."],
+ ["A fire breaks out in the cookhouse during dinner. You are the duty officer.",
+  "Two convoys from different units collide due to poor coordination.",
+  "A visiting officer criticises your unit publicly without accurate information.",
+  "You must give a command that will cause your team real hardship.",
+  "A supply vehicle has not arrived and the exercise begins in 30 minutes.",
+  "Your team is asked to perform a task in conditions for which they have not trained.",
+  "You discover a fundamental flaw in an operation plan that has already been approved.",
+  "A soldier under your command is arrested off-duty for a minor offence.",
+  "You must choose one of two routes, each with different serious risks.",
+  "Your commanding officer has made a decision based on incorrect information you provided.",
+  "You encounter a group of refugees near your operational area.",
+  "A new piece of equipment is issued that none of your team can operate.",
+  "You must explain to your team why a policy they hate is being enforced.",
+  "A mission objective changes completely 10 minutes after briefing.",
+  "You are the only officer available when a junior soldier needs urgent medical help.",
+  "Your team is running on empty. A soldier suggests an approach you had rejected.",
+  "An exercise requires you to act decisively on ambiguous intelligence.",
+  "A fellow officer is clearly struggling but refuses to ask for help.",
+  "You must maintain command in a chaotic situation with conflicting information.",
+  "An important piece of equipment is lost. You do not know how or when.",
+  "A rumour that affects troop morale turns out to be partly true.",
+  "You must balance the welfare of one soldier against the needs of the group.",
+  "An exercise is stopped due to weather. Your team's work is now nullified.",
+  "You must write an honest report that will damage a colleague's reputation.",
+  "Your team arrives at a task site to find conditions completely different from the brief.",
+  "A leadership decision you were confident about is failing in real time.",
+  "You must cross rough terrain at night with a team carrying heavy equipment.",
+  "An important ally refuses to cooperate at a critical moment.",
+  "You are asked to perform beyond your physical capacity by a well-meaning superior.",
+  "A military ceremony you are responsible for organising begins going wrong.",
+  "You are the duty officer when a serious administrative error is discovered.",
+  "A soldier you admire behaves dishonestly in a small but clear way.",
+  "You must negotiate with a difficult civilian authority to complete your mission.",
+  "Your team performs well but receives no recognition at the debrief.",
+  "A danger signal is detected but you cannot be certain it is real.",
+  "You must make an important judgment call based on conflicting expert opinions.",
+  "A superior officer is leading your team in a direction you are certain is wrong.",
+  "You have been wrong about someone. They have proven themselves under pressure.",
+  "A task is completed but not to the standard you would have required.",
+  "You are the calm centre in a situation where everyone else is panicking.",
+  "Your team is watching you for a reaction after a serious setback.",
+  "A fellow officer admits they have been struggling for the past month.",
+  "You must restore order after a breakdown in discipline during a stressful exercise.",
+  "A policy change makes your previous guidance to your team incorrect.",
+  "You must make a professional recommendation that goes against a personal preference.",
+  "Your unit is given a second chance at an exercise they previously failed.",
+  "A plan that was technically perfect fails because of human factors.",
+  "You must deal with a media inquiry about an incident involving your unit.",
+  "A night exercise requires you to remain awake for 36 consecutive hours.",
+  "You discover mid-exercise that a key assumption in your plan was wrong.",
+  "Your team is fractured along personal lines before an important cooperative task.",
+  "A serious accident occurs and you are first on the scene.",
+  "You must give a team a rest they need when the schedule cannot accommodate it.",
+  "You are asked to justify why you chose a certain course of action six months ago.",
+  "A senior officer offers you a position that requires compromising your principles.",
+  "You must continue performing at a high level despite ongoing personal difficulty.",
+  "A complex operation requires you to manage three subordinate teams simultaneously.",
+  "A fellow officer uses confidential information you shared in confidence against you.",
+  "Your team succeeds in an exercise but not in the way you intended.",
+  "You are asked to do more with significantly fewer resources than required."],
+ ["You are responsible for training a group that does not want to be trained.",
+  "An order arrives that contradicts the standing instructions you operate under.",
+  "A task that should have taken a day extends into a third day with no end in sight.",
+  "You must command a group across a language barrier with no interpreter.",
+  "A junior soldier points out a serious error in your plan during execution.",
+  "You are asked to take charge of a situation entirely outside your expertise.",
+  "Your team has been together so long they have stopped challenging each other.",
+  "You must enforce a rule you personally believe is unnecessary.",
+  "A fellow officer publicly contradicts you in front of your team.",
+  "A soldier who was previously excellent under your command is now underperforming.",
+  "You are given 24 hours to prepare a complex briefing with minimal information.",
+  "Your team achieves an objective through a method you had specifically prohibited.",
+  "A situation develops that matches nothing in your training or experience.",
+  "You are asked to lead a team through a task where failure has real consequences.",
+  "A team member shows genuine heroism in direct violation of orders.",
+  "You must plan an operation against an opponent that is significantly superior.",
+  "An exhausted team must regroup and begin again after a demoralising failure.",
+  "A sensitive conversation must take place in front of witnesses.",
+  "You realise mid-mission that one of your core assumptions was dangerously wrong.",
+  "You must maintain authority with a team that knows more than you about the specific task.",
+  "A decision your superior made is clearly adversely affecting your team's welfare.",
+  "You receive feedback that contradicts your own assessment of your performance.",
+  "A team member breaks under pressure at the worst possible moment.",
+  "An opportunity to take credit for someone else's work presents itself.",
+  "You must manage the aftermath of a team decision you opposed and that failed.",
+  "A technical malfunction during an important demonstration embarrasses your unit.",
+  "You have 48 hours of leave and receive an urgent call to return early.",
+  "Your unit's integrity is questioned based on an incident before your arrival.",
+  "You must decide whether to proceed with insufficient information or wait for more.",
+  "A junior under your command shows leadership qualities superior to your own.",
+  "Your team is told the rules of an exercise have changed mid-competition.",
+  "You must arbitrate between two very different but equally valid approaches.",
+  "An important exercise coincides with the worst personal news of your life.",
+  "Your plan is sabotaged by factors you had no control over.",
+  "You must complete a task in a new environment with a team that does not know it.",
+  "A junior's honest mistake costs the team a competition they could have won.",
+  "You are tested on your knowledge in front of an audience and are not certain of the answer.",
+  "Your team begins to fracture under sustained pressure.",
+  "You are asked to provide feedback that will determine whether someone stays or leaves.",
+  "A resource you were counting on is withdrawn at the last moment.",
+  "You must maintain your own calm while your team is visibly afraid.",
+  "A situation requires you to choose between two people who both need your help.",
+  "Your preparation was thorough but the situation bears no resemblance to what you expected.",
+  "You must give honest performance feedback to someone who will resist it.",
+  "A task requires more physical endurance than you believe you have.",
+  "You must make a decision that will be unpopular but is clearly the right one.",
+  "Your team breaks a record and immediately faces a harder challenge.",
+  "You discover the team you are about to lead has a history of disrespecting officers.",
+  "An important operation is compromised by a leak from within your own unit.",
+  "A soldier under your command is clearly better suited to your role than you are.",
+  "You must choose between two courses of action, both of which have serious drawbacks.",
+  "Your commanding officer is absent when a crisis erupts requiring immediate decision.",
+  "A previously reliable team member becomes unpredictable under a new type of pressure.",
+  "You are responsible for the safety of a civilian in an operational environment.",
+  "Your team completes an exercise perfectly. Your superior asks what you would do differently.",
+  "You must begin an important task without the briefing you requested.",
+  "A soldier returns from leave and cannot re-integrate with the team.",
+  "You are asked to take over a failing project with no explanation of what went wrong.",
+  "A surprise inspection occurs when your unit is at its lowest point.",
+  "You must decide whether to tell your team something that will affect their performance."],
+ ["A bridge must be crossed but it will only hold half the group at a time.",
+  "Your team is ambushed in a training scenario and must think quickly.",
+  "You arrive at a location to find the previous unit left it in a poor state.",
+  "Your team must transport a casualty over difficult terrain with limited equipment.",
+  "A senior officer arrives unexpectedly during a routine exercise.",
+  "You are required to complete a public speaking task with no preparation time.",
+  "Your planning exercise is disrupted by an unexpected change in the scenario.",
+  "A team member refuses to continue an exercise for personal reasons.",
+  "You must complete an assigned task while simultaneously managing a crisis.",
+  "A piece of equipment you are responsible for is damaged beyond repair.",
+  "Your team is performing well until a morale-critical incident derails them.",
+  "You encounter a situation that is clearly a test of your ethical boundaries.",
+  "An important document must be completed accurately under extreme time pressure.",
+  "Your team has made it to the final stage of a competition. Nerves are affecting performance.",
+  "A colleague you trust gives you advice that you believe is wrong.",
+  "You must give a speech at a passing-out parade with one hour's notice.",
+  "An exercise requires deception and you must decide how far to take it.",
+  "You discover a junior has been keeping a problem from you to avoid worrying you.",
+  "Your team's cohesion is tested by a deliberately divisive external pressure.",
+  "A task that seemed simple reveals unexpected complexity halfway through.",
+  "You must represent your unit in a dispute you were not party to.",
+  "A senior officer makes a minor but clear ethical lapse in front of you.",
+  "You are given responsibility for an outcome you cannot directly control.",
+  "An exercise designed to be done in a group must now be completed alone.",
+  "Your commanding officer expects a result that is not achievable with available resources.",
+  "A plan you did not design is now your responsibility to execute.",
+  "You are asked to motivate a team that has lost faith in the mission.",
+  "A routine task becomes dangerous due to an environmental change.",
+  "You must identify which of several team members is causing a hidden problem.",
+  "A competitor uses an unfair method to gain advantage. You notice. Others have not.",
+  "You are asked to complete your task in front of a live audience.",
+  "A critical piece of intelligence arrives too late to be fully acted upon.",
+  "You must manage a handover to a new team while your own task is still incomplete.",
+  "A group of civilians is obstructing your team's access to an important location.",
+  "You are responsible for a group divided on a fundamental approach.",
+  "An exercise requires you to make a public call that might be wrong.",
+  "Your team runs out of water during a long field exercise.",
+  "You are the most experienced person in the room when a crisis begins.",
+  "A task that requires collaboration is being dominated by one person.",
+  "You must continue an exercise after receiving genuinely frightening information.",
+  "A decision you made six months ago is now being reviewed and questioned.",
+  "Your team has 15 minutes to solve a problem that normally takes an hour.",
+  "An unexpected resource becomes available and it changes your plan significantly.",
+  "You must complete a dangerous task with a team that has lost confidence.",
+  "A task requires you to work in conditions that test your physical limits.",
+  "You discover a team member has been dishonest with you consistently.",
+  "You must remain professional when someone is deliberately trying to unsettle you.",
+  "A group exercise falls apart due to a communication failure between teams.",
+  "You are asked to evaluate your own leadership after a very difficult exercise.",
+  "You must take over leadership of a team mid-exercise without any briefing.",
+  "A natural obstacle blocks your planned route and there is no clear alternative.",
+  "Your most important exercise of the year begins under the worst possible conditions.",
+  "A fellow officer needs help with a task outside your expertise.",
+  "You must document a failure accurately when the temptation to soften it is real.",
+  "A soldier you lead tells you something that changes your understanding of them entirely.",
+  "You are at the limit of your physical and mental capacity. The task is not done.",
+  "A misunderstanding between units puts both at risk.",
+  "An exercise scenario is changed to target specifically your known weakness.",
+  "You must complete a task using only the resources that remain after a major loss.",
+  "A crisis requires you to simultaneously lead your team and support an injured colleague."]
+];
+
+// =====================================================
+// DATA — WAT SETS (7 x 60)
+// =====================================================
+const WAT = [
+ ["Courage","Fear","Leader","Enemy","Trust","Discipline","Hope","Failure","Victory","Sacrifice","Loyalty","Danger","Strength","Doubt","Mission","Family","Honour","Desert","Justice","Silence","Pressure","Comrade","Night","Command","Pain","Ambition","Frontier","Endurance","Truth","Weapon","Homeland","Defeat","Resilience","Duty","Shadow","Battle","Conscience","Wilderness","Pride","Storm","Obedience","Mountain","Forgiveness","Strategy","Dawn","Responsibility","River","Integrity","Enemy","Calm","Soldier","Crisis","Loneliness","Determination","Brotherhood","Darkness","Order","Patience","Faith","Vigil"],
+ ["Ambush","Morale","Challenge","Sacrifice","Character","Ground","Teamwork","Obstacle","Wisdom","Tiredness","Valor","Forest","Respect","Pressure","Signal","Boundary","Stability","Retreat","Excellence","Exposure","Vigilance","Shore","Purpose","Distance","Training","Achievement","Cliff","Motivation","Wilderness","Honour","Endurance","Service","Conflict","Sunrise","Initiative","Terrain","Compassion","Supply","Preparation","Thunder","Dignity","Awareness","Advance","Horizon","Discipline","Trenches","Morale","Courage","Darkness","Soldier","Crisis","Determination","Brotherhood","Leadership","Order","Patience","Faith","Victory","Loyalty","Strength"],
+ ["Risk","Authority","Compassion","Rally","Silence","Fortress","Resolve","Brotherhood","Doubt","Advance","Frontier","Character","Endurance","Victory","Command","Mountain","Crisis","Integrity","Loyalty","Service","Ambition","Courage","Determination","Faith","Hope","Family","Duty","Mission","Pride","Justice","Discipline","Strength","Sacrifice","Leadership","Trust","Honour","Night","Pain","Storm","Wisdom","Challenge","Morale","Strategy","Excellence","Vigilance","Terrain","Training","Order","Calm","Soldier","Loneliness","Shadow","Darkness","Purpose","Achievement","Resilience","Awareness","Teamwork","Respect","Obedience"],
+ ["Clarity","Surge","Combat","Sunrise","Stillness","Warrior","Endure","Frontier","Solidarity","Night","Ambition","Retreat","Trust","Mission","Strength","Doubt","Victory","Sacrifice","Courage","Loyalty","Fear","Discipline","Hope","Failure","Shadow","Compassion","Desert","Justice","Silence","Pressure","Comrade","Command","Pain","Weapon","Homeland","Defeat","Duty","Wilderness","Pride","Storm","Obedience","Mountain","Forgiveness","Strategy","Dawn","Responsibility","River","Integrity","Crisis","Calm","Soldier","Loneliness","Determination","Brotherhood","Darkness","Order","Patience","Faith","Leadership","Honour"],
+ ["Gallantry","Fortitude","Advance","Morale","Loyalty","Teamwork","Obstacle","Wisdom","Ambush","Challenge","Frontier","Resilience","Strength","Victory","Sacrifice","Courage","Discipline","Hope","Failure","Mission","Family","Honour","Desert","Justice","Silence","Pressure","Comrade","Night","Command","Pain","Strategy","Homeland","Defeat","Duty","Shadow","Battle","Conscience","Wilderness","Pride","Storm","Obedience","Mountain","Forgiveness","Dawn","Responsibility","River","Integrity","Calm","Soldier","Crisis","Loneliness","Determination","Brotherhood","Darkness","Order","Leadership","Patience","Faith","Trust","Vigour"],
+ ["Zeal","Stoic","Sentinel","Elevation","Boundary","Resilience","Honour","Silence","Advance","Trust","Strength","Sacrifice","Courage","Discipline","Hope","Failure","Victory","Mission","Family","Desert","Justice","Pressure","Comrade","Night","Command","Pain","Strategy","Weapon","Homeland","Defeat","Duty","Shadow","Battle","Conscience","Wilderness","Pride","Storm","Obedience","Mountain","Forgiveness","Dawn","Responsibility","River","Integrity","Enemy","Calm","Soldier","Crisis","Loneliness","Determination","Brotherhood","Darkness","Order","Leadership","Patience","Faith","Loyalty","Fear","Ambition","Clarity"],
+ ["Prowess","Initiative","Vigilance","Terrain","Compassion","Supply","Thunder","Dignity","Awareness","Horizon","Discipline","Trenches","Morale","Challenge","Sacrifice","Character","Stability","Retreat","Excellence","Exposure","Shore","Purpose","Distance","Training","Achievement","Cliff","Motivation","Wilderness","Honour","Endurance","Service","Conflict","Sunrise","Frontline","Command","Courage","Mountain","Crisis","Integrity","Loyalty","Ambition","Determination","Faith","Hope","Family","Duty","Mission","Pride","Justice","Strength","Trust","Resilience","Leadership","Patience","Victory","Night","Shadow","Pain","Obedience","Order"]
+];
+
+// =====================================================
+// DATA — SDT SECTIONS
+// =====================================================
+const SDT_SECS = [
+ {id:"parents",label:"What my parents think of me",
+  sub:"Write what your parents (or guardians) would honestly say about your character, habits, strengths, and weaknesses if asked by a stranger. Not what they say to your face — what they say when describing you to others.",
+  ph:"e.g. My parents would say I am determined but sometimes too stubborn to ask for help..."},
+ {id:"teachers",label:"What my teachers think of me",
+  sub:"Write what your school or college teachers would honestly say about you as a student and as a person — including the unflattering parts.",
+  ph:"e.g. My teachers would say I am intellectually engaged but tend to challenge authority..."},
+ {id:"friends",label:"What my friends think of me",
+  sub:"Write what your close friends would honestly say about you — including the things they say among themselves that you might find uncomfortable.",
+  ph:"e.g. My friends would say I am reliable in a crisis but sometimes too intense..."},
+ {id:"self",label:"What I think of myself",
+  sub:"Write an honest self-assessment. Include genuine strengths and real weaknesses — not what you wish were true. The SSB psychologist is trained to detect dishonest SDTs.",
+  ph:"e.g. I think I am capable of leading under pressure but I struggle with patience in low-stakes situations..."},
+ {id:"aspire",label:"What kind of person I want to become",
+  sub:"Write specifically what qualities, habits, and character traits you are actively working to develop. Specific beats vague every time.",
+  ph:"e.g. I want to become someone who acts on principle without needing external validation..."}
+];
+
+// =====================================================
+// STATE
+// =====================================================
+var selTest=null, selSet=0, timerInt=null, timeLeft=0;
+var srtAns={}, watAns={}, sdtAns={};
+
+// =====================================================
+// NAVIGATION
+// =====================================================
+function selectTest(t){
+  // Check set availability
+  if (!isDemoMode && unlockedSets <= 0) {
+    alert("No sets available. Please purchase a pack first.");
+    goStore();
+    return;
+  }
+  selTest=t;
+  document.getElementById("mainMenu").classList.add("hidden");
+  document.getElementById("testArea").classList.remove("hidden");
+  renderSetSel();
+}
+
+function renderSetSel(){
+  var titles={SRT:"Situation Reaction Test",WAT:"Word Association Test",SDT:"Self Description Test"};
+  var descs={
+    SRT:"60 situations. Write your immediate, instinctive response. You have 30 minutes.",
+    WAT:"60 words. Write one sentence using each word. You have 15 minutes.",
+    SDT:"5 sections. Write honestly about how different people see you. 15 minutes."
+  };
+  var ta=document.getElementById("testArea");
+  var maxSets = isDemoMode ? 1 : unlockedSets;
+  var btns="";
+  for(var i=0;i<maxSets;i++){
+    btns+='<button class="set-btn'+(i===0?' active':'')+'" onclick="setSet('+i+',this)">Set '+(i+1)+'</button>';
+  }
+  if(maxSets<7){
+    btns+='<button class="set-btn" style="opacity:.4;cursor:not-allowed;background:var(--cream2)" title="Purchase more sets to unlock">'+
+    (7-maxSets)+' more locked &#128274;</button>';
+  }
+  ta.innerHTML='<div style="margin:1.5rem 0">'
+    +'<h2 style="font-family:Playfair Display,serif;font-size:1.3rem;color:var(--navy);margin-bottom:.3rem">'+titles[selTest]+'</h2>'
+    +'<p style="font-size:.88rem;color:var(--ash);font-style:italic;margin-bottom:1rem">'+descs[selTest]+'</p>'
+    +'<div style="margin-bottom:1rem"><div style="font-family:JetBrains Mono,monospace;font-size:.65rem;color:var(--navy);margin-bottom:.5rem">SELECT SET</div>'
+    +'<div class="set-sel">'+btns+'</div></div>'
+    +'<button class="btn btn-primary" onclick="beginTest()">Begin '+selTest+' &rarr;</button>'
+    +' <button class="btn btn-outline" style="margin-left:.8rem" onclick="goHome()">&larr; Back</button>'
+    +'</div>';
+}
+
+function setSet(idx,el){
+  selSet=idx;
+  var btns=document.querySelectorAll(".set-btn");
+  for(var i=0;i<btns.length;i++) btns[i].classList.remove("active");
+  el.classList.add("active");
+}
+
+function goHome(){
+  clearInterval(timerInt);
+  selTest=null; selSet=0;
+  srtAns={}; watAns={}; sdtAns={};
+  document.getElementById("testArea").classList.add("hidden");
+  document.getElementById("reportArea").classList.add("hidden");
+  // Return to store if no sets left, otherwise back to test menu
+  if (!isDemoMode && unlockedSets <= 0) {
+    goStore();
+  } else {
+    document.getElementById("mainMenu").classList.remove("hidden");
+    // Update set usage display
+    if (!isDemoMode) {
+      document.getElementById("setUsageInfo").textContent =
+        unlockedSets + " set" + (unlockedSets!==1?"s":"") + " remaining.";
+    }
+  }
+}
+
+function beginTest(){
+  document.getElementById("testArea").innerHTML="";
+  if(selTest==="SRT") renderSRT();
+  else if(selTest==="WAT") renderWAT();
+  else renderSDT();
+}
+
+// =====================================================
+// TIMER
+// =====================================================
+function startTimer(seconds,onEnd){
+  clearInterval(timerInt);
+  timeLeft=seconds;
+  timerInt=setInterval(function(){
+    timeLeft--;
+    var m=Math.floor(timeLeft/60), s=timeLeft%60;
+    var d=document.getElementById("timerDisp");
+    if(d){
+      d.textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+      d.className="timer-val"+(timeLeft<=300?" warn":"")+(timeLeft<=60?" urgent":"");
+    }
+    if(timeLeft<=0){ clearInterval(timerInt); onEnd(); }
+  },1000);
+}
+
+// =====================================================
+// SRT
+// =====================================================
+function renderSRT(){
+  var sits=SRT[selSet];
+  var html='<div class="timer-bar">'
+    +'<div class="timer-lbl">SRT &middot; Set '+(selSet+1)+' &middot; 60 Situations</div>'
+    +'<div class="timer-val" id="timerDisp">30:00</div>'
+    +'<button class="btn btn-sm" style="background:var(--gold);color:var(--navy);border:none;cursor:pointer;font-family:Playfair Display,serif;border-radius:2px;padding:.4rem 1rem" onclick="submitSRT()">Submit &rarr;</button>'
+    +'</div>'
+    +'<div style="padding:1rem 0">'
+    +'<div class="srt-intro">Write your immediate, instinctive reaction to each situation. One or two sentences. Do not write what an officer "should" do — write what YOU would actually do today. Speed matters.</div>';
+  for(var i=0;i<sits.length;i++){
+    html+='<div class="srt-q">'
+      +'<div class="srt-num">Situation '+(i+1)+' of 60</div>'
+      +'<div class="srt-sit">'+sits[i]+'</div>'
+      +'<textarea class="srt-ans" id="srt'+i+'" placeholder="I would..." rows="2" oninput="srtAns['+i+']=this.value;this.className="srt-ans"+(this.value.trim().length>0?" filled":"")"></textarea>'
+      +'</div>';
+  }
+  html+='<div style="text-align:right;padding:1rem 0"><button class="btn btn-primary" onclick="submitSRT()">Submit SRT &rarr;</button></div></div>';
+  document.getElementById("testArea").innerHTML=html;
+  startTimer(1800,submitSRT);
+}
+
+function submitSRT(){ clearInterval(timerInt); genSRTReport(); }
+
+function genSRTReport(){
+  var sits=SRT[selSet];
+  var answered=0;
+  for(var i=0;i<sits.length;i++){ if(srtAns[i]&&srtAns[i].trim().length>0) answered++; }
+  var blank=60-answered;
+
+  var allText="";
+  for(var k in srtAns){ allText+=srtAns[k].toLowerCase()+" "; }
+
+  var proWords=["immediately","first","take charge","inform","assess","check","call","move","act","report","ensure","organise","secure","establish"];
+  var passWords=["wait","see what happens","do nothing","avoid","ignore","someone else","let them","hope"];
+  var ethWords=["right","honest","correct","properly","duty","inform superior","transparency","truth","report it"];
+  var socWords=["team","together","colleague","everyone","group","support","help","listen"];
+
+  var pScore=0,passScore=0,eScore=0,sScore=0;
+  for(var i=0;i<proWords.length;i++) if(allText.indexOf(proWords[i])>=0) pScore++;
+  for(var i=0;i<passWords.length;i++) if(allText.indexOf(passWords[i])>=0) passScore++;
+  for(var i=0;i<ethWords.length;i++) if(allText.indexOf(ethWords[i])>=0) eScore++;
+  for(var i=0;i<socWords.length;i++) if(allText.indexOf(socWords[i])>=0) sScore++;
+
+  var totalWords=0, filledCount=0;
+  for(var i=0;i<sits.length;i++){
+    if(srtAns[i]&&srtAns[i].trim()){
+      totalWords+=srtAns[i].trim().split(/\s+/).length;
+      filledCount++;
+    }
+  }
+  var avgWords=filledCount>0?Math.round(totalWords/filledCount):0;
+
+  var profile;
+  if(pScore>8&&eScore>5&&passScore<3){
+    profile="Your SRT pattern shows a consistently proactive, ethically grounded, and personally responsible orientation. This is the signature of the officer-like personality the SSB psychologist is trained to identify. Across your responses, the dominant instinct is to act, to own the action, and to act for a reason beyond personal advantage. This is not a performable pattern over 60 situations &mdash; it reflects something genuine about how you engage with difficulty.";
+  } else if(pScore>5&&passScore<5){
+    profile="Your SRT pattern shows moderate proactive orientation with some passive responses mixed in. The psychologist reading these 60 situations will note the inconsistency &mdash; not as a single failure, but as evidence that your instinct to act is situational rather than habitual. The passive responses tend to cluster around specific situation types (likely involving authority, conflict, or uncertainty). Identify which types trigger passivity in you and work specifically on those. Your response to situations you find comfortable is not the test. Your response to situations you find uncomfortable is.";
+  } else if(passScore>5){
+    profile="Your SRT pattern shows a predominantly passive or reactive orientation. In a significant number of situations, your instinct is to wait, defer, or manage the problem indirectly rather than to act, lead, and own the outcome. The SSB psychologist will observe this as a consistent pattern across 60 situations &mdash; not as a single weak response, but as a profile. This is not a preparation problem. It is a character orientation problem. The development work required is not SRT practice. It is building the habit of proactive engagement in your daily life over months.";
+  } else {
+    profile="Your SRT pattern is mixed, with no dominant orientation visible. This is itself a finding: the psychologist looks for consistency, and the absence of a consistent pattern &mdash; responses that vary significantly in quality, orientation, and depth &mdash; suggests a personality that has not yet developed stable officer-like response habits. Work on building consistency rather than improving individual responses.";
+  }
+
+  // Per-response coaching
+  var coachingHtml = '<div class="rpt-box"><h3>Response Analysis &mdash; Your First 10 Situations</h3>';
+  coachingHtml += '<p style="font-size:.82rem;color:var(--ash);font-style:italic;margin-bottom:.8rem">The SSB psychologist applies this level of analysis to all 60 of your responses. Here it is shown for the first 10. Apply the same framework to the remaining 50 in your own review session after this test.</p>';
+
+  for(var ci=0;ci<10&&ci<sits.length;ci++){
+    var ans=srtAns[ci];
+    if(!ans||!ans.trim()){
+      coachingHtml+='<div class="q-stat" style="flex-direction:column;gap:.3rem;padding:.8rem 0">'
+        +'<div style="display:flex;gap:.5rem"><div class="q-s-num">'+(ci+1)+'</div><div class="q-s-sit" style="font-weight:500;color:var(--navy)">'+sits[ci]+'</div></div>'
+        +'<div style="padding-left:2rem;font-size:.84rem;border-left:2px solid var(--red);padding-left:.8rem;color:var(--red);font-style:italic">Not attempted. In SSB, every unattempted situation is a negative signal regardless of other scores. Speed of response is itself a measure of dynamism. Practise until you can respond to all 60 within 30 minutes.</div></div>';
+      continue;
+    }
+    var a=ans.trim().toLowerCase();
+    var rawAns=ans.trim();
+    var isProactive=/immediate|first|take|inform|ensure|check|assess|move|act|report|organise|secure|establish|i would|i will|i shall/.test(a);
+    var isPassive=/wait|see what|do nothing|ignore|let them|hope|it depends|someone else|not sure/.test(a);
+    var isEthical=/right|honest|duty|inform|truth|report|correct|proper|should|must/.test(a);
+    var isSocial=/team|together|colleague|support|help|listen|group|them|others/.test(a);
+    var isOwnership=/i |my |myself/.test(a);
+    var wc=rawAns.split(/\s+/).length;
+
+    var note='';
+    var noteColor='var(--navy)';
+    if(wc<5){
+      note='Response too brief. SRT requires a complete thought \u2014 what you would do and how. Fewer than 5 words provides insufficient material for assessment. Aim for 1-2 complete sentences.';
+      noteColor='var(--amber)';
+    } else if(wc>35){
+      note='Response too long for SRT pace. The SSB allocates ~30 seconds per situation. Responses of this length suggest deliberation rather than instinct, which itself signals to the psychologist. Cut to the essential action and reasoning.';
+      noteColor='var(--amber)';
+    } else if(isPassive){
+      note='Passive orientation detected. Words like "wait," "hope," "let" signal low Initiative and Speed of Decision to the psychologist. Rewrite with a clear first action that you personally take.';
+      noteColor='var(--red)';
+    } else if(isProactive&&isEthical&&isOwnership){
+      note='Strong. Proactive, ethical, personally owned. This is the pattern. First-person, action-directed, with a clear reason. Template response.';
+      noteColor='var(--green)';
+    } else if(isProactive&&isEthical){
+      note='Good \u2014 proactive and ethically grounded. Strengthen by making ownership explicit: "I would immediately..." rather than "One should..." The psychologist reads for personal agency.';
+      noteColor='var(--amber)';
+    } else if(isProactive){
+      note='Proactive intent present. Gap: ethical or social grounding missing. In situations involving people, add one phrase showing the purpose behind the action \u2014 not just what you do but why.';
+      noteColor='var(--amber)';
+    } else if(isSocial){
+      note='Social awareness present. Gap: you are supporting rather than leading. For officer selection, move yourself into the active-leadership position. Who coordinates? Who decides? That should be you.';
+      noteColor='var(--amber)';
+    } else {
+      note='Functional but does not demonstrate officer-like qualities clearly. Ask yourself: does this response show someone who acts, leads, and takes responsibility? Rewrite with those three qualities visible.';
+      noteColor='var(--amber)';
+    }
+
+    coachingHtml+='<div class="q-stat" style="flex-direction:column;gap:.3rem;padding:.8rem 0;border-bottom:1px solid var(--border)">'
+      +'<div style="display:flex;gap:.5rem"><div class="q-s-num">'+(ci+1)+'</div><div style="font-size:.9rem;font-weight:500;color:var(--navy);line-height:1.45">'+sits[ci]+'</div></div>'
+      +'<div style="padding-left:2rem">'
+      +'<div style="font-size:.88rem;color:var(--ink);font-style:italic;border-left:2px solid var(--cream2);padding-left:.6rem;margin:.2rem 0;line-height:1.5">'+rawAns+'</div>'
+      +'<div style="font-size:.84rem;border-left:2px solid var(--gold);padding-left:.6rem;margin-top:.3rem;font-style:italic;line-height:1.55;color:var(--navy)">'+note+'</div>'
+      +'</div></div>';
+  }
+  coachingHtml+='<p style="font-size:.8rem;color:var(--ash);margin-top:.8rem;font-style:italic">Apply the same four-question framework to all remaining responses: Is it proactive? Is it ethically grounded? Is it personally owned? Is it concise?</p>';
+  coachingHtml+='</div>';
+
+  var colRaoNote='<div class="rpt-box" style="border:2px solid var(--gold);background:rgba(201,168,76,.04)">'
+    +'<h3>What This Practice Is Actually For</h3>'
+    +'<p>The SRT is not a test of what you know. It is a test of who you are when the situation demands something of you and there is no time to deliberate. The psychologist reading your 60 responses is not scoring individual answers. They are building a portrait of your personality from a pattern across 60 small windows.</p>'
+    +'<p>That portrait is the same personality that will be visible across five days of SSB \u2014 in your GTO group behaviour, in your Personal Interview, in the informal interactions that candidates do not realise are also being observed. You cannot build a different portrait in SRT practice than the one your character produces. But you can develop your character, over months, so that the portrait that emerges is genuinely officer-like.</p>'
+    +'<p>That is the purpose of this practice suite. And that is the purpose of the Lead By Dharma programme.</p>'
+    +'<div style="background:var(--cream);border-left:3px solid var(--gold);padding:.7rem 1rem;margin-top:1rem;border-radius:0 2px 2px 0">'
+    +'<em style="font-size:.9rem">&ldquo;Preparation that does not change who you are is not preparation &mdash; it is decoration.&rdquo;</em><br>'
+    +'<span style="font-family:JetBrains Mono,monospace;font-size:.65rem;color:var(--ash);letter-spacing:.1em">&mdash; Colonel Aniruddha Rao HR (Retd.) &middot; Maratha Light Infantry &middot; leadbydharma.com</span>'
+    +'</div>'
+    +'</div>';
+
+  var blankColor=blank>10?"#8b1a1a":"#1a5c2e";
+
+  document.getElementById("testArea").classList.add("hidden");
+  var ra=document.getElementById("reportArea");
+  ra.classList.remove("hidden");
+  ra.innerHTML='<div class="rpt-hdr">'
+    +'<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:var(--gold);letter-spacing:.2em;margin-bottom:.4rem">SRT ASSESSMENT REPORT \u00b7 SET '+(selSet+1)+'</div>'
+    +'<div style="font-family:Playfair Display,serif;font-size:1.6rem;color:var(--white)">Situation Reaction Test</div>'
+    +'<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:rgba(255,255,255,.4);margin-top:.4rem">LEAD BY DHARMA \u00b7 '+new Date().toLocaleDateString("en-IN",{year:"numeric",month:"long",day:"numeric"}).toUpperCase()+'</div>'
+    +'</div>'
+    +'<div class="rpt-box"><h3>Completion &amp; Pace</h3>'
+    +'<div class="stat-row"><span>Situations attempted</span><span class="stat-val">'+answered+'/60</span></div>'
+    +'<div class="stat-row"><span>Unattempted</span><span class="stat-val" id="srtBlankV">'+blank+'</span></div>'
+    +'<div class="stat-row"><span>Average response length</span><span class="stat-val">'+avgWords+' words</span></div>'
+    +'<div class="stat-row"><span>Proactive language markers</span><span class="stat-val">'+pScore+'</span></div>'
+    +'<div class="stat-row"><span>Ethical language markers</span><span class="stat-val">'+eScore+'</span></div>'
+    +'<div class="stat-row"><span>Passive language markers</span><span class="stat-val" style="color:'+( passScore>5?'#8b1a1a':'#1a5c2e')+'">'+passScore+'</span></div>'
+    +'<p style="font-size:.8rem;color:var(--ash);margin-top:.8rem;font-style:italic">Target: 60 attempted, average 10-20 words per response, proactive markers above 8, passive markers below 3. In the actual SSB, every unattempted situation contributes to the psychologist\'s overall personality assessment. Completion rate is itself a measure of initiative and stamina.</p>'
+    +'</div>'
+    +'<div class="rpt-box"><h3>Overall Pattern Analysis</h3><p>'+profile+'</p></div>'
+    +coachingHtml
+    +colRaoNote
+    +'<div class="lgl-ftr">Educational practice tool only \u00b7 Not an official SSB assessment \u00b7 Not affiliated with SSB, MoD, or Indian Armed Forces \u00b7 \u00a9 2026 Lead By Dharma \u00b7 leadbydharma.com</div>'
+    +'<div style="text-align:center;padding:1rem 0;display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap">'
+    +'<button class="btn btn-primary" onclick="window.print()">Print Report</button>'
+    +'<button class="btn btn-outline" onclick="goHome()">Try Another Test</button></div>';
+
+  document.getElementById("srtBlankV").style.color=blankColor;
+}
+
+// =====================================================
+// WAT
+// =====================================================
+function renderWAT(){
+  var words=WAT[selSet];
+  var html='<div class="timer-bar">'
+    +'<div class="timer-lbl">WAT &middot; Set '+(selSet+1)+' &middot; 60 Words</div>'
+    +'<div class="timer-val" id="timerDisp">15:00</div>'
+    +'<button class="btn btn-sm" style="background:var(--gold);color:var(--navy);border:none;cursor:pointer;font-family:Playfair Display,serif;border-radius:2px;padding:.4rem 1rem" onclick="submitWAT()">Submit &rarr;</button>'
+    +'</div>'
+    +'<div style="padding:1rem 0">'
+    +'<p style="font-size:.85rem;color:var(--ash);font-style:italic;margin-bottom:1rem">Write one sentence using each word. First thought — do not deliberate. SSB pace is 15 seconds per word.</p>'
+    +'<div class="wat-grid">';
+  for(var i=0;i<words.length;i++){
+    html+='<div class="wat-item">'
+      +'<div class="wat-word">'+words[i]+'</div>'
+      +'<input class="wat-inp" id="wat'+i+'" type="text" placeholder="Write a sentence..."'
+      +' oninput="watAns['+i+']=this.value;this.className="wat-inp"+(this.value.trim().length>0?" filled":"")" />'
+      +'<div class="wat-num">'+(i+1)+' / 60</div>'
+      +'</div>';
+  }
+  html+='</div><div style="text-align:right;padding:1rem 0"><button class="btn btn-primary" onclick="submitWAT()">Submit WAT &rarr;</button></div></div>';
+  document.getElementById("testArea").innerHTML=html;
+  startTimer(900,submitWAT);
+}
+
+function submitWAT(){ clearInterval(timerInt); genWATReport(); }
+
+function genWATReport(){
+  var words=WAT[selSet];
+  var answered=0;
+  for(var i=0;i<words.length;i++){ if(watAns[i]&&watAns[i].trim().length>0) answered++; }
+  var blank=60-answered;
+  var allText="";
+  for(var k in watAns){ allText+=watAns[k].toLowerCase()+" "; }
+
+  var posW=["help","serve","lead","achieve","build","protect","together","strong","duty","honour","victory","hope","succeed","overcome","courage","determined","committed","action","forward","responsibility"];
+  var negW=["fail","afraid","alone","difficult","impossible","hate","angry","never","give up","avoid","weak","scared","worry","cannot","helpless","lost","hopeless","pain","fear","defeated"];
+  var posC=0,negC=0;
+  for(var i=0;i<posW.length;i++) if(allText.indexOf(posW[i])>=0) posC++;
+  for(var i=0;i<negW.length;i++) if(allText.indexOf(negW[i])>=0) negC++;
+
+  var tone,toneNote;
+  if(posC>negC*2){
+    tone="strongly positive and action-oriented";
+    toneNote="Your WAT responses show a predominantly positive, action-oriented emotional orientation. This is the pattern the SSB psychologist looks for \u2014 not forced positivity or suppression of negative emotions, but a genuine default orientation toward agency and forward movement. The words you associate with these stimuli reveal what your mind reaches for first. What it reaches for first is the actual measure.";
+  } else if(posC>negC){
+    tone="broadly positive with some negative associations";
+    toneNote="Your WAT responses are broadly positive, with some negative associations appearing when specific words are presented. Review which words triggered negative responses \u2014 they reveal specific sensitivities or fears. In the actual SSB, the psychologist reads WAT responses specifically for these patterns. Words like 'enemy,' 'failure,' 'defeat,' and 'fear' are included deliberately. They are testing what your mind reaches for when confronted with difficulty. Work on building associations that are honest but forward-directed.";
+  } else {
+    tone="showing notable negative or avoidant associations";
+    toneNote="Your WAT responses show a notable number of negative or avoidant associations. This is significant because the SSB WAT is specifically designed to reveal underlying psychological orientation \u2014 the associations you carry below the level of deliberate presentation. Negative associations in WAT do not simply mean you used negative words. They mean your default emotional orientation, when unguarded, moves toward fear, avoidance, or defeat. This is the pattern the psychologist will flag. The development work here is not to practise positive sentences. It is to genuinely shift your emotional orientation over months.";
+  }
+
+  // Per-word coaching for first 12
+  var wordCoachHtml = '<div class="rpt-box"><h3>Response Analysis \u2014 Your First 12 Words</h3>';
+  wordCoachHtml += '<p style="font-size:.82rem;color:var(--ash);font-style:italic;margin-bottom:.8rem">In the actual SSB WAT, the psychologist reads all 60 sentences looking for three things: positive/negative orientation, active/passive construction, and consistency of personality projection. The analysis below shows what they see in your first 12 responses. Apply the same lens to the remaining 48.</p>';
+
+  for(var wi=0;wi<12&&wi<words.length;wi++){
+    var wans=watAns[wi];
+    var word=words[wi];
+    if(!wans||!wans.trim()){
+      wordCoachHtml+='<div class="q-stat" style="flex-direction:column;gap:.3rem;padding:.7rem 0;border-bottom:1px solid var(--border)">'
+        +'<div style="display:flex;gap:.5rem"><div style="font-family:Playfair Display,serif;font-weight:600;min-width:120px;color:var(--navy)">'+word+'</div>'
+        +'<div style="font-size:.84rem;color:var(--red);font-style:italic">Not attempted</div></div></div>';
+      continue;
+    }
+    var wa=wans.trim();
+    var wal=wa.toLowerCase();
+    var note='';
+    var isTooLong=wa.split(/\s+/).length>20;
+    var isNeg=/fail|afraid|lost|alone|difficult|impossible|angry|weak|scared|defeat|never|cannot/.test(wal);
+    var isVague=/thing|something|anything|it|this/.test(wal) && wa.split(/\s+/).length < 5;
+    var isActive=/\b(i|he|she|they|we|soldiers|officers|leaders?|team|men)\s+(will|can|must|should|would|did|do|lead|serve|act|fight|protect|achieve|help|build)\b/.test(wal);
+    var isPassive=/\b(was|were|been|got|being|is being)\b/.test(wal) && !isActive;
+
+    if(isTooLong){
+      note='Too long for WAT pace. The SSB allocates approximately 15 seconds per word. A sentence of this length requires more than 15 seconds to write \u2014 which means you cannot maintain this pace across all 60 words. Short, precise, positive. That is the model.';
+    } else if(isVague){
+      note='Too vague. "It is difficult" or "something important" gives the psychologist nothing to read. The sentence must demonstrate a thought, an orientation, a value. Rewrite with a specific subject, a specific action, a specific quality.';
+    } else if(isNeg){
+      note='Negative association. The word triggered a response that looks toward failure, fear, or difficulty rather than toward overcoming, action, or service. In the SSB WAT, words like this are specifically included to test psychological orientation. Work on building forward-directed associations with challenging words.';
+    } else if(isActive){
+      note='Good \u2014 active construction with a clear agent taking a clear action. This is the model: someone does something purposeful. Clean, direct, positive.';
+    } else {
+      note='Adequate but passive construction. The sentence describes a state rather than an action. Rewrite with an active agent doing something purposeful \u2014 preferably with a leadership, service, or character dimension.';
+    }
+
+    var noteCol = isNeg ? 'var(--red)' : isActive ? 'var(--green)' : 'var(--navy)';
+
+    wordCoachHtml+='<div class="q-stat" style="flex-direction:column;gap:.2rem;padding:.7rem 0;border-bottom:1px solid var(--border)">'
+      +'<div style="display:flex;gap:.5rem;align-items:baseline">'
+      +'<div style="font-family:Playfair Display,serif;font-size:1rem;font-weight:700;min-width:130px;color:var(--navy)">'+word+'</div>'
+      +'<div style="font-size:.88rem;color:var(--ink);font-style:italic">'+wa+'</div>'
+      +'</div>'
+      +'<div style="padding-left:130px;font-size:.83rem;font-style:italic;border-left:0;color:'+noteCol+';line-height:1.5">'+note+'</div>'
+      +'</div>';
+  }
+  wordCoachHtml+='</div>';
+
+  var colRaoNote='<div class="rpt-box" style="border:2px solid var(--gold);background:rgba(201,168,76,.04)">'
+    +'<h3>What the WAT Reveals That You Cannot Control</h3>'
+    +'<p>The WAT is one of the most revealing instruments in the SSB battery precisely because it eliminates deliberation. You have 15 seconds. Your first association is what surfaces. That first association is not random \u2014 it is the product of years of how you have been thinking, what you have been exposed to, what your emotional default setting is.</p>'
+    +'<p>A candidate who has spent months reading about courage, leadership, and service will produce different WAT associations from a candidate who has spent those same months in avoidance, anxiety, and self-doubt. Not because they have practised \u2014 because they have genuinely been different people in that time. The WAT sees through preparation. It reads character.</p>'
+    +'<p>Practise the WAT as often as you need to build speed. But understand that the real preparation is the life you live in the months before your board.</p>'
+    +'<div style="background:var(--cream);border-left:3px solid var(--gold);padding:.7rem 1rem;margin-top:1rem;border-radius:0 2px 2px 0">'
+    +'<em style="font-size:.9rem">&ldquo;The uniform gave me more than I could ever give back to it. Not because of what it asked me to do \u2014 but because of what it asked me to be.&rdquo;</em><br>'
+    +'<span style="font-family:JetBrains Mono,monospace;font-size:.65rem;color:var(--ash);letter-spacing:.1em">&mdash; Colonel Aniruddha Rao HR (Retd.) \u00b7 leadbydharma.com</span>'
+    +'</div>'
+    +'</div>';
+
+  var blankColor=blank>8?"#8b1a1a":"#1a5c2e";
+
+  document.getElementById("testArea").classList.add("hidden");
+  var ra=document.getElementById("reportArea");
+  ra.classList.remove("hidden");
+  ra.innerHTML='<div class="rpt-hdr">'
+    +'<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:var(--gold);letter-spacing:.2em;margin-bottom:.4rem">WAT ASSESSMENT REPORT \u00b7 SET '+(selSet+1)+'</div>'
+    +'<div style="font-family:Playfair Display,serif;font-size:1.6rem;color:var(--white)">Word Association Test</div>'
+    +'<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:rgba(255,255,255,.4);margin-top:.4rem">LEAD BY DHARMA \u00b7 '+new Date().toLocaleDateString("en-IN",{year:"numeric",month:"long",day:"numeric"}).toUpperCase()+'</div>'
+    +'</div>'
+    +'<div class="rpt-box"><h3>Completion &amp; Orientation</h3>'
+    +'<div class="stat-row"><span>Words attempted</span><span class="stat-val">'+answered+'/60</span></div>'
+    +'<div class="stat-row"><span>Unattempted</span><span class="stat-val" id="watBlankV">'+blank+'</span></div>'
+    +'<div class="stat-row"><span>Overall association tone</span><span class="stat-val">'+tone+'</span></div>'
+    +'<div class="stat-row"><span>Positive orientation markers</span><span class="stat-val" style="color:var(--green)">'+posC+'</span></div>'
+    +'<div class="stat-row"><span>Negative orientation markers</span><span class="stat-val" style="color:'+(negC>5?'var(--red)':'var(--amber)')+'">'+negC+'</span></div>'
+    +'</div>'
+    +'<div class="rpt-box"><h3>What Your Association Pattern Reveals</h3><p>'+toneNote+'</p></div>'
+    +wordCoachHtml
+    +colRaoNote
+    +'<div class="lgl-ftr">Educational practice tool only \u00b7 Not an official SSB assessment \u00b7 Not affiliated with SSB, MoD, or Indian Armed Forces \u00b7 \u00a9 2026 Lead By Dharma \u00b7 leadbydharma.com</div>'
+    +'<div style="text-align:center;padding:1rem 0;display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap">'
+    +'<button class="btn btn-primary" onclick="window.print()">Print Report</button>'
+    +'<button class="btn btn-outline" onclick="goHome()">Try Another Test</button></div>';
+
+  document.getElementById("watBlankV").style.color=blankColor;
+}
+
+// =====================================================
+// SDT
+// =====================================================
+function renderSDT(){
+  var html='<div class="timer-bar">'
+    +'<div class="timer-lbl">SDT &middot; Set '+(selSet+1)+' &middot; 5 Sections</div>'
+    +'<div class="timer-val" id="timerDisp">15:00</div>'
+    +'<button class="btn btn-sm" style="background:var(--gold);color:var(--navy);border:none;cursor:pointer;font-family:Playfair Display,serif;border-radius:2px;padding:.4rem 1rem" onclick="submitSDT()">Submit &rarr;</button>'
+    +'</div>'
+    +'<div style="padding:1rem 0">'
+    +'<div class="sdt-intro">Write what five different people would say about you. The most important rule: be honest. The SSB psychologist reads all five sections together and looks for consistency — or inconsistency. An SDT where everyone says only positives is not credible.</div>';
+  for(var i=0;i<SDT_SECS.length;i++){
+    var sec=SDT_SECS[i];
+    html+='<div class="sdt-field">'
+      +'<div class="sdt-label">'+sec.label+'</div>'
+      +'<div class="sdt-sublbl">'+sec.sub+'</div>'
+      +'<textarea class="sdt-ta" id="sdt_'+sec.id+'" placeholder="'+sec.ph+'" rows="4" oninput="sdtSave(\'' +sec.id+ '\',this.value)"></textarea>'
+      +'</div>';
+  }
+  html+='<div style="text-align:right;padding:1rem 0"><button class="btn btn-primary" onclick="submitSDT()">Submit SDT &rarr;</button></div></div>';
+  document.getElementById("testArea").innerHTML=html;
+  startTimer(900,submitSDT);
+}
+
+function sdtSave(k,v){ sdtAns[k]=v; }
+function submitSDT(){ clearInterval(timerInt); genSDTReport(); }
+
+function genSDTReport(){
+  var filled=0;
+  for(var i=0;i<SDT_SECS.length;i++){
+    var v=sdtAns[SDT_SECS[i].id];
+    if(v&&v.trim().length>20) filled++;
+  }
+  var allText="";
+  for(var k in sdtAns){ allText+=sdtAns[k].toLowerCase()+" "; }
+
+  var negPhrases=["weakness","struggle","difficult","improve","not good at","sometimes fail","tend to","working on","need to develop","not always","can be"];
+  var posPhrases=["strength","good at","capable","achieve","succeed","praised","recognised","reliable","consistent","trusted","responsible"];
+  var negC=0,posC=0;
+  for(var i=0;i<negPhrases.length;i++) if(allText.indexOf(negPhrases[i])>=0) negC++;
+  for(var i=0;i<posPhrases.length;i++) if(allText.indexOf(posPhrases[i])>=0) posC++;
+  var balanced=negC>=2&&posC>=2;
+
+  var selfTxt=sdtAns["self"]||"";
+  var aspireTxt=sdtAns["aspire"]||"";
+  var parentTxt=sdtAns["parents"]||"";
+  var teachTxt=sdtAns["teachers"]||"";
+  var friendTxt=sdtAns["friends"]||"";
+
+  // Cross-section consistency check
+  var allSections=[parentTxt,teachTxt,friendTxt,selfTxt,aspireTxt];
+  var allFilled=allSections.filter(function(s){return s&&s.trim().length>30;}).length;
+
+  // Build section analyses
+  var sectionAnalyses='';
+
+  function analyseSection(label, text, context){
+    if(!text||text.trim().length<20){
+      return '<div style="margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)">'
+        +'<div style="font-family:Playfair Display,serif;font-size:.95rem;color:var(--navy);font-weight:600;margin-bottom:.3rem">'+label+'</div>'
+        +'<div style="font-size:.85rem;color:var(--red);font-style:italic;margin-bottom:.4rem">Not completed or too brief.</div>'
+        +'<div style="font-size:.83rem;color:var(--navy);border-left:2px solid var(--gold);padding-left:.6rem;font-style:italic">'+context+'</div>'
+        +'</div>';
+    }
+    var t=text.trim();
+    var tl=t.toLowerCase();
+    var hasNeg=negPhrases.some(function(p){return tl.indexOf(p)>=0;});
+    var hasPos=posPhrases.some(function(p){return tl.indexOf(p)>=0;});
+    var isVague=/good person|nice|helpful|hardworking|sincere/.test(tl) && t.split(/\s+/).length < 25;
+    var isSpecific=/specific|example|instance|when|time when|particularly|especially/.test(tl) || t.split(/\s+/).length > 40;
+
+    var note='';
+    if(isVague){
+      note='This section reads as generic rather than specific. Phrases like "hardworking," "sincere," and "good person" appear in thousands of SDTs every year. The SSB psychologist reads these as unverified self-report. What makes an SDT credible is specificity \u2014 concrete examples, real incidents, named qualities that are evidenced rather than claimed. Rewrite with at least one specific example that demonstrates the quality you are describing.';
+    } else if(!hasNeg && label.indexOf('self')>=0){
+      note='Your self-description contains only positive attributes. The SSB psychologist specifically looks for honest self-awareness \u2014 the ability to see and name genuine weaknesses with the same clarity that you see strengths. A self-section with no weaknesses does not read as confident. It reads as either dishonest or lacking in self-knowledge. Both are significant SSB negatives. Add at least one genuine weakness with specific examples.';
+    } else if(isSpecific&&hasNeg&&hasPos){
+      note='Good \u2014 this section is specific, honest about both strengths and weaknesses, and grounded in observable behaviour. This is the quality the psychologist is looking for. The SDT gains its full credibility when all five sections have this level of honesty and specificity.';
+    } else if(!hasNeg){
+      note='This section describes only positive qualities. For maximum SDT credibility, include at least one specific limitation or area of development. An honest SDT acknowledges reality in all five sections.';
+    } else {
+      note='This section is adequately completed. To strengthen it, add more specificity \u2014 concrete examples rather than general claims. The psychologist reads SDT sections looking for evidence, not assertion.';
+    }
+
+    var noteCol=isVague?'var(--amber)':(!hasNeg&&label.indexOf('self')>=0)?'var(--red)':(isSpecific&&hasNeg&&hasPos)?'var(--green)':'var(--navy)';
+
+    return '<div style="margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)">'
+      +'<div style="font-family:Playfair Display,serif;font-size:.95rem;color:var(--navy);font-weight:600;margin-bottom:.4rem">'+label+'</div>'
+      +'<div style="font-size:.88rem;font-style:italic;color:var(--ink);line-height:1.6;margin-bottom:.4rem;border-left:2px solid var(--cream2);padding-left:.6rem">'+t+'</div>'
+      +'<div style="font-size:.84rem;font-style:italic;border-left:2px solid var(--gold);padding-left:.6rem;color:'+noteCol+';line-height:1.55">'+note+'</div>'
+      +'</div>';
+  }
+
+  sectionAnalyses+=analyseSection("What my parents think of me",parentTxt,
+    "The parents section is often the most revealing in the SDT because candidates tend to write what their parents actually think rather than what they wish were true. If this section is incomplete, the psychologist notes it as avoidance. Complete it honestly.");
+  sectionAnalyses+=analyseSection("What my teachers think of me",teachTxt,
+    "Teachers observe behaviour in institutional settings under mild pressure. Their assessment of you reveals how you perform in structured environments with authority and expectations. Complete this honestly, including the limitations your teachers would privately acknowledge.");
+  sectionAnalyses+=analyseSection("What my friends think of me",friendTxt,
+    "The friends section often reveals the most honest picture of social behaviour. Friends are candid in private. What would they actually say, including the parts you find uncomfortable? That is the section the psychologist will read most carefully for social intelligence markers.");
+  sectionAnalyses+=analyseSection("What I think of myself",selfTxt,
+    "The self-section is the most scrutinised in the entire SDT. It must demonstrate self-awareness \u2014 accurate knowledge of your actual character, strengths, and genuine weaknesses. Generic claims and absent weaknesses are the two most common reasons this section fails to impress assessors.");
+  sectionAnalyses+=analyseSection("What kind of person I want to become",aspireTxt,
+    "The aspiration section is read for two things: specificity and honesty. 'I want to be a better leader' scores nothing. 'I am working on controlling my impatience when others are slower than me, specifically in group settings' scores significantly. Vague aspirations suggest lack of self-knowledge. Specific aspirations demonstrate both self-awareness and the will to develop.");
+
+  var consistencyNote='';
+  if(allFilled>=4&&balanced){
+    consistencyNote='Your SDT is substantially complete and shows a balance of positive and negative self-perception across sections. The most important next check is consistency: do the qualities described by your parents, teachers, and friends align with your self-description? Inconsistency across sections is a red flag to the SSB psychologist. If your parents see one thing and your self-description says another, that gap tells a story.';
+  } else if(allFilled<4){
+    consistencyNote='Incomplete sections are a significant weakness in your SDT. In the actual SSB, the psychologist reads all five sections and draws inferences from incomplete ones. An incomplete section is not neutral \u2014 it suggests avoidance or insufficient self-knowledge. Complete all five sections before your board, with genuine length and honesty in each.';
+  } else if(!balanced){
+    consistencyNote='Your SDT lacks balance between positive and negative self-assessment. An SDT that presents only positive qualities in all five sections is not credible to an experienced psychologist. Every candidate has weaknesses. The psychologist expects to see them acknowledged. Absence of acknowledged weakness signals either dishonesty or a lack of self-awareness \u2014 both of which are significant SSB negatives.';
+  }
+
+  var colRaoNote='<div class="rpt-box" style="border:2px solid var(--gold);background:rgba(201,168,76,.04)">'
+    +'<h3>What the SDT Actually Measures</h3>'
+    +'<p>The Self Description Test is the most intimate of the SSB psychology instruments. It asks you to write not only what you think of yourself, but what five different people who know you well would say about you. The psychologist reads these five perspectives together, looking for coherence, honesty, and self-awareness.</p>'
+    +'<p>What the SDT cannot be is performed. A candidate who writes what they think the psychologist wants to read will produce a section that is internally consistent but rings hollow \u2014 because genuine self-knowledge has texture and honesty has specificity. The candidate who writes "I am hardworking and disciplined" is giving the psychologist nothing. The candidate who writes "My teachers would say I am one of the sharper students but that I tend to dominate discussions when I feel others are not keeping up \u2014 something I am actively trying to moderate" is giving them a person.</p>'
+    +'<p>Write the SDT as if the psychologist already knows the truth about you and you are confirming it, not constructing a narrative.</p>'
+    +'<div style="background:var(--cream);border-left:3px solid var(--gold);padding:.7rem 1rem;margin-top:1rem;border-radius:0 2px 2px 0">'
+    +'<em style="font-size:.9rem">&ldquo;India does not need your best performance. India needs your best self. The two are only the same thing if you know honestly what your best self actually is.&rdquo;</em><br>'
+    +'<span style="font-family:JetBrains Mono,monospace;font-size:.65rem;color:var(--ash);letter-spacing:.1em">&mdash; Colonel Aniruddha Rao HR (Retd.) \u00b7 leadbydharma.com</span>'
+    +'</div>'
+    +'</div>';
+
+  var filledColor=filled>=4?"#1a5c2e":"#8b5c00";
+  var balColor=balanced?"#1a5c2e":"#8b5c00";
+
+  document.getElementById("testArea").classList.add("hidden");
+  var ra=document.getElementById("reportArea");
+  ra.classList.remove("hidden");
+  ra.innerHTML='<div class="rpt-hdr">'
+    +'<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:var(--gold);letter-spacing:.2em;margin-bottom:.4rem">SDT ASSESSMENT REPORT \u00b7 SET '+(selSet+1)+'</div>'
+    +'<div style="font-family:Playfair Display,serif;font-size:1.6rem;color:var(--white)">Self Description Test</div>'
+    +'<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:rgba(255,255,255,.4);margin-top:.4rem">LEAD BY DHARMA \u00b7 '+new Date().toLocaleDateString("en-IN",{year:"numeric",month:"long",day:"numeric"}).toUpperCase()+'</div>'
+    +'</div>'
+    +'<div class="rpt-box"><h3>SDT Overview</h3>'
+    +'<div class="stat-row"><span>Sections substantially completed</span><span class="stat-val" id="sdtFilledV">'+filled+'/5</span></div>'
+    +'<div class="stat-row"><span>Balance (strengths AND weaknesses present)</span><span class="stat-val" id="sdtBalV">'+(balanced?"Yes \u2014 present":"Review \u2014 appears one-sided")+'</span></div>'
+    +'<p style="font-size:.85rem;color:var(--ash);font-style:italic;margin-top:.7rem">'+consistencyNote+'</p>'
+    +'</div>'
+    +'<div class="rpt-box"><h3>Section-by-Section Analysis</h3>'+sectionAnalyses+'</div>'
+    +colRaoNote
+    +'<div class="lgl-ftr">Educational practice tool only \u00b7 Not an official SSB assessment \u00b7 Not affiliated with SSB, MoD, or Indian Armed Forces \u00b7 \u00a9 2026 Lead By Dharma \u00b7 leadbydharma.com</div>'
+    +'<div style="text-align:center;padding:1rem 0;display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap">'
+    +'<button class="btn btn-primary" onclick="window.print()">Print Report</button>'
+    +'<button class="btn btn-outline" onclick="goHome()">Try Another Test</button></div>';
+
+  document.getElementById("sdtFilledV").style.color=filledColor;
+  document.getElementById("sdtBalV").style.color=balColor;
+}
+// Initialize store on load
+renderPricingGrid();
+</script>
+</body>
+</html>
