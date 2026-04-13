@@ -820,6 +820,25 @@ function genReport(){
     });
   },200);
 }
+
+// Auto-show unlock gate if returning from Razorpay payment
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('unlock') === 'true' || params.get('unlocked') === 'true') {
+    document.getElementById('payGate').classList.remove('hidden');
+    var ub = document.getElementById('unlockBox');
+    if (ub) {
+      ub.style.display = 'block';
+      var note = document.createElement('div');
+      note.style.cssText = 'background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);'
+        + 'border-radius:2px;padding:.6rem .9rem;font-size:.8rem;color:var(--amber);'
+        + 'font-family:JetBrains Mono,monospace;margin:.6rem 0;text-align:center;';
+      note.textContent = 'Payment received. Check your email for the access code.';
+      ub.insertBefore(note, ub.firstChild);
+    }
+  }
+})();
+
 </script>
 </body>
 </html>

@@ -1601,6 +1601,29 @@ function genSDTReport(){
 }
 // Initialize store on load
 renderPricingGrid();
+
+// ── AUTO-SHOW UNLOCK GATE if returning from payment ──────────
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  // ?unlock=true  — show gate immediately (for all Razorpay redirects)
+  // ?pack=N       — optionally pre-select the pack they paid for
+  if (params.get('unlock') === 'true' || params.get('unlocked') === 'true') {
+    // Hide store, show unlock gate
+    document.getElementById('storePage').classList.add('hidden');
+    document.getElementById('unlockGate').classList.remove('hidden');
+    // If pack info present, show a contextual note
+    var pack = params.get('pack');
+    if (pack) {
+      var note = document.createElement('div');
+      note.style.cssText = 'background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);'
+        + 'border-radius:2px;padding:.6rem .9rem;font-size:.8rem;color:var(--amber);'
+        + 'font-family:JetBrains Mono,monospace;margin:.6rem 0;text-align:center;';
+      note.textContent = 'Payment received. Check your email for the access code.';
+      var gate = document.getElementById('unlockGate').querySelector('.unlock-gate');
+      if (gate) gate.insertBefore(note, gate.firstChild);
+    }
+  }
+})();
 </script>
 </body>
 </html>
