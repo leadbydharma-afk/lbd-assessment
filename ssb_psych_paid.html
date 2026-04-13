@@ -115,6 +115,36 @@ body{font-family:Crimson Pro,Georgia,serif;background:var(--cream);color:var(--i
   .demo-banner{background:rgba(139,92,0,.08);border:1px solid rgba(139,92,0,.25);border-radius:2px;padding:.6rem 1rem;font-family:JetBrains Mono,monospace;font-size:.68rem;color:var(--amber);text-align:center;margin:.6rem 0}
   @media(max-width:560px){.what-included{grid-template-columns:1fr}.pricing-grid{grid-template-columns:1fr 1fr}}
 
+
+  /* EXTEND TIME BUTTON */
+  .extend-btn {
+    font-family: JetBrains Mono, monospace;
+    font-size: .62rem;
+    letter-spacing: .1em;
+    padding: .3rem .75rem;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all .2s;
+    border: 1px solid rgba(201,168,76,.5);
+    background: rgba(201,168,76,.1);
+    color: var(--gold2);
+    white-space: nowrap;
+  }
+  .extend-btn:hover:not(:disabled) {
+    background: rgba(201,168,76,.2);
+    border-color: var(--gold2);
+  }
+  .extend-btn:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+  }
+  .extend-uses {
+    font-family: JetBrains Mono, monospace;
+    font-size: .58rem;
+    color: rgba(201,168,76,.5);
+    margin-left: .3rem;
+  }
+
 </style>
 </head>
 <body>
@@ -949,6 +979,7 @@ function goHome(){
 
 function beginTest(){
   document.getElementById("testArea").innerHTML="";
+  resetExtend();
   if(selTest==="SRT") renderSRT();
   else if(selTest==="WAT") renderWAT();
   else renderSDT();
@@ -998,6 +1029,11 @@ function renderSRT(){
     + '<div class="timer-lbl">' + headerLabel + '</div>'
     + '<div class="timer-val" id="timerDisp">' + timerLabel + '</div>'
     + '<button class="btn btn-sm" style="background:var(--gold);color:var(--navy);border:none;cursor:pointer;font-family:Playfair Display,serif;border-radius:2px;padding:.4rem 1rem" onclick="submitSRT()">Submit &rarr;</button>'
+    + '<div style="display:flex;align-items:center;gap:.3rem">'
+    + '<button class="extend-btn" id="extendBtn" onclick="extendTime()">'
+    + (isDemoMode ? '+1 min' : '+3 min') + '</button>'
+    + '<span class="extend-uses" id="extendUses">' + EXTEND_MAX + ' left</span>'
+    + '</div>'
     + '</div>'
     + '<div style="padding:1rem 0">'
     + '<div class="srt-intro">Write your immediate, instinctive reaction to each situation. One or two sentences. Do not write what an officer should do — write what YOU would actually do today. Speed matters.</div>';
@@ -1038,6 +1074,11 @@ function renderWAT(){
     + '<div class="timer-lbl">' + watHeader + '</div>'
     + '<div class="timer-val" id="timerDisp">' + watTimerLabel + '</div>'
     + '<button class="btn btn-sm" style="background:var(--gold);color:var(--navy);border:none;cursor:pointer;font-family:Playfair Display,serif;border-radius:2px;padding:.4rem 1rem" onclick="submitWAT()">Submit &rarr;</button>'
+    + '<div style="display:flex;align-items:center;gap:.3rem">'
+    + '<button class="extend-btn" id="extendBtn" onclick="extendTime()">'
+    + (isDemoMode ? '+1 min' : '+3 min') + '</button>'
+    + '<span class="extend-uses" id="extendUses">' + EXTEND_MAX + ' left</span>'
+    + '</div>'
     + '</div>'
     + '<div style="padding:1rem 0">'
     + '<p style="font-size:.85rem;color:var(--ash);font-style:italic;margin-bottom:1rem">Write one sentence using each word. First thought — do not deliberate. SSB pace is 15 seconds per word.</p>'
@@ -1062,6 +1103,53 @@ function renderWAT(){
   startTimer(watTimerSecs, submitWAT);
 }
 
+
+
+// =====================================================
+// EXTEND TIME
+// =====================================================
+var extendUsed = 0;
+var EXTEND_MAX  = 2;           // max recharges per test
+var EXTEND_SECS_DEMO = 60;     // +1 min for demo
+var EXTEND_SECS_PAID = 180;    // +3 min for paid
+
+function extendTime() {
+  if (extendUsed >= EXTEND_MAX) return;
+  var secs = isDemoMode ? EXTEND_SECS_DEMO : EXTEND_SECS_PAID;
+  timeLeft += secs;
+  extendUsed++;
+  var remaining = EXTEND_MAX - extendUsed;
+
+  // Update button
+  var btn  = document.getElementById('extendBtn');
+  var uses = document.getElementById('extendUses');
+  if (btn) {
+    if (remaining === 0) {
+      btn.disabled = true;
+      btn.textContent = 'No more extensions';
+    } else {
+      btn.textContent = (isDemoMode ? '+1 min' : '+3 min');
+    }
+  }
+  if (uses) {
+    uses.textContent = remaining > 0
+      ? remaining + ' left'
+      : 'used up';
+  }
+
+  // Flash the timer green briefly
+  var timerEl = document.getElementById('timerDisp');
+  if (timerEl) {
+    timerEl.style.color = '#4caf50';
+    setTimeout(function() {
+      timerEl.style.color = '';
+    }, 800);
+  }
+}
+
+function resetExtend() {
+  extendUsed = 0;
+}
 
 // =====================================================
 // SRT SUBMIT + REPORT
@@ -1357,6 +1445,11 @@ function renderSDT(){
     + '<div class="timer-lbl">' + sdtHeader + '</div>'
     + '<div class="timer-val" id="timerDisp">' + sdtTimerLabel + '</div>'
     + '<button class="btn btn-sm" style="background:var(--gold);color:var(--navy);border:none;cursor:pointer;font-family:Playfair Display,serif;border-radius:2px;padding:.4rem 1rem" onclick="submitSDT()">Submit &rarr;</button>'
+    + '<div style="display:flex;align-items:center;gap:.3rem">'
+    + '<button class="extend-btn" id="extendBtn" onclick="extendTime()">'
+    + (isDemoMode ? '+1 min' : '+3 min') + '</button>'
+    + '<span class="extend-uses" id="extendUses">' + EXTEND_MAX + ' left</span>'
+    + '</div>'
     + '</div>'
     + '<div style="padding:1rem 0">'
     + '<div class="sdt-intro">Write what five different people would say about you. The most important rule: be honest. The SSB psychologist reads all five sections together and looks for consistency or inconsistency. An SDT where everyone says only positives is not credible.</div>';
