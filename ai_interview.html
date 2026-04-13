@@ -92,6 +92,72 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 .loading-msg{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--gold);text-align:center;padding:.5rem;animation:fade .8s infinite alternate}
 @keyframes fade{from{opacity:.5}to{opacity:1}}
 @media(max-width:560px){.score-grid{grid-template-columns:1fr}}
+
+  /* USAGE TRACKER */
+  .usage-bar {
+    background: var(--cream);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: .8rem 1rem;
+    margin-bottom: 1.2rem;
+    font-family: JetBrains Mono, monospace;
+  }
+  .usage-title {
+    font-size: .62rem;
+    letter-spacing: .15em;
+    color: var(--ash);
+    text-transform: uppercase;
+    margin-bottom: .5rem;
+  }
+  .usage-slots {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+  }
+  .usage-slot {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    font-size: .72rem;
+    padding: .25rem .6rem;
+    border-radius: 2px;
+    border: 1px solid var(--rule);
+    background: var(--white);
+    color: var(--ash);
+  }
+  .usage-slot.used {
+    background: rgba(107,26,26,.06);
+    border-color: rgba(107,26,26,.2);
+    color: var(--red);
+    text-decoration: line-through;
+    opacity: .7;
+  }
+  .usage-slot.available {
+    background: rgba(26,74,46,.06);
+    border-color: rgba(26,74,46,.2);
+    color: var(--green);
+  }
+  .usage-exhausted {
+    background: rgba(107,26,26,.06);
+    border: 1px solid rgba(107,26,26,.2);
+    border-radius: 3px;
+    padding: .7rem 1rem;
+    font-size: .82rem;
+    color: var(--red);
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+  .report-access-note {
+    background: rgba(26,74,46,.06);
+    border: 1px solid rgba(26,74,46,.2);
+    border-radius: 3px;
+    padding: .6rem 1rem;
+    font-size: .78rem;
+    color: var(--green);
+    font-family: JetBrains Mono, monospace;
+    margin-top: .5rem;
+  }
+
 </style>
 </head>
 <body>
@@ -108,8 +174,11 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 </div>
 
 <!-- SETUP PAGE -->
+<div id="aiCodeGate"></div>
+
 <div id="setupPage">
   <div class="setup-card">
+    <div id="usageContainer"></div>
     <h3>Before We Begin — Tell Me About Yourself</h3>
     <p style="font-size:.88rem;color:var(--ash);margin-bottom:1.2rem;font-style:italic">This information is used to personalise your interview. The AI interviewer will use it to ask relevant, probing questions — just as a real IO would.</p>
 
@@ -246,6 +315,191 @@ function getSystemPrompt() {
 // =====================================================
 // START INTERVIEW
 // =====================================================
+
+// =====================================================
+// USAGE LIMIT SYSTEM
+// Max 3 interviews total — one per difficulty level
+// Reports always accessible
+// Stored in localStorage so persists across sessions
+// =====================================================
+var USAGE_KEY = 'lbd_ai_interview_usage';
+var DIFF_LABELS = {
+  'standard':  'Standard',
+  'demanding': 'Demanding',
+  'stress':    'Stress'
+};
+var MAX_INTERVIEWS = 3;
+
+function getUsage() {
+  try {
+    var raw = localStorage.getItem(USAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch(e) { return {}; }
+}
+
+function saveUsage(usage) {
+  try { localStorage.setItem(USAGE_KEY, JSON.stringify(usage)); } catch(e) {}
+}
+
+function markUsed(difficulty) {
+  var usage = getUsage();
+  if (!usage[difficulty]) usage[difficulty] = { count: 0, reports: [] };
+  usage[difficulty].count++;
+  usage[difficulty].lastUsed = new Date().toISOString();
+  saveUsage(usage);
+}
+
+function totalUsed() {
+  var usage = getUsage();
+  var total = 0;
+  for (var d in usage) { total += (usage[d].count || 0); }
+  return total;
+}
+
+function isDifficultyUsed(difficulty) {
+  var usage = getUsage();
+  return usage[difficulty] && usage[difficulty].count > 0;
+}
+
+function canStartInterview(difficulty) {
+  if (totalUsed() >= MAX_INTERVIEWS) return false;
+  if (isDifficultyUsed(difficulty)) return false;
+  return true;
+}
+
+function saveReport(difficulty, reportHTML) {
+  try {
+    var usage = getUsage();
+    if (!usage[difficulty]) usage[difficulty] = { count: 0, reports: [] };
+    if (!usage[difficulty].reports) usage[difficulty].reports = [];
+    usage[difficulty].reports.push({
+      date: new Date().toLocaleDateString('en-IN'),
+      html: reportHTML
+    });
+    saveUsage(usage);
+  } catch(e) {}
+}
+
+function renderUsageBar() {
+  var usage = getUsage();
+  var used = totalUsed();
+  var remaining = MAX_INTERVIEWS - used;
+  var diffs = ['standard', 'demanding', 'stress'];
+
+  var slotsHTML = diffs.map(function(d) {
+    var isUsed = isDifficultyUsed(d);
+    return '<div class="usage-slot ' + (isUsed ? 'used' : 'available') + '">'
+      + (isUsed ? '✕' : '✓') + ' ' + DIFF_LABELS[d]
+      + '</div>';
+  }).join('');
+
+  var html = '<div class="usage-bar">'
+    + '<div class="usage-title">AI Interview Usage &nbsp;·&nbsp; '
+    + used + '/' + MAX_INTERVIEWS + ' used'
+    + (remaining > 0 ? ' &nbsp;·&nbsp; ' + remaining + ' remaining' : ' &nbsp;·&nbsp; All used')
+    + '</div>'
+    + '<div class="usage-slots">' + slotsHTML + '</div>'
+    + '</div>';
+
+  if (used >= MAX_INTERVIEWS) {
+    html += '<div class="usage-exhausted">'
+      + 'You have used all 3 interview attempts. Your reports are always accessible below.'
+      + '</div>';
+  }
+
+  // Add saved reports access if any exist
+  var reportsHTML = '';
+
+  // Build saved reports lookup for click handlers
+  window._lbdReports = [];
+  diffs.forEach(function(d) {
+    if (usage[d] && usage[d].reports && usage[d].reports.length > 0) {
+      usage[d].reports.forEach(function(r, i) {
+        var idx = window._lbdReports.length;
+        window._lbdReports.push({ diff: d, index: i });
+        reportsHTML += '<div style="margin-top:.4rem">'
+          + '<button onclick="showReportByIndex(' + idx + ')" '
+          + 'style="font-family:JetBrains Mono,monospace;font-size:.62rem;'
+          + 'background:none;border:1px solid var(--rule);padding:.2rem .6rem;'
+          + 'border-radius:2px;cursor:pointer;color:var(--navy)">'
+          + '\uD83D\uDCCB ' + DIFF_LABELS[d] + ' Report \u2014 ' + r.date
+          + '</button></div>';
+      });
+    }
+  });
+
+  if (reportsHTML) {
+    html += '<div class="report-access-note">📋 Your saved reports:</div>' + reportsHTML;
+  }
+
+  var container = document.getElementById('usageContainer');
+  if (container) container.innerHTML = html;
+}
+
+function showReportByIndex(idx) {
+  if (!window._lbdReports || !window._lbdReports[idx]) return;
+  var r = window._lbdReports[idx];
+  showSavedReport(r.diff, r.index);
+}
+
+function showSavedReport(difficulty, index) {
+  var usage = getUsage();
+  if (!usage[difficulty] || !usage[difficulty].reports || !usage[difficulty].reports[index]) return;
+  var rDiv = document.getElementById('reportPage');
+  rDiv.classList.remove('hidden');
+  rDiv.innerHTML = usage[difficulty].reports[index].html;
+  document.getElementById('setupPage').classList.add('hidden');
+}
+
+
+// =====================================================
+// USAGE LOGGING — silent, sends to Cloudflare Worker
+// Logs: code hash, session fingerprint, difficulty, timestamp
+// You can view logs in Cloudflare Worker → Logs tab
+// =====================================================
+function hashCode(str) {
+  // Simple hash — obfuscates real code value in transit
+  var hash = 0;
+  for (var i = 0; i < str.length; i++) {
+    var ch = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + ch;
+    hash = hash & hash;
+  }
+  return Math.abs(hash).toString(36).toUpperCase();
+}
+
+function getSessionFingerprint() {
+  // Lightweight browser fingerprint — identifies unique devices
+  // Not PII — cannot identify the person, only the device
+  var fp = [
+    navigator.language,
+    screen.width + 'x' + screen.height,
+    new Date().getTimezoneOffset(),
+    navigator.platform || 'unknown'
+  ].join('|');
+  return hashCode(fp);
+}
+
+function logInterviewStart(code, difficulty) {
+  try {
+    var payload = {
+      type:        'interview_start',
+      code_hash:   hashCode(code),
+      code_prefix: code.substring(0, 7),  // e.g. LBD-ABC for owner to identify
+      device_fp:   getSessionFingerprint(),
+      difficulty:  difficulty,
+      timestamp:   new Date().toISOString(),
+      timezone:    Intl.DateTimeFormat().resolvedOptions().timeZone
+    };
+    // Fire and forget — does not block interview
+    fetch(PROXY_URL + '?action=log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ log: payload })
+    }).catch(function() {});  // silently ignore if logging fails
+  } catch(e) {}  // never let logging crash the interview
+}
+
 function startInterview() {
   var name = document.getElementById('cName').value.trim();
   var entry = document.getElementById('cEntry').value;
@@ -256,6 +510,20 @@ function startInterview() {
     return;
   }
 
+  var selectedDiff = document.getElementById('cDiff').value || 'standard';
+
+  // ── Code-based usage check ──────────────────────────────
+  var codedUses = currentAICode ? getCodeUsage(currentAICode) : 0;
+  var isOwner = currentAICode && AI_CODES[currentAICode] && AI_CODES[currentAICode].owner;
+  if (!isOwner && codedUses <= 0) {
+    alert('You have used all your interview sessions. Your reports are permanently saved on this page. Contact leadbydharma@gmail.com if you need additional sessions.');
+    return;
+  }
+  if (!isOwner) {
+    decrementAIUses(currentAICode);
+    renderUsageDisplay();
+  }
+
   profile = {
     name: name,
     entry: entry,
@@ -264,8 +532,14 @@ function startInterview() {
     home: document.getElementById('cHome').value.trim() || 'Not specified',
     hobbies: document.getElementById('cHobbies').value.trim() || 'Not specified',
     why: document.getElementById('cWhy').value.trim() || 'Not specified',
-    difficulty: document.getElementById('cDiff').value
+    difficulty: selectedDiff
   };
+
+  // Mark this difficulty as used BEFORE starting (prevents double-use on refresh)
+  markUsed(selectedDiff);
+
+  // Log this interview start for abuse detection
+  logInterviewStart(currentAICode || 'unknown', profile.difficulty);
 
   document.getElementById('setupPage').classList.add('hidden');
   document.getElementById('interviewRoom').style.display = 'block';
@@ -326,6 +600,147 @@ function setInputEnabled(enabled) {
 // =====================================================
 // API CALL
 // =====================================================
+
+// Render usage bar on load
+document.addEventListener("DOMContentLoaded", function() {
+  renderCodeGate();  // Show code entry gate first
+  // Check if owner code already active from session
+  if (currentAICode) {
+    document.getElementById('aiCodeGate').classList.add('hidden');
+    document.getElementById('setupPage').classList.remove('hidden');
+    renderUsageDisplay();
+  }
+});
+
+
+// =====================================================
+// AI INTERVIEW ACCESS CODE SYSTEM
+// Tied to SSB Suite codes — ai:true flag grants access
+// aiUses tracks remaining interviews (default 3)
+// Persisted in localStorage but code is source of truth
+// =====================================================
+var AI_CODES = {
+  // Owner code — unlimited interviews, never expires
+  "COLRAO-OWNER": { uses: 999, owner: true },
+  // Customer codes added here when Readiness Pack purchased
+  // Format: "LBD-XXXX-7": { uses: 3 }
+  // Uses decrements each interview — cannot be reset by browser clear
+};
+
+var AI_USAGE_KEY   = 'lbd_ai_usage_v2';  // versioned to avoid old data
+var currentAICode  = null;
+var aiUsesRemaining = 0;
+
+// ── Code gate functions ──────────────────────────────────
+function getCodeUsage(code) {
+  // Returns uses remaining from localStorage cache
+  // Falls back to code definition if cache missing
+  try {
+    var raw = localStorage.getItem(AI_USAGE_KEY);
+    var data = raw ? JSON.parse(raw) : {};
+    if (data[code] !== undefined) return data[code];
+  } catch(e) {}
+  // Not in cache — use value from AI_CODES definition
+  return AI_CODES[code] ? AI_CODES[code].uses : 0;
+}
+
+function saveCodeUsage(code, uses) {
+  try {
+    var raw = localStorage.getItem(AI_USAGE_KEY);
+    var data = raw ? JSON.parse(raw) : {};
+    data[code] = uses;
+    localStorage.setItem(AI_USAGE_KEY, JSON.stringify(data));
+  } catch(e) {}
+}
+
+function redeemAICode(code) {
+  code = code.trim().toUpperCase();
+  if (!AI_CODES[code]) return { ok: false, msg: 'Code not recognised. Check your email for the correct code.' };
+  var uses = getCodeUsage(code);
+  if (uses <= 0) return { ok: false, msg: 'All interview attempts for this code have been used. Contact leadbydharma@gmail.com if you believe this is an error.' };
+  return { ok: true, uses: uses, owner: AI_CODES[code].owner || false };
+}
+
+function decrementAIUses(code) {
+  if (AI_CODES[code] && AI_CODES[code].owner) return;  // owner never decrements
+  var uses = getCodeUsage(code);
+  if (uses > 0) saveCodeUsage(code, uses - 1);
+}
+
+function renderCodeGate() {
+  var gate = document.getElementById('aiCodeGate');
+  if (!gate) return;
+  gate.innerHTML = '<div class="setup-card" style="max-width:480px;margin:0 auto">'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;letter-spacing:.15em;color:var(--gold2);margin-bottom:.8rem">AI INTERVIEW ACCESS</div>'
+    + '<h3 style="font-size:1.2rem;margin-bottom:.4rem">Personal Interview Simulation</h3>'
+    + '<p style="font-size:.85rem;color:var(--ash);font-style:italic;margin-bottom:1.2rem;line-height:1.6">'
+    + 'Enter the access code from your Readiness Pack purchase email. '
+    + 'Each code allows 3 interview sessions across the three difficulty levels.</p>'
+    + '<div style="margin-bottom:.8rem">'
+    + '<label style="font-family:JetBrains Mono,monospace;font-size:.65rem;letter-spacing:.1em;display:block;margin-bottom:.3rem;color:var(--navy)">ACCESS CODE</label>'
+    + '<input id="aiCodeInput" class="inp" type="text" placeholder="e.g. LBD-XXXX-7" '
+    + 'style="text-transform:uppercase;letter-spacing:.1em;font-family:JetBrains Mono,monospace" '
+    + 'onkeydown="if(event.keyCode===13) submitAICode()" />'
+    + '</div>'
+    + '<div id="aiCodeErr" style="display:none;color:var(--red);font-size:.82rem;font-style:italic;margin-bottom:.6rem"></div>'
+    + '<button onclick="submitAICode()" class="btn btn-primary" style="width:100%">Unlock Interview &rarr;</button>'
+    + '<p style="font-size:.75rem;color:var(--ash);text-align:center;margin-top:.8rem;font-style:italic">'
+    + 'Purchased the Readiness Pack? Your code was emailed immediately after payment.<br>'
+    + 'Questions? <a href="mailto:leadbydharma@gmail.com" style="color:var(--gold2)">leadbydharma@gmail.com</a> '
+    + '&middot; <a href="tel:+919878930879" style="color:var(--gold2)">+91 98789 30879</a></p>'
+    + '</div>';
+}
+
+function submitAICode() {
+  var code = (document.getElementById('aiCodeInput').value || '').trim().toUpperCase();
+  var errEl = document.getElementById('aiCodeErr');
+  if (!code) { 
+    errEl.style.display = 'block'; 
+    errEl.textContent = 'Please enter your access code.'; 
+    return; 
+  }
+  var result = redeemAICode(code);
+  if (!result.ok) {
+    errEl.style.display = 'block';
+    errEl.textContent = result.msg;
+    return;
+  }
+  // Valid code — unlock the interview
+  currentAICode = code;
+  aiUsesRemaining = result.uses;
+  document.getElementById('aiCodeGate').classList.add('hidden');
+  document.getElementById('setupPage').classList.remove('hidden');
+  renderUsageDisplay();
+}
+
+function renderUsageDisplay() {
+  var container = document.getElementById('usageContainer');
+  if (!container) return;
+  var isOwner = currentAICode && AI_CODES[currentAICode] && AI_CODES[currentAICode].owner;
+  var uses = currentAICode ? getCodeUsage(currentAICode) : 0;
+  var html = '<div class="usage-bar">'
+    + '<div class="usage-title">AI Interview Usage'
+    + (isOwner ? ' &nbsp;·&nbsp; Owner Access — Unlimited' 
+               : ' &nbsp;·&nbsp; ' + uses + ' session' + (uses !== 1 ? 's' : '') + ' remaining')
+    + '</div>';
+  if (!isOwner) {
+    var used = (currentAICode && AI_CODES[currentAICode] ? AI_CODES[currentAICode].uses : 3) - uses;
+    var diffs = ['Standard', 'Demanding', 'Stress'];
+    html += '<div class="usage-slots">';
+    for (var i = 0; i < 3; i++) {
+      var slotUsed = i < used;
+      html += '<div class="usage-slot ' + (slotUsed ? 'used' : 'available') + '">'
+        + (slotUsed ? '✕' : '✓') + ' ' + diffs[i] + '</div>';
+    }
+    html += '</div>';
+    if (uses <= 0) {
+      html += '<div class="usage-exhausted">All interview sessions used. Your reports are permanently saved below.</div>';
+    }
+  }
+  html += '</div>';
+  container.innerHTML = html;
+}
+
 // ── PROXY URL ──────────────────────────────────────────────
 // Replace this with your Cloudflare Worker URL after setup.
 // See setup guide at leadbydharma.com or contact Col Rao.
