@@ -266,6 +266,7 @@ var selectedPlan = null;
 var unlockedSets = 0;
 var setsUsed = 0;   // tracks how many complete sets (SRT+WAT+SDT) have been used
 var isDemoMode = false;
+var DEMO_SITS = 5;  // Demo shows 5 situations (not 60)
 
 // ── RENDER PRICING GRID ──────────────────────────────────────
 function renderPricingGrid() {
@@ -976,32 +977,36 @@ function startTimer(seconds,onEnd){
 // =====================================================
 function renderSRT(){
   var sits=SRT[selSet];
+  var sitCount = isDemoMode ? DEMO_SITS : sits.length;
+  var timerSecs = isDemoMode ? 300 : 1800;
   var html='<div class="timer-bar">'
-    +'<div class="timer-lbl">SRT &middot; Set '+(selSet+1)+' &middot; 60 Situations</div>'
+    +'<div class="timer-lbl">SRT &middot; '+(isDemoMode?'DEMO &middot; '+DEMO_SITS+' Situations':'Set '+(selSet+1)+' &middot; 60 Situations')+'</div>'
     +'<div class="timer-val" id="timerDisp">30:00</div>'
     +'<button class="btn btn-sm" style="background:var(--gold);color:var(--navy);border:none;cursor:pointer;font-family:Playfair Display,serif;border-radius:2px;padding:.4rem 1rem" onclick="submitSRT()">Submit &rarr;</button>'
     +'</div>'
     +'<div style="padding:1rem 0">'
     +'<div class="srt-intro">Write your immediate, instinctive reaction to each situation. One or two sentences. Do not write what an officer "should" do — write what YOU would actually do today. Speed matters.</div>';
-  for(var i=0;i<sits.length;i++){
+  for(var i=0;i<sitCount;i++){
     html+='<div class="srt-q">'
       +'<div class="srt-num">Situation '+(i+1)+' of 60</div>'
       +'<div class="srt-sit">'+sits[i]+'</div>'
-      +'<textarea class="srt-ans" id="srt'+i+'" placeholder="I would..." rows="2" oninput="srtAns['+i+']=this.value;this.className="srt-ans"+(this.value.trim().length>0?" filled":"")"></textarea>'
+      +'<textarea class="srt-ans" id="srt'+i+'" rows="2" oninput="srtAns['+i+']=this.value;this.className="srt-ans"+(this.value.trim().length>0?" filled":"")">I would </textarea>'
       +'</div>';
   }
   html+='<div style="text-align:right;padding:1rem 0"><button class="btn btn-primary" onclick="submitSRT()">Submit SRT &rarr;</button></div></div>';
   document.getElementById("testArea").innerHTML=html;
-  startTimer(1800,submitSRT);
+  startTimer(timerSecs,submitSRT);
 }
 
 function submitSRT(){ clearInterval(timerInt); genSRTReport(); }
 
 function genSRTReport(){
   var sits=SRT[selSet];
+  var sitCount = isDemoMode ? DEMO_SITS : sits.length;
+  var totalSits = isDemoMode ? DEMO_SITS : 60;
   var answered=0;
-  for(var i=0;i<sits.length;i++){ if(srtAns[i]&&srtAns[i].trim().length>0) answered++; }
-  var blank=60-answered;
+  for(var i=0;i<sitCount;i++){ if(srtAns[i]&&srtAns[i].trim().length>0) answered++; }
+  var blank=totalSits-answered;
 
   var allText="";
   for(var k in srtAns){ allText+=srtAns[k].toLowerCase()+" "; }
@@ -1041,7 +1046,7 @@ function genSRTReport(){
   var coachingHtml = '<div class="rpt-box"><h3>Response Analysis &mdash; Your First 10 Situations</h3>';
   coachingHtml += '<p style="font-size:.82rem;color:var(--ash);font-style:italic;margin-bottom:.8rem">The SSB psychologist applies this level of analysis to all 60 of your responses. Here it is shown for the first 10. Apply the same framework to the remaining 50 in your own review session after this test.</p>';
 
-  for(var ci=0;ci<10&&ci<sits.length;ci++){
+  for(var ci=0;ci<Math.min(10,sitCount)&&ci<sits.length;ci++){
     var ans=srtAns[ci];
     if(!ans||!ans.trim()){
       coachingHtml+='<div class="q-stat" style="flex-direction:column;gap:.3rem;padding:.8rem 0">'
@@ -1118,7 +1123,7 @@ function genSRTReport(){
     +'<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:rgba(255,255,255,.4);margin-top:.4rem">LEAD BY DHARMA \u00b7 '+new Date().toLocaleDateString("en-IN",{year:"numeric",month:"long",day:"numeric"}).toUpperCase()+'</div>'
     +'</div>'
     +'<div class="rpt-box"><h3>Completion &amp; Pace</h3>'
-    +'<div class="stat-row"><span>Situations attempted</span><span class="stat-val">'+answered+'/60</span></div>'
+    +'<div class="stat-row"><span>Situations attempted</span><span class="stat-val">'+answered+'/'+totalSits+'</span></div>'
     +'<div class="stat-row"><span>Unattempted</span><span class="stat-val" id="srtBlankV">'+blank+'</span></div>'
     +'<div class="stat-row"><span>Average response length</span><span class="stat-val">'+avgWords+' words</span></div>'
     +'<div class="stat-row"><span>Proactive language markers</span><span class="stat-val">'+pScore+'</span></div>'
@@ -1150,7 +1155,9 @@ function renderWAT(){
     +'<div style="padding:1rem 0">'
     +'<p style="font-size:.85rem;color:var(--ash);font-style:italic;margin-bottom:1rem">Write one sentence using each word. First thought — do not deliberate. SSB pace is 15 seconds per word.</p>'
     +'<div class="wat-grid">';
-  for(var i=0;i<words.length;i++){
+  var watSitCount = isDemoMode ? DEMO_SITS : words.length;
+  var watTimerSecs = isDemoMode ? 120 : 900;
+  for(var i=0;i<watSitCount;i++){
     html+='<div class="wat-item">'
       +'<div class="wat-word">'+words[i]+'</div>'
       +'<input class="wat-inp" id="wat'+i+'" type="text" placeholder="Write a sentence..."'
@@ -1160,16 +1167,18 @@ function renderWAT(){
   }
   html+='</div><div style="text-align:right;padding:1rem 0"><button class="btn btn-primary" onclick="submitWAT()">Submit WAT &rarr;</button></div></div>';
   document.getElementById("testArea").innerHTML=html;
-  startTimer(900,submitWAT);
+  startTimer(watTimerSecs,submitWAT);
 }
 
 function submitWAT(){ clearInterval(timerInt); genWATReport(); }
 
 function genWATReport(){
   var words=WAT[selSet];
+  var wordCount = isDemoMode ? DEMO_SITS : words.length;
+  var totalWords = isDemoMode ? DEMO_SITS : 60;
   var answered=0;
-  for(var i=0;i<words.length;i++){ if(watAns[i]&&watAns[i].trim().length>0) answered++; }
-  var blank=60-answered;
+  for(var i=0;i<wordCount;i++){ if(watAns[i]&&watAns[i].trim().length>0) answered++; }
+  var blank=totalWords-answered;
   var allText="";
   for(var k in watAns){ allText+=watAns[k].toLowerCase()+" "; }
 
@@ -1195,7 +1204,7 @@ function genWATReport(){
   var wordCoachHtml = '<div class="rpt-box"><h3>Response Analysis \u2014 Your First 12 Words</h3>';
   wordCoachHtml += '<p style="font-size:.82rem;color:var(--ash);font-style:italic;margin-bottom:.8rem">In the actual SSB WAT, the psychologist reads all 60 sentences looking for three things: positive/negative orientation, active/passive construction, and consistency of personality projection. The analysis below shows what they see in your first 12 responses. Apply the same lens to the remaining 48.</p>';
 
-  for(var wi=0;wi<12&&wi<words.length;wi++){
+  for(var wi=0;wi<Math.min(12,wordCount)&&wi<words.length;wi++){
     var wans=watAns[wi];
     var word=words[wi];
     if(!wans||!wans.trim()){
@@ -1259,7 +1268,7 @@ function genWATReport(){
     +'<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:rgba(255,255,255,.4);margin-top:.4rem">LEAD BY DHARMA \u00b7 '+new Date().toLocaleDateString("en-IN",{year:"numeric",month:"long",day:"numeric"}).toUpperCase()+'</div>'
     +'</div>'
     +'<div class="rpt-box"><h3>Completion &amp; Orientation</h3>'
-    +'<div class="stat-row"><span>Words attempted</span><span class="stat-val">'+answered+'/60</span></div>'
+    +'<div class="stat-row"><span>Words attempted</span><span class="stat-val">'+answered+'/'+totalWords+'</span></div>'
     +'<div class="stat-row"><span>Unattempted</span><span class="stat-val" id="watBlankV">'+blank+'</span></div>'
     +'<div class="stat-row"><span>Overall association tone</span><span class="stat-val">'+tone+'</span></div>'
     +'<div class="stat-row"><span>Positive orientation markers</span><span class="stat-val" style="color:var(--green)">'+posC+'</span></div>'

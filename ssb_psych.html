@@ -681,7 +681,7 @@ function renderSRT(){
     html+='<div class="srt-q">'
       +'<div class="srt-num">Situation '+(i+1)+' of 60</div>'
       +'<div class="srt-sit">'+sits[i]+'</div>'
-      +'<textarea class="srt-ans" id="srt'+i+'" placeholder="I would..." rows="2" oninput="srtAns['+i+']=this.value;this.className="srt-ans"+(this.value.trim().length>0?" filled":"")"></textarea>'
+      +'<textarea class="srt-ans" id="srt'+i+'" rows="2" oninput="srtAns['+i+']=this.value;this.className="srt-ans"+(this.value.trim().length>0?" filled":"")">I would </textarea>'
       +'</div>';
   }
   html+='<div style="text-align:right;padding:1rem 0"><button class="btn btn-primary" onclick="submitSRT()">Submit SRT &rarr;</button></div></div>';
