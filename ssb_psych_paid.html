@@ -22,7 +22,7 @@ body{font-family:Crimson Pro,Georgia,serif;background:var(--cream);color:var(--i
 .btn-outline{background:transparent;color:var(--navy);border:1px solid var(--navy)}
 .btn-outline:hover{background:var(--cream2)}
 .btn-sm{font-size:.82rem;padding:.5rem 1.2rem}
-.menu-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin:1.5rem 0}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:1.5rem 0}
 .menu-card{background:var(--white);border:1.5px solid var(--border);border-radius:3px;padding:1.4rem;cursor:pointer;transition:all .2s;text-align:center}
 .menu-card:hover{border-color:var(--navy);box-shadow:0 2px 12px rgba(26,58,92,.1)}
 .mc-icon{font-size:2rem;margin-bottom:.6rem}
@@ -249,6 +249,11 @@ body{font-family:Crimson Pro,Georgia,serif;background:var(--cream);color:var(--i
       <div class="mc-title">SDT</div>
       <div class="mc-desc">Self Description Test<br>5 sections &middot; 15 min<br>Be ruthlessly honest</div>
     </div>
+    <div class="menu-card" id="aiInterviewCard" onclick="openAIInterview()" style="display:none">
+      <div class="mc-icon">&#127908;</div>
+      <div class="mc-title">AI Interview</div>
+      <div class="mc-desc">Personal Interview Simulation<br>12 questions &middot; Col Rao AI<br>Scored report with feedback</div>
+    </div>
   </div>
 </div>
 
@@ -280,9 +285,9 @@ var PRICING = [
 // YOU manage these codes and email them after Razorpay payment confirmation
 // Example codes below — replace with your actual code list
 // Code format: LBD-XXXX-N (last digit = number of sets)
-var VALID_CODES = {"LBD-ANIR-7": {sets:7, used:false},   // Complete Pack
+var VALID_CODES = {
   // OWNER MASTER CODE — full access, never expires, never used-up
-  "COLRAO-OWNER": {sets:7, used:false, owner:true},
+  "COLRAO-OWNER": {sets:7, used:false, owner:true, ai:true},
   // DEMO codes (always valid, set 1 only)
   "DEMO-FREE-1": {sets:1, used:false, demo:true},
   // Production codes — generate and manage these yourself
@@ -296,6 +301,7 @@ var selectedPlan = null;
 var unlockedSets = 0;
 var setsUsed = 0;   // tracks how many complete sets (SRT+WAT+SDT) have been used
 var isDemoMode = false;
+var hasAIAccess = false;  // true for Readiness Pack (7 sets) purchases
 var DEMO_SITS = 5;  // Demo shows 5 situations (not 60)
 
 // ── RENDER PRICING GRID ──────────────────────────────────────
@@ -420,10 +426,13 @@ function redeemCode() {
     unlockedSets = entry.sets;
     setsUsed = 0;
     isDemoMode = false;
+    // Check for AI Interview access (Readiness Pack = 7 sets with ai:true)
+    hasAIAccess = !!(entry.ai || entry.owner || unlockedSets >= 7);
     document.getElementById("unlockGate").classList.add("hidden");
     document.getElementById("mainMenu").classList.remove("hidden");
-    document.getElementById("unlockedLabel").innerHTML = "&#10003; " + unlockedSets + " set" + (unlockedSets > 1 ? "s" : "") + " unlocked";
-    document.getElementById("setUsageInfo").textContent = "You have " + unlockedSets + " set" + (unlockedSets > 1 ? "s" : "") + " available. Each complete session (SRT + WAT + SDT) uses one set.";
+    document.getElementById("unlockedLabel").innerHTML = "&#10003; " + unlockedSets + " set" + (unlockedSets > 1 ? "s" : "") + " unlocked" + (hasAIAccess ? " + AI Interview" : "");
+    document.getElementById("setUsageInfo").textContent = "You have " + unlockedSets + " set" + (unlockedSets > 1 ? "s" : "") + " available. Each complete session (SRT + WAT + SDT) uses one set." + (hasAIAccess ? " AI Interview also unlocked." : "");
+    if (hasAIAccess) showAIInterviewCard();
   } else if (VALID_CODES[code] && VALID_CODES[code].used) {
     document.getElementById("codeError").textContent = "This code has already been used.";
     document.getElementById("codeError").style.display = "block";
@@ -1599,6 +1608,19 @@ function genSDTReport(){
   document.getElementById("sdtFilledV").style.color=filledColor;
   document.getElementById("sdtBalV").style.color=balColor;
 }
+// =====================================================
+// AI INTERVIEW ACCESS
+// =====================================================
+function openAIInterview() {
+  // Opens the AI Interview in the same tab
+  window.location.href = 'ai_interview.html';
+}
+
+function showAIInterviewCard() {
+  var card = document.getElementById('aiInterviewCard');
+  if (card) card.style.display = 'block';
+}
+
 // Initialize store on load
 renderPricingGrid();
 
