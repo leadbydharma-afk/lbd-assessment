@@ -326,8 +326,15 @@ function setInputEnabled(enabled) {
 // =====================================================
 // API CALL
 // =====================================================
+// ── PROXY URL ──────────────────────────────────────────────
+// Replace this with your Cloudflare Worker URL after setup.
+// See setup guide at leadbydharma.com or contact Col Rao.
+// Format: https://lbd-ai-proxy.YOUR-ACCOUNT.workers.dev
+var PROXY_URL = 'https://lbd-ai-proxy.leadbydharma.workers.dev';
+
 async function callClaude(messages, systemPrompt) {
-  var response = await fetch('https://api.anthropic.com/v1/messages', {
+  // Cloudflare Worker proxy — avoids CORS restriction on Anthropic API
+  var response = await fetch(PROXY_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
