@@ -354,34 +354,31 @@ function selectPlan(sets) {
 }
 
 function proceedToPayment() {
-  if (!selectedPlan) { alert("Please select a pack first."); return; }
+  if (!selectedPlan) { alert('Please select a pack first.'); return; }
   var plan = null;
   for (var i = 0; i < PRICING.length; i++) {
     if (PRICING[i].sets === selectedPlan) { plan = PRICING[i]; break; }
   }
-  // Razorpay Payment Link — replace YOUR_RAZORPAY_LINK with your actual Razorpay Payment Page URL
-  // Create a Razorpay Payment Page at razorpay.com/payment-pages
-  // Set up dynamic pricing OR create one page per pack
+  if (!plan) { alert('Pack not found. Please select again.'); return; }
+
   var razorpayLinks = {
-    1: "https://rzp.io/rzp/DkHmfCa",
-    2: "https://rzp.io/rzp/yibLBOe",
-    3: "https://rzp.io/rzp/hkH6lcNY",
-    4: "https://rzp.io/rzp/djhQxbC",
-    5: "https://rzp.io/rzp/Cm9fKrzs",
-    6: "https://rzp.io/rzp/19Fm4Pe6",
-    7: "https://rzp.io/rzp/nkgx4Cr4"
+    1: 'https://rzp.io/rzp/DkHmfCa',
+    2: 'https://rzp.io/rzp/yibLBOe',
+    3: 'https://rzp.io/rzp/hkH6lcNY',
+    4: 'https://rzp.io/rzp/djhQxbC',
+    5: 'https://rzp.io/rzp/Cm9fKrzs',
+    6: 'https://rzp.io/rzp/19Fm4Pe6',
+    7: 'https://rzp.io/rzp/nkgx4Cr4'
   };
+
   var link = razorpayLinks[selectedPlan];
-  // Show instruction + show unlock gate
-  var msg = "You will be taken to the payment page for the " + plan.label + " (&#8377;" + plan.price + ")."
-    + "\n\nAfter payment, you will receive an access code by email within a few minutes."
-    + "\n\nEnter the code on the next screen to unlock your sets."
-    + "\n\nClick OK to go to the payment page.";
-  if (confirm("Pack: " + plan.label + " - Rs." + plan.price + ". After payment you will receive an access code by email. Click OK to proceed to payment.")) {
-    // In production: window.open(link, "_blank");
-    // Show unlock gate with instruction
-    showUnlockGate("Payment page would open here. After completing payment, enter your access code below.");
-  }
+  if (!link) { alert('Payment link not found. Please contact leadbydharma@gmail.com'); return; }
+
+  // Open Razorpay payment page in new tab
+  window.open(link, '_blank');
+
+  // Show unlock gate so candidate can enter code when they return
+  showUnlockGate('Payment page opened in a new tab. Complete payment — you will receive your access code by email within minutes. Enter the code below when received.');
 }
 
 function launchDemo() {
