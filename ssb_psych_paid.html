@@ -975,338 +975,409 @@ function startTimer(seconds,onEnd){
 // =====================================================
 // SRT
 // =====================================================
-function renderSRT(){
-  var sits=SRT[selSet];
-  var sitCount = isDemoMode ? DEMO_SITS : sits.length;
-  var timerSecs = isDemoMode ? 300 : 1800;
-  var html='<div class="timer-bar">'
-    +'<div class="timer-lbl">SRT &middot; '+(isDemoMode?'DEMO &middot; '+DEMO_SITS+' Situations':'Set '+(selSet+1)+' &middot; 60 Situations')+'</div>'
-    +'<div class="timer-val" id="timerDisp">30:00</div>'
-    +'<button class="btn btn-sm" style="background:var(--gold);color:var(--navy);border:none;cursor:pointer;font-family:Playfair Display,serif;border-radius:2px;padding:.4rem 1rem" onclick="submitSRT()">Submit &rarr;</button>'
-    +'</div>'
-    +'<div style="padding:1rem 0">'
-    +'<div class="srt-intro">Write your immediate, instinctive reaction to each situation. One or two sentences. Do not write what an officer "should" do — write what YOU would actually do today. Speed matters.</div>';
-  for(var i=0;i<sitCount;i++){
-    html+='<div class="srt-q">'
-      +'<div class="srt-num">Situation '+(i+1)+' of 60</div>'
-      +'<div class="srt-sit">'+sits[i]+'</div>'
-      +'<textarea class="srt-ans" id="srt'+i+'" rows="2" oninput="srtAns['+i+']=this.value;this.className="srt-ans"+(this.value.trim().length>0?" filled":"")">I would </textarea>'
-      +'</div>';
-  }
-  html+='<div style="text-align:right;padding:1rem 0"><button class="btn btn-primary" onclick="submitSRT()">Submit SRT &rarr;</button></div></div>';
-  document.getElementById("testArea").innerHTML=html;
-  startTimer(timerSecs,submitSRT);
+// Named input handlers — clean, no quote-nesting issues
+function srtUpdate(i, el) {
+  srtAns[i] = el.value;
+  el.className = 'srt-ans' + (el.value.trim().length > 0 ? ' filled' : '');
+}
+function watUpdate(i, el) {
+  watAns[i] = el.value;
+  el.className = 'wat-inp' + (el.value.trim().length > 0 ? ' filled' : '');
 }
 
+function renderSRT(){
+  var sits = SRT[selSet];
+  var sitCount = isDemoMode ? DEMO_SITS : sits.length;
+  var timerSecs = isDemoMode ? 300 : 1800;
+  var timerLabel = isDemoMode ? '05:00' : '30:00';
+  var headerLabel = isDemoMode
+    ? 'SRT &middot; DEMO &middot; ' + DEMO_SITS + ' Situations'
+    : 'SRT &middot; Set ' + (selSet+1) + ' &middot; 60 Situations';
+
+  var html = '<div class="timer-bar">'
+    + '<div class="timer-lbl">' + headerLabel + '</div>'
+    + '<div class="timer-val" id="timerDisp">' + timerLabel + '</div>'
+    + '<button class="btn btn-sm" style="background:var(--gold);color:var(--navy);border:none;cursor:pointer;font-family:Playfair Display,serif;border-radius:2px;padding:.4rem 1rem" onclick="submitSRT()">Submit &rarr;</button>'
+    + '</div>'
+    + '<div style="padding:1rem 0">'
+    + '<div class="srt-intro">Write your immediate, instinctive reaction to each situation. One or two sentences. Do not write what an officer should do — write what YOU would actually do today. Speed matters.</div>';
+
+  for (var i = 0; i < sitCount; i++) {
+    html += '<div class="srt-q">'
+      + '<div class="srt-num">Situation ' + (i+1) + ' of ' + sitCount + '</div>'
+      + '<div class="srt-sit">' + sits[i] + '</div>'
+      + '<textarea class="srt-ans" id="srt' + i + '" rows="2"'
+      + ' oninput="srtUpdate(' + i + ',this)"></textarea>'
+      + '</div>';
+  }
+
+  html += '<div style="text-align:right;padding:1rem 0">'
+    + '<button class="btn btn-primary" onclick="submitSRT()">Submit SRT &rarr;</button>'
+    + '</div></div>';
+
+  document.getElementById('testArea').innerHTML = html;
+
+  for (var j = 0; j < sitCount; j++) {
+    var ta = document.getElementById('srt' + j);
+    if (ta) ta.value = 'I would ';
+  }
+
+  startTimer(timerSecs, submitSRT);
+}
+
+function renderWAT(){
+  var words = WAT[selSet];
+  var watCount = isDemoMode ? DEMO_SITS : words.length;
+  var watTimerSecs = isDemoMode ? 120 : 900;
+  var watTimerLabel = isDemoMode ? '02:00' : '15:00';
+  var watHeader = isDemoMode
+    ? 'WAT &middot; DEMO &middot; ' + DEMO_SITS + ' Words'
+    : 'WAT &middot; Set ' + (selSet+1) + ' &middot; 60 Words';
+
+  var html = '<div class="timer-bar">'
+    + '<div class="timer-lbl">' + watHeader + '</div>'
+    + '<div class="timer-val" id="timerDisp">' + watTimerLabel + '</div>'
+    + '<button class="btn btn-sm" style="background:var(--gold);color:var(--navy);border:none;cursor:pointer;font-family:Playfair Display,serif;border-radius:2px;padding:.4rem 1rem" onclick="submitWAT()">Submit &rarr;</button>'
+    + '</div>'
+    + '<div style="padding:1rem 0">'
+    + '<p style="font-size:.85rem;color:var(--ash);font-style:italic;margin-bottom:1rem">Write one sentence using each word. First thought — do not deliberate. SSB pace is 15 seconds per word.</p>'
+    + '<div class="wat-grid">';
+
+  for (var i = 0; i < watCount; i++) {
+    html += '<div class="wat-item">'
+      + '<div class="wat-word">' + words[i] + '</div>'
+      + '<input class="wat-inp" id="wat' + i + '" type="text"'
+      + ' placeholder="Write a sentence..."'
+      + ' oninput="watUpdate(' + i + ',this)" />'
+      + '<div class="wat-num">' + (i+1) + ' / ' + watCount + '</div>'
+      + '</div>';
+  }
+
+  html += '</div>'
+    + '<div style="text-align:right;padding:1rem 0">'
+    + '<button class="btn btn-primary" onclick="submitWAT()">Submit WAT &rarr;</button>'
+    + '</div></div>';
+
+  document.getElementById('testArea').innerHTML = html;
+  startTimer(watTimerSecs, submitWAT);
+}
+
+
+// =====================================================
+// SRT SUBMIT + REPORT
+// =====================================================
 function submitSRT(){ clearInterval(timerInt); genSRTReport(); }
 
 function genSRTReport(){
-  var sits=SRT[selSet];
+  var sits = SRT[selSet];
   var sitCount = isDemoMode ? DEMO_SITS : sits.length;
-  var totalSits = isDemoMode ? DEMO_SITS : 60;
-  var answered=0;
-  for(var i=0;i<sitCount;i++){ if(srtAns[i]&&srtAns[i].trim().length>0) answered++; }
-  var blank=totalSits-answered;
+  var totalLabel = isDemoMode ? DEMO_SITS : 60;
 
-  var allText="";
-  for(var k in srtAns){ allText+=srtAns[k].toLowerCase()+" "; }
+  // Count answered — exclude pre-fill 'I would ' only entries
+  var answered = 0;
+  for(var i = 0; i < sitCount; i++){
+    if(srtAns[i] && srtAns[i].trim().length > 0 && srtAns[i].trim() !== 'I would'){
+      answered++;
+    }
+  }
+  var blank = totalLabel - answered;
 
-  var proWords=["immediately","first","take charge","inform","assess","check","call","move","act","report","ensure","organise","secure","establish"];
-  var passWords=["wait","see what happens","do nothing","avoid","ignore","someone else","let them","hope"];
-  var ethWords=["right","honest","correct","properly","duty","inform superior","transparency","truth","report it"];
-  var socWords=["team","together","colleague","everyone","group","support","help","listen"];
+  // Build analysis text
+  var allText = '';
+  for(var k in srtAns){
+    if(srtAns[k] && srtAns[k].trim() !== 'I would') allText += srtAns[k].toLowerCase() + ' ';
+  }
 
-  var pScore=0,passScore=0,eScore=0,sScore=0;
-  for(var i=0;i<proWords.length;i++) if(allText.indexOf(proWords[i])>=0) pScore++;
+  var proWords  = ['immediately','first','take charge','inform','assess','check','call','move','act','report','ensure','organise','secure','establish'];
+  var passWords = ['wait','see what','do nothing','avoid','ignore','someone else','let them','hope'];
+  var ethWords  = ['right','honest','correct','properly','duty','inform superior','transparency','truth','report it'];
+  var socWords  = ['team','together','colleague','everyone','group','support','help','listen'];
+
+  var pScore=0, passScore=0, eScore=0, sScore=0;
+  for(var i=0;i<proWords.length;i++)  if(allText.indexOf(proWords[i])>=0)  pScore++;
   for(var i=0;i<passWords.length;i++) if(allText.indexOf(passWords[i])>=0) passScore++;
-  for(var i=0;i<ethWords.length;i++) if(allText.indexOf(ethWords[i])>=0) eScore++;
-  for(var i=0;i<socWords.length;i++) if(allText.indexOf(socWords[i])>=0) sScore++;
+  for(var i=0;i<ethWords.length;i++)  if(allText.indexOf(ethWords[i])>=0)  eScore++;
+  for(var i=0;i<socWords.length;i++)  if(allText.indexOf(socWords[i])>=0)  sScore++;
 
-  var totalWords=0, filledCount=0;
-  for(var i=0;i<sits.length;i++){
-    if(srtAns[i]&&srtAns[i].trim()){
-      totalWords+=srtAns[i].trim().split(/\s+/).length;
+  var totalWords = 0, filledCount = 0;
+  for(var i=0;i<sitCount;i++){
+    if(srtAns[i] && srtAns[i].trim() && srtAns[i].trim() !== 'I would'){
+      totalWords += srtAns[i].trim().split(/\s+/).length;
       filledCount++;
     }
   }
-  var avgWords=filledCount>0?Math.round(totalWords/filledCount):0;
+  var avgWords = filledCount > 0 ? Math.round(totalWords / filledCount) : 0;
 
   var profile;
-  if(pScore>8&&eScore>5&&passScore<3){
-    profile="Your SRT pattern shows a consistently proactive, ethically grounded, and personally responsible orientation. This is the signature of the officer-like personality the SSB psychologist is trained to identify. Across your responses, the dominant instinct is to act, to own the action, and to act for a reason beyond personal advantage. This is not a performable pattern over 60 situations &mdash; it reflects something genuine about how you engage with difficulty.";
-  } else if(pScore>5&&passScore<5){
-    profile="Your SRT pattern shows moderate proactive orientation with some passive responses mixed in. The psychologist reading these 60 situations will note the inconsistency &mdash; not as a single failure, but as evidence that your instinct to act is situational rather than habitual. The passive responses tend to cluster around specific situation types (likely involving authority, conflict, or uncertainty). Identify which types trigger passivity in you and work specifically on those. Your response to situations you find comfortable is not the test. Your response to situations you find uncomfortable is.";
-  } else if(passScore>5){
-    profile="Your SRT pattern shows a predominantly passive or reactive orientation. In a significant number of situations, your instinct is to wait, defer, or manage the problem indirectly rather than to act, lead, and own the outcome. The SSB psychologist will observe this as a consistent pattern across 60 situations &mdash; not as a single weak response, but as a profile. This is not a preparation problem. It is a character orientation problem. The development work required is not SRT practice. It is building the habit of proactive engagement in your daily life over months.";
+  if(pScore > 8 && eScore > 5 && passScore < 3){
+    profile = 'Your SRT pattern shows a consistently proactive, ethically grounded, and personally responsible orientation. This is the signature of the officer-like personality the SSB psychologist is trained to identify. Across your responses, the dominant instinct is to act, to own the action, and to act for a reason beyond personal advantage. This is not a performable pattern over ' + totalLabel + ' situations \u2014 it reflects something genuine about how you engage with difficulty.';
+  } else if(pScore > 5 && passScore < 5){
+    profile = 'Your SRT pattern shows moderate proactive orientation with some passive responses mixed in. The psychologist reading these situations will note the inconsistency \u2014 not as a single failure, but as evidence that your instinct to act is situational rather than habitual. The passive responses tend to cluster around specific situation types. Identify which types trigger passivity in you and work specifically on those.';
+  } else if(passScore > 5){
+    profile = 'Your SRT pattern shows a predominantly passive or reactive orientation. In a significant number of situations, your instinct is to wait, defer, or manage the problem indirectly. The SSB psychologist will observe this as a consistent pattern \u2014 not as a single weak response, but as a profile. This is not a preparation problem. It is a character orientation problem that requires sustained behavioural work over months.';
   } else {
-    profile="Your SRT pattern is mixed, with no dominant orientation visible. This is itself a finding: the psychologist looks for consistency, and the absence of a consistent pattern &mdash; responses that vary significantly in quality, orientation, and depth &mdash; suggests a personality that has not yet developed stable officer-like response habits. Work on building consistency rather than improving individual responses.";
+    profile = 'Your SRT pattern is mixed, with no dominant orientation visible. The psychologist looks for consistency, and the absence of a consistent pattern suggests a personality that has not yet developed stable officer-like response habits. Work on building consistency rather than improving individual responses.';
   }
 
   // Per-response coaching
-  var coachingHtml = '<div class="rpt-box"><h3>Response Analysis &mdash; Your First 10 Situations</h3>';
-  coachingHtml += '<p style="font-size:.82rem;color:var(--ash);font-style:italic;margin-bottom:.8rem">The SSB psychologist applies this level of analysis to all 60 of your responses. Here it is shown for the first 10. Apply the same framework to the remaining 50 in your own review session after this test.</p>';
+  var coachingHtml = '<div class="rpt-box"><h3>Response Analysis \u2014 Your First ' + Math.min(10, sitCount) + ' Situations</h3>';
+  coachingHtml += '<p style="font-size:.82rem;color:var(--ash);font-style:italic;margin-bottom:.8rem">The SSB psychologist applies this level of analysis to all ' + totalLabel + ' of your responses. Four criteria: Is it proactive? Is it ethical? Is it personally owned? Is it concise?</p>';
 
-  for(var ci=0;ci<Math.min(10,sitCount)&&ci<sits.length;ci++){
-    var ans=srtAns[ci];
-    if(!ans||!ans.trim()){
-      coachingHtml+='<div class="q-stat" style="flex-direction:column;gap:.3rem;padding:.8rem 0">'
-        +'<div style="display:flex;gap:.5rem"><div class="q-s-num">'+(ci+1)+'</div><div class="q-s-sit" style="font-weight:500;color:var(--navy)">'+sits[ci]+'</div></div>'
-        +'<div style="padding-left:2rem;font-size:.84rem;border-left:2px solid var(--red);padding-left:.8rem;color:var(--red);font-style:italic">Not attempted. In SSB, every unattempted situation is a negative signal regardless of other scores. Speed of response is itself a measure of dynamism. Practise until you can respond to all 60 within 30 minutes.</div></div>';
+  for(var ci = 0; ci < Math.min(10, sitCount) && ci < sits.length; ci++){
+    var ans = srtAns[ci];
+    var isEmpty = !ans || !ans.trim() || ans.trim() === 'I would';
+    if(isEmpty){
+      coachingHtml += '<div class="q-stat" style="flex-direction:column;gap:.3rem;padding:.8rem 0;border-bottom:1px solid var(--border)">'
+        + '<div style="display:flex;gap:.5rem"><div class="q-s-num">' + (ci+1) + '</div>'
+        + '<div class="q-s-sit" style="font-weight:500;color:var(--navy)">' + sits[ci] + '</div></div>'
+        + '<div style="padding-left:2rem;font-size:.84rem;border-left:2px solid var(--red);padding-left:.8rem;color:var(--red);font-style:italic">Not attempted. Every unattempted situation is a negative signal. Practise until you can respond to all ' + totalLabel + ' within the time limit.</div></div>';
       continue;
     }
-    var a=ans.trim().toLowerCase();
-    var rawAns=ans.trim();
-    var isProactive=/immediate|first|take|inform|ensure|check|assess|move|act|report|organise|secure|establish|i would|i will|i shall/.test(a);
-    var isPassive=/wait|see what|do nothing|ignore|let them|hope|it depends|someone else|not sure/.test(a);
-    var isEthical=/right|honest|duty|inform|truth|report|correct|proper|should|must/.test(a);
-    var isSocial=/team|together|colleague|support|help|listen|group|them|others/.test(a);
-    var isOwnership=/i |my |myself/.test(a);
-    var wc=rawAns.split(/\s+/).length;
+    var a = ans.trim().toLowerCase();
+    var rawAns = ans.trim();
+    var isProactive = /immediate|first|take|inform|ensure|check|assess|move|act|report|organise|secure|i would|i will|i shall/.test(a);
+    var isPassive   = /wait|see what|do nothing|ignore|let them|hope|it depends|not sure/.test(a);
+    var isEthical   = /right|honest|duty|inform|truth|report|correct|proper|should|must/.test(a);
+    var isSocial    = /team|together|colleague|support|help|listen|group/.test(a);
+    var isOwnership = /\bi |\bmy |\bmyself/.test(a);
+    var wc = rawAns.split(/\s+/).length;
 
-    var note='';
-    var noteColor='var(--navy)';
-    if(wc<5){
-      note='Response too brief. SRT requires a complete thought \u2014 what you would do and how. Fewer than 5 words provides insufficient material for assessment. Aim for 1-2 complete sentences.';
-      noteColor='var(--amber)';
-    } else if(wc>35){
-      note='Response too long for SRT pace. The SSB allocates ~30 seconds per situation. Responses of this length suggest deliberation rather than instinct, which itself signals to the psychologist. Cut to the essential action and reasoning.';
-      noteColor='var(--amber)';
+    var note = '', noteColor = 'var(--navy)';
+    if(wc < 5){
+      note = 'Response too brief. SRT requires a complete thought \u2014 what you would do and how. Aim for 1-2 complete sentences.';
+      noteColor = 'var(--amber)';
+    } else if(wc > 35){
+      note = 'Response too long for SRT pace. The SSB allocates ~30 seconds per situation. Cut to the essential action.';
+      noteColor = 'var(--amber)';
     } else if(isPassive){
-      note='Passive orientation detected. Words like "wait," "hope," "let" signal low Initiative and Speed of Decision to the psychologist. Rewrite with a clear first action that you personally take.';
-      noteColor='var(--red)';
-    } else if(isProactive&&isEthical&&isOwnership){
-      note='Strong. Proactive, ethical, personally owned. This is the pattern. First-person, action-directed, with a clear reason. Template response.';
-      noteColor='var(--green)';
-    } else if(isProactive&&isEthical){
-      note='Good \u2014 proactive and ethically grounded. Strengthen by making ownership explicit: "I would immediately..." rather than "One should..." The psychologist reads for personal agency.';
-      noteColor='var(--amber)';
+      note = 'Passive orientation detected. Words like "wait," "hope," "let" signal low Initiative. Rewrite with a clear first action that you personally take.';
+      noteColor = 'var(--red)';
+    } else if(isProactive && isEthical && isOwnership){
+      note = 'Strong. Proactive, ethical, personally owned. This is the template. First-person, action-directed, with a clear reason.';
+      noteColor = 'var(--green)';
+    } else if(isProactive && isEthical){
+      note = 'Good \u2014 proactive and ethically grounded. Strengthen by making ownership explicit: "I would immediately..." rather than abstract framing.';
+      noteColor = 'var(--amber)';
     } else if(isProactive){
-      note='Proactive intent present. Gap: ethical or social grounding missing. In situations involving people, add one phrase showing the purpose behind the action \u2014 not just what you do but why.';
-      noteColor='var(--amber)';
+      note = 'Proactive intent present. Add ethical or social grounding \u2014 show the purpose behind the action, not just the action itself.';
+      noteColor = 'var(--amber)';
     } else if(isSocial){
-      note='Social awareness present. Gap: you are supporting rather than leading. For officer selection, move yourself into the active-leadership position. Who coordinates? Who decides? That should be you.';
-      noteColor='var(--amber)';
+      note = 'Social awareness present. Gap: supporting rather than leading. Move yourself into the active-leadership position.';
+      noteColor = 'var(--amber)';
     } else {
-      note='Functional but does not demonstrate officer-like qualities clearly. Ask yourself: does this response show someone who acts, leads, and takes responsibility? Rewrite with those three qualities visible.';
-      noteColor='var(--amber)';
+      note = 'Functional but does not demonstrate officer-like qualities clearly. Ask: does this show someone who acts, leads, and takes responsibility?';
+      noteColor = 'var(--amber)';
     }
 
-    coachingHtml+='<div class="q-stat" style="flex-direction:column;gap:.3rem;padding:.8rem 0;border-bottom:1px solid var(--border)">'
-      +'<div style="display:flex;gap:.5rem"><div class="q-s-num">'+(ci+1)+'</div><div style="font-size:.9rem;font-weight:500;color:var(--navy);line-height:1.45">'+sits[ci]+'</div></div>'
-      +'<div style="padding-left:2rem">'
-      +'<div style="font-size:.88rem;color:var(--ink);font-style:italic;border-left:2px solid var(--cream2);padding-left:.6rem;margin:.2rem 0;line-height:1.5">'+rawAns+'</div>'
-      +'<div style="font-size:.84rem;border-left:2px solid var(--gold);padding-left:.6rem;margin-top:.3rem;font-style:italic;line-height:1.55;color:var(--navy)">'+note+'</div>'
-      +'</div></div>';
+    coachingHtml += '<div class="q-stat" style="flex-direction:column;gap:.3rem;padding:.8rem 0;border-bottom:1px solid var(--border)">'
+      + '<div style="display:flex;gap:.5rem"><div class="q-s-num">' + (ci+1) + '</div>'
+      + '<div style="font-size:.9rem;font-weight:500;color:var(--navy);line-height:1.45">' + sits[ci] + '</div></div>'
+      + '<div style="padding-left:2rem">'
+      + '<div style="font-size:.88rem;color:var(--ink);font-style:italic;border-left:2px solid var(--cream2);padding-left:.6rem;margin:.2rem 0;line-height:1.5">' + rawAns + '</div>'
+      + '<div style="font-size:.84rem;border-left:2px solid var(--gold);padding-left:.6rem;margin-top:.3rem;font-style:italic;line-height:1.55;color:' + noteColor + '">' + note + '</div>'
+      + '</div></div>';
   }
-  coachingHtml+='<p style="font-size:.8rem;color:var(--ash);margin-top:.8rem;font-style:italic">Apply the same four-question framework to all remaining responses: Is it proactive? Is it ethically grounded? Is it personally owned? Is it concise?</p>';
-  coachingHtml+='</div>';
 
-  var colRaoNote='<div class="rpt-box" style="border:2px solid var(--gold);background:rgba(201,168,76,.04)">'
-    +'<h3>What This Practice Is Actually For</h3>'
-    +'<p>The SRT is not a test of what you know. It is a test of who you are when the situation demands something of you and there is no time to deliberate. The psychologist reading your 60 responses is not scoring individual answers. They are building a portrait of your personality from a pattern across 60 small windows.</p>'
-    +'<p>That portrait is the same personality that will be visible across five days of SSB \u2014 in your GTO group behaviour, in your Personal Interview, in the informal interactions that candidates do not realise are also being observed. You cannot build a different portrait in SRT practice than the one your character produces. But you can develop your character, over months, so that the portrait that emerges is genuinely officer-like.</p>'
-    +'<p>That is the purpose of this practice suite. And that is the purpose of the Lead By Dharma programme.</p>'
-    +'<div style="background:var(--cream);border-left:3px solid var(--gold);padding:.7rem 1rem;margin-top:1rem;border-radius:0 2px 2px 0">'
-    +'<em style="font-size:.9rem">&ldquo;Preparation that does not change who you are is not preparation &mdash; it is decoration.&rdquo;</em><br>'
-    +'<span style="font-family:JetBrains Mono,monospace;font-size:.65rem;color:var(--ash);letter-spacing:.1em">&mdash; Colonel Aniruddha Rao HR (Retd.) &middot; Maratha Light Infantry &middot; leadbydharma.com</span>'
-    +'</div>'
-    +'</div>';
+  var demoNote = isDemoMode
+    ? '<p style="font-size:.8rem;color:var(--ash);margin-top:.8rem;font-style:italic">Demo mode \u2014 ' + DEMO_SITS + ' situations shown. The full Single Set has 60 situations with complete per-response coaching. <a href="ssb_psych_paid.html" style="color:var(--gold)">Purchase a pack \u2192</a></p>'
+    : '<p style="font-size:.8rem;color:var(--ash);margin-top:.8rem;font-style:italic">Apply the same four criteria to all remaining responses: proactive? ethical? personally owned? concise?</p>';
+  coachingHtml += demoNote + '</div>';
 
-  var blankColor=blank>10?"#8b1a1a":"#1a5c2e";
+  var colRaoNote = '<div class="rpt-box" style="border:2px solid var(--gold);background:rgba(201,168,76,.04)">'
+    + '<h3>What This Practice Is Actually For</h3>'
+    + '<p>The SRT is not a test of what you know. It is a test of who you are when the situation demands something of you and there is no time to deliberate. The psychologist reading your responses is building a portrait of your personality from a pattern across ' + totalLabel + ' small windows.</p>'
+    + '<p>That portrait is the same personality that will be visible across five days of SSB. You cannot build a different portrait in SRT practice than the one your character produces. But you can develop your character, over months, so that the portrait that emerges is genuinely officer-like.</p>'
+    + '<div style="background:var(--cream);border-left:3px solid var(--gold);padding:.7rem 1rem;margin-top:1rem;border-radius:0 2px 2px 0">'
+    + '<em style="font-size:.9rem">&ldquo;Preparation that does not change who you are is not preparation \u2014 it is decoration.&rdquo;</em><br>'
+    + '<span style="font-family:JetBrains Mono,monospace;font-size:.65rem;color:var(--ash);letter-spacing:.1em">&mdash; Colonel Aniruddha Rao HR (Retd.) &middot; leadbydharma.com</span>'
+    + '</div></div>';
 
-  document.getElementById("testArea").classList.add("hidden");
-  var ra=document.getElementById("reportArea");
-  ra.classList.remove("hidden");
-  ra.innerHTML='<div class="rpt-hdr">'
-    +'<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:var(--gold);letter-spacing:.2em;margin-bottom:.4rem">SRT ASSESSMENT REPORT \u00b7 SET '+(selSet+1)+'</div>'
-    +'<div style="font-family:Playfair Display,serif;font-size:1.6rem;color:var(--white)">Situation Reaction Test</div>'
-    +'<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:rgba(255,255,255,.4);margin-top:.4rem">LEAD BY DHARMA \u00b7 '+new Date().toLocaleDateString("en-IN",{year:"numeric",month:"long",day:"numeric"}).toUpperCase()+'</div>'
-    +'</div>'
-    +'<div class="rpt-box"><h3>Completion &amp; Pace</h3>'
-    +'<div class="stat-row"><span>Situations attempted</span><span class="stat-val">'+answered+'/'+totalSits+'</span></div>'
-    +'<div class="stat-row"><span>Unattempted</span><span class="stat-val" id="srtBlankV">'+blank+'</span></div>'
-    +'<div class="stat-row"><span>Average response length</span><span class="stat-val">'+avgWords+' words</span></div>'
-    +'<div class="stat-row"><span>Proactive language markers</span><span class="stat-val">'+pScore+'</span></div>'
-    +'<div class="stat-row"><span>Ethical language markers</span><span class="stat-val">'+eScore+'</span></div>'
-    +'<div class="stat-row"><span>Passive language markers</span><span class="stat-val" style="color:'+( passScore>5?'#8b1a1a':'#1a5c2e')+'">'+passScore+'</span></div>'
-    +'<p style="font-size:.8rem;color:var(--ash);margin-top:.8rem;font-style:italic">Target: 60 attempted, average 10-20 words per response, proactive markers above 8, passive markers below 3. In the actual SSB, every unattempted situation contributes to the psychologist\'s overall personality assessment. Completion rate is itself a measure of initiative and stamina.</p>'
-    +'</div>'
-    +'<div class="rpt-box"><h3>Overall Pattern Analysis</h3><p>'+profile+'</p></div>'
-    +coachingHtml
-    +colRaoNote
-    +'<div class="lgl-ftr">Educational practice tool only \u00b7 Not an official SSB assessment \u00b7 Not affiliated with SSB, MoD, or Indian Armed Forces \u00b7 \u00a9 2026 Lead By Dharma \u00b7 leadbydharma.com</div>'
-    +'<div style="text-align:center;padding:1rem 0;display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap">'
-    +'<button class="btn btn-primary" onclick="window.print()">Print Report</button>'
-    +'<button class="btn btn-outline" onclick="goHome()">Try Another Test</button></div>';
+  var blankColor = blank > (isDemoMode ? 2 : 10) ? '#8b1a1a' : '#1a5c2e';
 
-  document.getElementById("srtBlankV").style.color=blankColor;
+  document.getElementById('testArea').classList.add('hidden');
+  var ra = document.getElementById('reportArea');
+  ra.classList.remove('hidden');
+  ra.innerHTML = '<div class="rpt-hdr">'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:var(--gold);letter-spacing:.2em;margin-bottom:.4rem">SRT ' + (isDemoMode ? 'DEMO ' : '') + 'REPORT \u00b7 SET ' + (selSet+1) + '</div>'
+    + '<div style="font-family:Playfair Display,serif;font-size:1.6rem;color:var(--white)">Situation Reaction Test</div>'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:rgba(255,255,255,.4);margin-top:.4rem">LEAD BY DHARMA \u00b7 ' + new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'}).toUpperCase() + '</div>'
+    + '</div>'
+    + '<div class="rpt-box"><h3>Completion</h3>'
+    + '<div class="stat-row"><span>Situations attempted</span><span class="stat-val">' + answered + '/' + totalLabel + '</span></div>'
+    + '<div class="stat-row"><span>Unattempted</span><span class="stat-val" id="srtBlankV">' + blank + '</span></div>'
+    + '<div class="stat-row"><span>Average response length</span><span class="stat-val">' + avgWords + ' words</span></div>'
+    + '<div class="stat-row"><span>Proactive language markers</span><span class="stat-val">' + pScore + '</span></div>'
+    + '<div class="stat-row"><span>Ethical language markers</span><span class="stat-val">' + eScore + '</span></div>'
+    + '<div class="stat-row"><span>Passive language markers</span><span class="stat-val" style="color:' + (passScore>5?'#8b1a1a':'#1a5c2e') + '">' + passScore + '</span></div>'
+    + '</div>'
+    + '<div class="rpt-box"><h3>Overall Pattern</h3><p>' + profile + '</p></div>'
+    + coachingHtml
+    + colRaoNote
+    + '<div class="lgl-ftr">Educational practice tool only \u00b7 Not an official SSB assessment \u00b7 \u00a9 2026 Lead By Dharma \u00b7 leadbydharma.com</div>'
+    + '<div style="text-align:center;padding:1rem 0;display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap">'
+    + '<button class="btn btn-primary" onclick="window.print()">Print Report</button>'
+    + '<button class="btn btn-outline" onclick="goHome()">Try Another Test</button></div>';
+
+  document.getElementById('srtBlankV').style.color = blankColor;
 }
 
 // =====================================================
-// WAT
+// WAT SUBMIT + REPORT
 // =====================================================
-function renderWAT(){
-  var words=WAT[selSet];
-  var html='<div class="timer-bar">'
-    +'<div class="timer-lbl">WAT &middot; Set '+(selSet+1)+' &middot; 60 Words</div>'
-    +'<div class="timer-val" id="timerDisp">15:00</div>'
-    +'<button class="btn btn-sm" style="background:var(--gold);color:var(--navy);border:none;cursor:pointer;font-family:Playfair Display,serif;border-radius:2px;padding:.4rem 1rem" onclick="submitWAT()">Submit &rarr;</button>'
-    +'</div>'
-    +'<div style="padding:1rem 0">'
-    +'<p style="font-size:.85rem;color:var(--ash);font-style:italic;margin-bottom:1rem">Write one sentence using each word. First thought — do not deliberate. SSB pace is 15 seconds per word.</p>'
-    +'<div class="wat-grid">';
-  var watSitCount = isDemoMode ? DEMO_SITS : words.length;
-  var watTimerSecs = isDemoMode ? 120 : 900;
-  for(var i=0;i<watSitCount;i++){
-    html+='<div class="wat-item">'
-      +'<div class="wat-word">'+words[i]+'</div>'
-      +'<input class="wat-inp" id="wat'+i+'" type="text" placeholder="Write a sentence..."'
-      +' oninput="watAns['+i+']=this.value;this.className="wat-inp"+(this.value.trim().length>0?" filled":"")" />'
-      +'<div class="wat-num">'+(i+1)+' / 60</div>'
-      +'</div>';
-  }
-  html+='</div><div style="text-align:right;padding:1rem 0"><button class="btn btn-primary" onclick="submitWAT()">Submit WAT &rarr;</button></div></div>';
-  document.getElementById("testArea").innerHTML=html;
-  startTimer(watTimerSecs,submitWAT);
-}
-
 function submitWAT(){ clearInterval(timerInt); genWATReport(); }
 
 function genWATReport(){
-  var words=WAT[selSet];
+  var words = WAT[selSet];
   var wordCount = isDemoMode ? DEMO_SITS : words.length;
-  var totalWords = isDemoMode ? DEMO_SITS : 60;
-  var answered=0;
-  for(var i=0;i<wordCount;i++){ if(watAns[i]&&watAns[i].trim().length>0) answered++; }
-  var blank=totalWords-answered;
-  var allText="";
-  for(var k in watAns){ allText+=watAns[k].toLowerCase()+" "; }
+  var totalLabel = isDemoMode ? DEMO_SITS : 60;
 
-  var posW=["help","serve","lead","achieve","build","protect","together","strong","duty","honour","victory","hope","succeed","overcome","courage","determined","committed","action","forward","responsibility"];
-  var negW=["fail","afraid","alone","difficult","impossible","hate","angry","never","give up","avoid","weak","scared","worry","cannot","helpless","lost","hopeless","pain","fear","defeated"];
-  var posC=0,negC=0;
+  var answered = 0;
+  for(var i = 0; i < wordCount; i++){
+    if(watAns[i] && watAns[i].trim().length > 0) answered++;
+  }
+  var blank = totalLabel - answered;
+
+  var allText = '';
+  for(var k in watAns){ allText += watAns[k].toLowerCase() + ' '; }
+
+  var posW = ['help','serve','lead','achieve','build','protect','together','strong','duty','honour','victory','hope','succeed','overcome','courage','determined','committed','action','forward','responsibility'];
+  var negW = ['fail','afraid','alone','difficult','impossible','hate','angry','never','give up','avoid','weak','scared','worry','cannot','helpless','lost','hopeless'];
+  var posC = 0, negC = 0;
   for(var i=0;i<posW.length;i++) if(allText.indexOf(posW[i])>=0) posC++;
   for(var i=0;i<negW.length;i++) if(allText.indexOf(negW[i])>=0) negC++;
 
-  var tone,toneNote;
-  if(posC>negC*2){
-    tone="strongly positive and action-oriented";
-    toneNote="Your WAT responses show a predominantly positive, action-oriented emotional orientation. This is the pattern the SSB psychologist looks for \u2014 not forced positivity or suppression of negative emotions, but a genuine default orientation toward agency and forward movement. The words you associate with these stimuli reveal what your mind reaches for first. What it reaches for first is the actual measure.";
-  } else if(posC>negC){
-    tone="broadly positive with some negative associations";
-    toneNote="Your WAT responses are broadly positive, with some negative associations appearing when specific words are presented. Review which words triggered negative responses \u2014 they reveal specific sensitivities or fears. In the actual SSB, the psychologist reads WAT responses specifically for these patterns. Words like 'enemy,' 'failure,' 'defeat,' and 'fear' are included deliberately. They are testing what your mind reaches for when confronted with difficulty. Work on building associations that are honest but forward-directed.";
+  var tone, toneNote;
+  if(posC > negC*2){
+    tone = 'strongly positive and action-oriented';
+    toneNote = 'Your WAT responses show a predominantly positive, action-oriented emotional orientation. This is the pattern the SSB psychologist looks for \u2014 not forced positivity, but a genuine default orientation toward agency and forward movement.';
+  } else if(posC > negC){
+    tone = 'broadly positive with some negative associations';
+    toneNote = 'Your WAT responses are broadly positive, with some negative associations appearing when specific words are presented. Review which words triggered negative responses \u2014 they reveal specific sensitivities. Work on building forward-directed associations with challenging words.';
   } else {
-    tone="showing notable negative or avoidant associations";
-    toneNote="Your WAT responses show a notable number of negative or avoidant associations. This is significant because the SSB WAT is specifically designed to reveal underlying psychological orientation \u2014 the associations you carry below the level of deliberate presentation. Negative associations in WAT do not simply mean you used negative words. They mean your default emotional orientation, when unguarded, moves toward fear, avoidance, or defeat. This is the pattern the psychologist will flag. The development work here is not to practise positive sentences. It is to genuinely shift your emotional orientation over months.";
+    tone = 'showing notable negative or avoidant associations';
+    toneNote = 'Your WAT responses show a notable number of negative or avoidant associations. This is significant because the SSB WAT is specifically designed to reveal underlying psychological orientation. The development work here is not to practise positive sentences but to genuinely shift your emotional orientation over months.';
   }
 
-  // Per-word coaching for first 12
-  var wordCoachHtml = '<div class="rpt-box"><h3>Response Analysis \u2014 Your First 12 Words</h3>';
-  wordCoachHtml += '<p style="font-size:.82rem;color:var(--ash);font-style:italic;margin-bottom:.8rem">In the actual SSB WAT, the psychologist reads all 60 sentences looking for three things: positive/negative orientation, active/passive construction, and consistency of personality projection. The analysis below shows what they see in your first 12 responses. Apply the same lens to the remaining 48.</p>';
+  // Per-word coaching
+  var wordCoachHtml = '<div class="rpt-box"><h3>Response Analysis \u2014 First ' + Math.min(12, wordCount) + ' Words</h3>';
+  wordCoachHtml += '<p style="font-size:.82rem;color:var(--ash);font-style:italic;margin-bottom:.8rem">The psychologist reads for: positive/negative orientation, active/passive construction, consistency of character.</p>';
 
-  for(var wi=0;wi<Math.min(12,wordCount)&&wi<words.length;wi++){
-    var wans=watAns[wi];
-    var word=words[wi];
-    if(!wans||!wans.trim()){
-      wordCoachHtml+='<div class="q-stat" style="flex-direction:column;gap:.3rem;padding:.7rem 0;border-bottom:1px solid var(--border)">'
-        +'<div style="display:flex;gap:.5rem"><div style="font-family:Playfair Display,serif;font-weight:600;min-width:120px;color:var(--navy)">'+word+'</div>'
-        +'<div style="font-size:.84rem;color:var(--red);font-style:italic">Not attempted</div></div></div>';
+  for(var wi = 0; wi < Math.min(12, wordCount) && wi < words.length; wi++){
+    var wans = watAns[wi];
+    var word = words[wi];
+    if(!wans || !wans.trim()){
+      wordCoachHtml += '<div class="q-stat" style="flex-direction:column;gap:.2rem;padding:.7rem 0;border-bottom:1px solid var(--border)">'
+        + '<div style="display:flex;gap:.5rem;align-items:baseline">'
+        + '<div style="font-family:Playfair Display,serif;font-size:1rem;font-weight:700;min-width:130px;color:var(--navy)">' + word + '</div>'
+        + '<div style="font-size:.84rem;color:var(--red);font-style:italic">Not attempted</div>'
+        + '</div></div>';
       continue;
     }
-    var wa=wans.trim();
-    var wal=wa.toLowerCase();
-    var note='';
-    var isTooLong=wa.split(/\s+/).length>20;
-    var isNeg=/fail|afraid|lost|alone|difficult|impossible|angry|weak|scared|defeat|never|cannot/.test(wal);
-    var isVague=/thing|something|anything|it|this/.test(wal) && wa.split(/\s+/).length < 5;
-    var isActive=/\b(i|he|she|they|we|soldiers|officers|leaders?|team|men)\s+(will|can|must|should|would|did|do|lead|serve|act|fight|protect|achieve|help|build)\b/.test(wal);
-    var isPassive=/\b(was|were|been|got|being|is being)\b/.test(wal) && !isActive;
+    var wa = wans.trim();
+    var wal = wa.toLowerCase();
+    var isTooLong = wa.split(/\s+/).length > 20;
+    var isNeg = /fail|afraid|lost|alone|difficult|impossible|angry|weak|scared|defeat|never|cannot/.test(wal);
+    var isActive = /\b(i|he|she|they|we|soldiers|officers|leaders?|team|men)\s+(will|can|must|should|would|did|do|lead|serve|act|fight|protect|achieve|help|build)\b/.test(wal);
 
+    var note = '', noteCol = 'var(--navy)';
     if(isTooLong){
-      note='Too long for WAT pace. The SSB allocates approximately 15 seconds per word. A sentence of this length requires more than 15 seconds to write \u2014 which means you cannot maintain this pace across all 60 words. Short, precise, positive. That is the model.';
-    } else if(isVague){
-      note='Too vague. "It is difficult" or "something important" gives the psychologist nothing to read. The sentence must demonstrate a thought, an orientation, a value. Rewrite with a specific subject, a specific action, a specific quality.';
+      note = 'Too long for WAT pace. ~15 seconds per word. Keep it short, positive, action-directed.';
+      noteCol = 'var(--amber)';
     } else if(isNeg){
-      note='Negative association. The word triggered a response that looks toward failure, fear, or difficulty rather than toward overcoming, action, or service. In the SSB WAT, words like this are specifically included to test psychological orientation. Work on building forward-directed associations with challenging words.';
+      note = 'Negative association. This word triggered a response looking toward difficulty rather than toward overcoming or action. Build forward-directed associations with challenging words.';
+      noteCol = 'var(--red)';
     } else if(isActive){
-      note='Good \u2014 active construction with a clear agent taking a clear action. This is the model: someone does something purposeful. Clean, direct, positive.';
+      note = 'Good \u2014 active construction with a clear agent taking purposeful action. This is the model.';
+      noteCol = 'var(--green)';
     } else {
-      note='Adequate but passive construction. The sentence describes a state rather than an action. Rewrite with an active agent doing something purposeful \u2014 preferably with a leadership, service, or character dimension.';
+      note = 'Adequate but passive construction. Rewrite with an active agent doing something purposeful.';
+      noteCol = 'var(--navy)';
     }
 
-    var noteCol = isNeg ? 'var(--red)' : isActive ? 'var(--green)' : 'var(--navy)';
-
-    wordCoachHtml+='<div class="q-stat" style="flex-direction:column;gap:.2rem;padding:.7rem 0;border-bottom:1px solid var(--border)">'
-      +'<div style="display:flex;gap:.5rem;align-items:baseline">'
-      +'<div style="font-family:Playfair Display,serif;font-size:1rem;font-weight:700;min-width:130px;color:var(--navy)">'+word+'</div>'
-      +'<div style="font-size:.88rem;color:var(--ink);font-style:italic">'+wa+'</div>'
-      +'</div>'
-      +'<div style="padding-left:130px;font-size:.83rem;font-style:italic;border-left:0;color:'+noteCol+';line-height:1.5">'+note+'</div>'
-      +'</div>';
+    wordCoachHtml += '<div class="q-stat" style="flex-direction:column;gap:.2rem;padding:.7rem 0;border-bottom:1px solid var(--border)">'
+      + '<div style="display:flex;gap:.5rem;align-items:baseline">'
+      + '<div style="font-family:Playfair Display,serif;font-size:1rem;font-weight:700;min-width:130px;color:var(--navy)">' + word + '</div>'
+      + '<div style="font-size:.88rem;color:var(--ink);font-style:italic">' + wa + '</div>'
+      + '</div>'
+      + '<div style="padding-left:130px;font-size:.83rem;font-style:italic;color:' + noteCol + ';line-height:1.5">' + note + '</div>'
+      + '</div>';
   }
-  wordCoachHtml+='</div>';
 
-  var colRaoNote='<div class="rpt-box" style="border:2px solid var(--gold);background:rgba(201,168,76,.04)">'
-    +'<h3>What the WAT Reveals That You Cannot Control</h3>'
-    +'<p>The WAT is one of the most revealing instruments in the SSB battery precisely because it eliminates deliberation. You have 15 seconds. Your first association is what surfaces. That first association is not random \u2014 it is the product of years of how you have been thinking, what you have been exposed to, what your emotional default setting is.</p>'
-    +'<p>A candidate who has spent months reading about courage, leadership, and service will produce different WAT associations from a candidate who has spent those same months in avoidance, anxiety, and self-doubt. Not because they have practised \u2014 because they have genuinely been different people in that time. The WAT sees through preparation. It reads character.</p>'
-    +'<p>Practise the WAT as often as you need to build speed. But understand that the real preparation is the life you live in the months before your board.</p>'
-    +'<div style="background:var(--cream);border-left:3px solid var(--gold);padding:.7rem 1rem;margin-top:1rem;border-radius:0 2px 2px 0">'
-    +'<em style="font-size:.9rem">&ldquo;The uniform gave me more than I could ever give back to it. Not because of what it asked me to do \u2014 but because of what it asked me to be.&rdquo;</em><br>'
-    +'<span style="font-family:JetBrains Mono,monospace;font-size:.65rem;color:var(--ash);letter-spacing:.1em">&mdash; Colonel Aniruddha Rao HR (Retd.) \u00b7 leadbydharma.com</span>'
-    +'</div>'
-    +'</div>';
+  var demoNoteW = isDemoMode
+    ? '<p style="font-size:.8rem;color:var(--ash);margin-top:.8rem;font-style:italic">Demo \u2014 ' + DEMO_SITS + ' words shown. Full Single Set has 60 words. <a href="ssb_psych_paid.html" style="color:var(--gold)">Purchase a pack \u2192</a></p>'
+    : '';
+  wordCoachHtml += demoNoteW + '</div>';
 
-  var blankColor=blank>8?"#8b1a1a":"#1a5c2e";
+  var colRaoNoteW = '<div class="rpt-box" style="border:2px solid var(--gold);background:rgba(201,168,76,.04)">'
+    + '<h3>What the WAT Reveals That You Cannot Control</h3>'
+    + '<p>The WAT eliminates deliberation. You have 15 seconds. Your first association is the product of years of how you have been thinking and what your emotional default setting is. A candidate who has spent months in avoidance and self-doubt will produce different WAT associations from one who has spent those same months in action, service, and honest self-examination.</p>'
+    + '<p>Practise the WAT to build speed. But understand that the real preparation is the life you live in the months before your board.</p>'
+    + '<div style="background:var(--cream);border-left:3px solid var(--gold);padding:.7rem 1rem;margin-top:1rem;border-radius:0 2px 2px 0">'
+    + '<em style="font-size:.9rem">&ldquo;The uniform gave me more than I could ever give back to it. Not because of what it asked me to do \u2014 but because of what it asked me to be.&rdquo;</em><br>'
+    + '<span style="font-family:JetBrains Mono,monospace;font-size:.65rem;color:var(--ash);letter-spacing:.1em">&mdash; Colonel Aniruddha Rao HR (Retd.) &middot; leadbydharma.com</span>'
+    + '</div></div>';
 
-  document.getElementById("testArea").classList.add("hidden");
-  var ra=document.getElementById("reportArea");
-  ra.classList.remove("hidden");
-  ra.innerHTML='<div class="rpt-hdr">'
-    +'<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:var(--gold);letter-spacing:.2em;margin-bottom:.4rem">WAT ASSESSMENT REPORT \u00b7 SET '+(selSet+1)+'</div>'
-    +'<div style="font-family:Playfair Display,serif;font-size:1.6rem;color:var(--white)">Word Association Test</div>'
-    +'<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:rgba(255,255,255,.4);margin-top:.4rem">LEAD BY DHARMA \u00b7 '+new Date().toLocaleDateString("en-IN",{year:"numeric",month:"long",day:"numeric"}).toUpperCase()+'</div>'
-    +'</div>'
-    +'<div class="rpt-box"><h3>Completion &amp; Orientation</h3>'
-    +'<div class="stat-row"><span>Words attempted</span><span class="stat-val">'+answered+'/'+totalWords+'</span></div>'
-    +'<div class="stat-row"><span>Unattempted</span><span class="stat-val" id="watBlankV">'+blank+'</span></div>'
-    +'<div class="stat-row"><span>Overall association tone</span><span class="stat-val">'+tone+'</span></div>'
-    +'<div class="stat-row"><span>Positive orientation markers</span><span class="stat-val" style="color:var(--green)">'+posC+'</span></div>'
-    +'<div class="stat-row"><span>Negative orientation markers</span><span class="stat-val" style="color:'+(negC>5?'var(--red)':'var(--amber)')+'">'+negC+'</span></div>'
-    +'</div>'
-    +'<div class="rpt-box"><h3>What Your Association Pattern Reveals</h3><p>'+toneNote+'</p></div>'
-    +wordCoachHtml
-    +colRaoNote
-    +'<div class="lgl-ftr">Educational practice tool only \u00b7 Not an official SSB assessment \u00b7 Not affiliated with SSB, MoD, or Indian Armed Forces \u00b7 \u00a9 2026 Lead By Dharma \u00b7 leadbydharma.com</div>'
-    +'<div style="text-align:center;padding:1rem 0;display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap">'
-    +'<button class="btn btn-primary" onclick="window.print()">Print Report</button>'
-    +'<button class="btn btn-outline" onclick="goHome()">Try Another Test</button></div>';
+  var blankColorW = blank > (isDemoMode ? 2 : 8) ? '#8b1a1a' : '#1a5c2e';
 
-  document.getElementById("watBlankV").style.color=blankColor;
+  document.getElementById('testArea').classList.add('hidden');
+  var ra = document.getElementById('reportArea');
+  ra.classList.remove('hidden');
+  ra.innerHTML = '<div class="rpt-hdr">'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:var(--gold);letter-spacing:.2em;margin-bottom:.4rem">WAT ' + (isDemoMode ? 'DEMO ' : '') + 'REPORT \u00b7 SET ' + (selSet+1) + '</div>'
+    + '<div style="font-family:Playfair Display,serif;font-size:1.6rem;color:var(--white)">Word Association Test</div>'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:rgba(255,255,255,.4);margin-top:.4rem">LEAD BY DHARMA \u00b7 ' + new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'}).toUpperCase() + '</div>'
+    + '</div>'
+    + '<div class="rpt-box"><h3>Completion</h3>'
+    + '<div class="stat-row"><span>Words attempted</span><span class="stat-val">' + answered + '/' + totalLabel + '</span></div>'
+    + '<div class="stat-row"><span>Unattempted</span><span class="stat-val" id="watBlankV">' + blank + '</span></div>'
+    + '<div class="stat-row"><span>Overall tone</span><span class="stat-val">' + tone + '</span></div>'
+    + '<div class="stat-row"><span>Positive markers</span><span class="stat-val" style="color:#1a5c2e">' + posC + '</span></div>'
+    + '<div class="stat-row"><span>Negative markers</span><span class="stat-val" style="color:' + (negC>5?'#8b1a1a':'#8b5c00') + '">' + negC + '</span></div>'
+    + '</div>'
+    + '<div class="rpt-box"><h3>What Your Association Pattern Reveals</h3><p>' + toneNote + '</p></div>'
+    + wordCoachHtml
+    + colRaoNoteW
+    + '<div class="lgl-ftr">Educational practice tool only \u00b7 Not an official SSB assessment \u00b7 \u00a9 2026 Lead By Dharma \u00b7 leadbydharma.com</div>'
+    + '<div style="text-align:center;padding:1rem 0;display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap">'
+    + '<button class="btn btn-primary" onclick="window.print()">Print Report</button>'
+    + '<button class="btn btn-outline" onclick="goHome()">Try Another Test</button></div>';
+
+  document.getElementById('watBlankV').style.color = blankColorW;
 }
 
-// =====================================================
-// SDT
-// =====================================================
+
 function renderSDT(){
-  var html='<div class="timer-bar">'
-    +'<div class="timer-lbl">SDT &middot; Set '+(selSet+1)+' &middot; 5 Sections</div>'
-    +'<div class="timer-val" id="timerDisp">15:00</div>'
-    +'<button class="btn btn-sm" style="background:var(--gold);color:var(--navy);border:none;cursor:pointer;font-family:Playfair Display,serif;border-radius:2px;padding:.4rem 1rem" onclick="submitSDT()">Submit &rarr;</button>'
-    +'</div>'
-    +'<div style="padding:1rem 0">'
-    +'<div class="sdt-intro">Write what five different people would say about you. The most important rule: be honest. The SSB psychologist reads all five sections together and looks for consistency — or inconsistency. An SDT where everyone says only positives is not credible.</div>';
-  for(var i=0;i<SDT_SECS.length;i++){
-    var sec=SDT_SECS[i];
-    html+='<div class="sdt-field">'
-      +'<div class="sdt-label">'+sec.label+'</div>'
-      +'<div class="sdt-sublbl">'+sec.sub+'</div>'
-      +'<textarea class="sdt-ta" id="sdt_'+sec.id+'" placeholder="'+sec.ph+'" rows="4" oninput="sdtSave(\'' +sec.id+ '\',this.value)"></textarea>'
-      +'</div>';
+  var sdtTimerSecs = isDemoMode ? 300 : 900;
+  var sdtTimerLabel = isDemoMode ? '05:00' : '15:00';
+  var sdtHeader = isDemoMode
+    ? 'SDT &middot; DEMO &middot; 5 Sections'
+    : 'SDT &middot; Set ' + (selSet+1) + ' &middot; 5 Sections';
+
+  var html = '<div class="timer-bar">'
+    + '<div class="timer-lbl">' + sdtHeader + '</div>'
+    + '<div class="timer-val" id="timerDisp">' + sdtTimerLabel + '</div>'
+    + '<button class="btn btn-sm" style="background:var(--gold);color:var(--navy);border:none;cursor:pointer;font-family:Playfair Display,serif;border-radius:2px;padding:.4rem 1rem" onclick="submitSDT()">Submit &rarr;</button>'
+    + '</div>'
+    + '<div style="padding:1rem 0">'
+    + '<div class="sdt-intro">Write what five different people would say about you. The most important rule: be honest. The SSB psychologist reads all five sections together and looks for consistency or inconsistency. An SDT where everyone says only positives is not credible.</div>';
+
+  for (var i = 0; i < SDT_SECS.length; i++) {
+    var sec = SDT_SECS[i];
+    html += '<div class="sdt-field">'
+      + '<div class="sdt-label">' + sec.label + '</div>'
+      + '<div class="sdt-sublbl">' + sec.sub + '</div>'
+      + '<textarea class="sdt-ta" id="sdt_' + sec.id + '"'
+      + ' placeholder="' + sec.ph + '" rows="4"'
+      + ' data-sid="' + sec.id + '" oninput="sdtSave(this.dataset.sid,this.value)"></textarea>'
+      + '</div>';
   }
-  html+='<div style="text-align:right;padding:1rem 0"><button class="btn btn-primary" onclick="submitSDT()">Submit SDT &rarr;</button></div></div>';
-  document.getElementById("testArea").innerHTML=html;
-  startTimer(900,submitSDT);
+
+  html += '<div style="text-align:right;padding:1rem 0">'
+    + '<button class="btn btn-primary" onclick="submitSDT()">Submit SDT &rarr;</button>'
+    + '</div></div>';
+
+  document.getElementById('testArea').innerHTML = html;
+  startTimer(sdtTimerSecs, submitSDT);
 }
 
 function sdtSave(k,v){ sdtAns[k]=v; }
