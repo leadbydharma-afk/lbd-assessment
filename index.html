@@ -702,6 +702,172 @@ body::before {
   .masthead h1 { font-size: 2rem; }
   .comparison-wrap { overflow-x: auto; }
 }
+
+  /* ── APPLICATION MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(13,31,53,.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--cream);
+    max-width: 580px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    border-top: 4px solid var(--gold);
+    box-shadow: 0 40px 120px rgba(0,0,0,.5);
+  }
+  .modal-head {
+    background: var(--navy);
+    padding: 1.8rem 2rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .modal-head-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .6rem;
+    letter-spacing: .25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: .5rem;
+  }
+  .modal-head h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.2rem;
+    color: var(--white);
+    font-weight: 400;
+    letter-spacing: .06em;
+  }
+  .modal-close {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.5rem;
+    background: none;
+    border: 1px solid rgba(255,255,255,.2);
+    color: rgba(255,255,255,.6);
+    font-size: 1.1rem;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .2s;
+    border-radius: 2px;
+    line-height: 1;
+  }
+  .modal-close:hover { background: rgba(255,255,255,.1); color: var(--white); }
+  .modal-body { padding: 1.8rem 2rem; }
+  .modal-note {
+    font-size: .9rem;
+    color: var(--ash);
+    font-style: italic;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .modal-note strong { color: var(--navy); font-style: normal; }
+  .form-field { margin-bottom: 1.2rem; }
+  .form-label {
+    display: block;
+    font-family: 'Cinzel', serif;
+    font-size: .68rem;
+    letter-spacing: .12em;
+    color: var(--navy);
+    margin-bottom: .4rem;
+    font-weight: 400;
+  }
+  .form-label .req { color: var(--gold); margin-left: .2rem; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    padding: .75rem 1rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    border: 1.5px solid rgba(13,31,53,.15);
+    border-radius: 2px;
+    background: var(--white);
+    color: var(--ink);
+    outline: none;
+    transition: border-color .2s;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--navy);
+  }
+  .form-textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+  .form-select { cursor: pointer; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-submit {
+    width: 100%;
+    font-family: 'Cinzel', serif;
+    font-size: .78rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    padding: 1rem 2rem;
+    background: var(--navy);
+    color: var(--gold2);
+    border: none;
+    cursor: pointer;
+    transition: all .25s;
+    margin-top: .5rem;
+  }
+  .form-submit:hover { background: var(--navy2); }
+  .form-submit:disabled { opacity: .5; cursor: not-allowed; }
+  .form-legal {
+    font-size: .75rem;
+    color: var(--ash);
+    font-style: italic;
+    text-align: center;
+    margin-top: .8rem;
+    line-height: 1.6;
+  }
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 2.5rem 2rem;
+  }
+  .form-success-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .form-success h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    color: var(--navy);
+    margin-bottom: .6rem;
+    letter-spacing: .06em;
+    font-weight: 400;
+  }
+  .form-success p {
+    font-size: .95rem;
+    color: var(--ash);
+    font-style: italic;
+    line-height: 1.7;
+    max-width: 380px;
+    margin: 0 auto;
+  }
+  .form-error-msg {
+    display: none;
+    background: rgba(107,26,26,.08);
+    border: 1px solid rgba(107,26,26,.2);
+    color: var(--red);
+    font-size: .82rem;
+    padding: .6rem .9rem;
+    margin-top: .6rem;
+    border-radius: 2px;
+  }
+  @media (max-width: 540px) {
+    .form-row { grid-template-columns: 1fr; }
+    .modal-body { padding: 1.4rem 1.2rem; }
+  }
+
 </style>
 </head>
 <body>
@@ -776,7 +942,7 @@ body::before {
       </div>
     </div>
     <div class="pkg-footer">
-      <a href="iq_eq_aq_sq.html" class="btn-pkg btn-pkg-outline">Begin Clarity Pack &rarr;</a>
+      <a href="https://rzp.io/rzp/KlwSeSGD" target="_blank" class="btn-pkg btn-pkg-outline">Pay &amp; Get Clarity Pack &rarr;</a>
       <div class="pkg-footer-note">IQ/EQ/AQ/SQ · SSB Suite Sets 1–3 &nbsp;·&nbsp; Access codes by email after payment</div>
     </div>
   </div>
@@ -819,7 +985,7 @@ body::before {
       </div>
     </div>
     <div class="pkg-footer">
-      <a href="ssb_psych_paid.html" class="btn-pkg btn-pkg-gold">Begin Readiness Pack &rarr;</a>
+      <a href="https://rzp.io/rzp/mlJJu4V0" target="_blank" class="btn-pkg btn-pkg-gold">Pay &amp; Get Readiness Pack &rarr;</a>
       <div class="pkg-footer-note">SSB Complete Pack (7 sets) · AI Interview &nbsp;·&nbsp; Access codes by email after payment</div>
     </div>
   </div>
@@ -864,7 +1030,7 @@ body::before {
       </div>
     </div>
     <div class="pkg-footer">
-      <a href="https://forms.gle/6fzMeQckJeqxdcdF7" class="btn-pkg btn-pkg-apply">Apply for Mentorship &rarr;</a>
+      <button class="btn-pkg btn-pkg-apply" onclick="openModal()">Apply for Mentorship &rarr;</button>
       <div class="pkg-footer-note">Selection-based entry &nbsp;·&nbsp; Limited places &nbsp;·&nbsp; Col Rao reads every application</div>
     </div>
   </div>
@@ -994,6 +1160,190 @@ body::before {
     All assessments are independent educational tools for personal development.
   </div>
 </div>
+
+
+<!-- APPLICATION MODAL -->
+<div class="modal-overlay" id="appModal" onclick="handleOverlayClick(event)">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-head-kicker">Lead By Dharma &mdash; Transformation Programme</div>
+      <h3>Application for Mentorship</h3>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-note">
+        <strong>This programme is entry by assessment, not payment.</strong>
+        Complete this application honestly. Col Rao reads every application personally
+        and will respond within 48 hours with an honest assessment of whether this
+        programme is right for you at this stage.
+      </p>
+
+      <!-- SUCCESS STATE -->
+      <div class="form-success" id="formSuccess">
+        <div class="form-success-icon">&#10003;</div>
+        <h4>Application Received</h4>
+        <p>Col Rao will read your application personally and respond within 48 hours. In the meantime, take the free Leadership Assessment if you have not already done so.</p>
+      </div>
+
+      <!-- FORM -->
+      <form
+        id="applicationForm"
+        action="https://formspree.io/f/xeepyprw"
+        method="POST"
+        onsubmit="handleSubmit(event)"
+      >
+        <!-- Hidden fields for context -->
+        <input type="hidden" name="_subject" value="Lead By Dharma — Mentorship Application">
+        <input type="hidden" name="form_type" value="Transformation Programme Application">
+
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label" for="app_name">Full Name <span class="req">*</span></label>
+            <input class="form-input" type="text" id="app_name" name="full_name"
+              placeholder="Your full name" required autocomplete="name"/>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="app_age">Age <span class="req">*</span></label>
+            <input class="form-input" type="number" id="app_age" name="age"
+              placeholder="e.g. 19" min="16" max="40" required/>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="app_email">Email Address <span class="req">*</span></label>
+          <input class="form-input" type="email" id="app_email" name="email"
+            placeholder="Your email address" required autocomplete="email"/>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="app_phone">Mobile Number <span class="req">*</span></label>
+          <input class="form-input" type="tel" id="app_phone" name="phone"
+            placeholder="+91 98765 43210" required autocomplete="tel"/>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="app_entry">Entry You Are Preparing For <span class="req">*</span></label>
+          <select class="form-select" id="app_entry" name="entry" required>
+            <option value="" disabled selected>Select entry type...</option>
+            <option value="NDA">NDA &mdash; National Defence Academy</option>
+            <option value="CDS">CDS &mdash; Combined Defence Services</option>
+            <option value="AFCAT">AFCAT &mdash; Air Force Common Admission Test</option>
+            <option value="TES">TES &mdash; Technical Entry Scheme</option>
+            <option value="SSC-Tech">SSC-Tech &mdash; Short Service Commission</option>
+            <option value="NCC Special">NCC Special Entry</option>
+            <option value="Other">Other Officer Entry</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="app_attempts">SSB Attempts So Far</label>
+          <select class="form-select" id="app_attempts" name="ssb_attempts">
+            <option value="0">First attempt &mdash; not yet appeared</option>
+            <option value="1">1 attempt &mdash; not recommended</option>
+            <option value="2">2 attempts &mdash; not recommended</option>
+            <option value="3">3 or more attempts</option>
+            <option value="recommended">Recommended but not selected on merit</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="app_edu">Educational Background <span class="req">*</span></label>
+          <input class="form-input" type="text" id="app_edu" name="education"
+            placeholder="e.g. Class XII (PCM) / B.Tech Computer Science" required/>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="app_why">Why do you want to join the Armed Forces? <span class="req">*</span></label>
+          <textarea class="form-textarea" id="app_why" name="why_armed_forces"
+            placeholder="Write honestly — not what sounds impressive. What is actually true for you."
+            rows="4" required></textarea>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="app_weakness">What is your most significant personal weakness?</label>
+          <textarea class="form-textarea" id="app_weakness" name="key_weakness"
+            placeholder="Col Rao reads this section most carefully. Honest answers are the only ones worth writing."
+            rows="3"></textarea>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="app_ready">Why are you ready for mentorship now?</label>
+          <textarea class="form-textarea" id="app_ready" name="readiness_statement"
+            placeholder="What has changed, or what are you willing to change?"
+            rows="3"></textarea>
+        </div>
+
+        <!-- Error message -->
+        <div class="form-error-msg" id="formError">
+          Something went wrong. Please try again or email leadbydharma@gmail.com directly.
+        </div>
+
+        <button class="form-submit" type="submit" id="formSubmitBtn">
+          Submit Application &rarr;
+        </button>
+
+        <p class="form-legal">
+          By submitting, you confirm this application is honest and complete.
+          Your information will only be used to assess your application and will not be shared with any third party.
+          &mdash; Lead By Dharma &middot; leadbydharma.com
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function openModal() {
+  document.getElementById('appModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('appModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('appModal')) closeModal();
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+
+async function handleSubmit(e) {
+  e.preventDefault();
+  var form = document.getElementById('applicationForm');
+  var btn  = document.getElementById('formSubmitBtn');
+  var errEl = document.getElementById('formError');
+
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+  errEl.style.display = 'none';
+
+  var data = new FormData(form);
+
+  try {
+    var response = await fetch('https://formspree.io/f/xeepyprw', {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (response.ok) {
+      form.style.display = 'none';
+      document.querySelector('.modal-note').style.display = 'none';
+      document.getElementById('formSuccess').style.display = 'block';
+    } else {
+      var json = await response.json();
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Submit Application →';
+    }
+  } catch (err) {
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Submit Application →';
+  }
+}
+</script>
 
 </body>
 </html>
