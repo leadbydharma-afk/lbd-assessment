@@ -285,7 +285,7 @@ var PRICING = [
 // YOU manage these codes and email them after Razorpay payment confirmation
 // Example codes below — replace with your actual code list
 // Code format: LBD-XXXX-N (last digit = number of sets)
-var VALID_CODES = {"LBD-ABCD-7": {sets:7, used:false, ai:true},
+var VALID_CODES = {
   // OWNER MASTER CODE — full access, never expires, never used-up
   "COLRAO-OWNER": {sets:7, used:false, owner:true, ai:true},
   // DEMO codes (always valid, set 1 only)
@@ -1444,10 +1444,12 @@ function genWATReport(){
 
 
 function renderSDT(){
-  var sdtTimerSecs = isDemoMode ? 300 : 900;
-  var sdtTimerLabel = isDemoMode ? '05:00' : '15:00';
+  var sdtTimerSecs = isDemoMode ? 120 : 900;
+  var sdtTimerLabel = isDemoMode ? '02:00' : '15:00';
+  var DEMO_SDT_SECS = 2;
+  var sdtSecCount = isDemoMode ? DEMO_SDT_SECS : SDT_SECS.length;
   var sdtHeader = isDemoMode
-    ? 'SDT &middot; DEMO &middot; 5 Sections'
+    ? 'SDT &middot; DEMO &middot; ' + DEMO_SDT_SECS + ' Sections'
     : 'SDT &middot; Set ' + (selSet+1) + ' &middot; 5 Sections';
 
   var html = '<div class="timer-bar">'
@@ -1463,7 +1465,7 @@ function renderSDT(){
     + '<div style="padding:1rem 0">'
     + '<div class="sdt-intro">Write what five different people would say about you. The most important rule: be honest. The SSB psychologist reads all five sections together and looks for consistency or inconsistency. An SDT where everyone says only positives is not credible.</div>';
 
-  for (var i = 0; i < SDT_SECS.length; i++) {
+  for (var i = 0; i < sdtSecCount; i++) {
     var sec = SDT_SECS[i];
     html += '<div class="sdt-field">'
       + '<div class="sdt-label">' + sec.label + '</div>'
@@ -1486,8 +1488,9 @@ function sdtSave(k,v){ sdtAns[k]=v; }
 function submitSDT(){ clearInterval(timerInt); genSDTReport(); }
 
 function genSDTReport(){
+  var sdtShown = isDemoMode ? 2 : SDT_SECS.length;
   var filled=0;
-  for(var i=0;i<SDT_SECS.length;i++){
+  for(var i=0;i<sdtShown;i++){
     var v=sdtAns[SDT_SECS[i].id];
     if(v&&v.trim().length>20) filled++;
   }
@@ -1594,12 +1597,13 @@ function genSDTReport(){
     +'<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:rgba(255,255,255,.4);margin-top:.4rem">LEAD BY DHARMA \u00b7 '+new Date().toLocaleDateString("en-IN",{year:"numeric",month:"long",day:"numeric"}).toUpperCase()+'</div>'
     +'</div>'
     +'<div class="rpt-box"><h3>SDT Overview</h3>'
-    +'<div class="stat-row"><span>Sections substantially completed</span><span class="stat-val" id="sdtFilledV">'+filled+'/5</span></div>'
+    +'<div class="stat-row"><span>Sections substantially completed</span><span class="stat-val" id="sdtFilledV">'+filled+'/'+(isDemoMode?2:5)+'</span></div>'
     +'<div class="stat-row"><span>Balance (strengths AND weaknesses present)</span><span class="stat-val" id="sdtBalV">'+(balanced?"Yes \u2014 present":"Review \u2014 appears one-sided")+'</span></div>'
     +'<p style="font-size:.85rem;color:var(--ash);font-style:italic;margin-top:.7rem">'+consistencyNote+'</p>'
     +'</div>'
     +'<div class="rpt-box"><h3>Section-by-Section Analysis</h3>'+sectionAnalyses+'</div>'
     +colRaoNote
+    +(isDemoMode ? '<div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);padding:.7rem 1rem;margin:.8rem 0;font-size:.82rem;color:var(--ash);font-style:italic">Demo mode — 2 of 5 SDT sections shown. The full Single Set includes all 5 sections with complete section-by-section analysis. <a href="ssb_psych_paid.html" style="color:var(--gold)">Purchase a pack &rarr;</a></div>' : '')
     +'<div class="lgl-ftr">Educational practice tool only \u00b7 Not an official SSB assessment \u00b7 Not affiliated with SSB, MoD, or Indian Armed Forces \u00b7 \u00a9 2026 Lead By Dharma \u00b7 leadbydharma.com</div>'
     +'<div style="text-align:center;padding:1rem 0;display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap">'
     +'<button class="btn btn-primary" onclick="window.print()">Print Report</button>'
