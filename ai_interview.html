@@ -16,80 +16,80 @@
 body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(--ink);min-height:100vh}
 .hdr{background:var(--navy2);padding:2rem 1.5rem 1.5rem;text-align:center;border-bottom:4px solid var(--gold);position:relative}
 .hdr::before{content:'';position:absolute;top:0;left:0;width:6px;height:100%;background:var(--gold)}
-.hdr-lbl{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--gold);letter-spacing:.25em;text-transform:uppercase;margin-bottom:.6rem}
-.hdr h1{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.4rem);color:var(--white);margin-bottom:.4rem}
+.hdr-lbl{font-family:'JetBrains Mono',monospace;font-size:1.06rem;color:var(--gold);letter-spacing:.25em;text-transform:uppercase;margin-bottom:.6rem}
+.hdr h1{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.6rem);color:var(--white);margin-bottom:.4rem}
 .hdr h1 span{color:var(--gold)}
-.hdr-sub{font-size:.95rem;color:#aabbcc;font-style:italic}
+.hdr-sub{font-size:1.4rem;color:#aabbcc;font-style:italic}
 .wrap{max-width:780px;margin:0 auto;padding:1.5rem 1.2rem 4rem}
-.btn{font-family:'Playfair Display',serif;font-size:.95rem;padding:.7rem 1.8rem;border:none;cursor:pointer;border-radius:2px;transition:all .2s}
+.btn{font-family:'Playfair Display',serif;font-size:1.4rem;padding:.7rem 1.8rem;border:none;cursor:pointer;border-radius:2px;transition:all .2s}
 .btn-primary{background:var(--navy);color:var(--gold);border:1px solid var(--navy)}
 .btn-primary:hover:not(:disabled){background:var(--navy2)}
 .btn-primary:disabled{opacity:.4;cursor:not-allowed}
 .btn-outline{background:transparent;color:var(--navy);border:1px solid var(--navy)}
 .btn-outline:hover{background:var(--cream2)}
-.disc{background:linear-gradient(135deg,var(--navy2),var(--navy));border-left:4px solid var(--gold);padding:1.1rem 1.4rem;color:#c8d8e8;font-size:.88rem;line-height:1.75;margin:1.2rem 0;border-radius:0 2px 2px 0}
+.disc{background:linear-gradient(135deg,var(--navy2),var(--navy));border-left:4px solid var(--gold);padding:1.1rem 1.4rem;color:#c8d8e8;font-size:1.02rem;line-height:1.75;margin:1.2rem 0;border-radius:0 2px 2px 0}
 /* SETUP */
 .setup-card{background:var(--white);border:1px solid var(--border);border-radius:3px;padding:1.8rem;margin:1.2rem 0}
-.setup-card h3{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--navy);margin-bottom:1rem}
+.setup-card h3{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--navy);margin-bottom:1rem}
 .field-row{margin-bottom:1rem}
-.field-lbl{font-family:'Playfair Display',serif;font-size:.92rem;font-weight:600;color:var(--navy);display:block;margin-bottom:.35rem}
-.field-sub{font-size:.8rem;color:var(--ash);font-style:italic;margin-bottom:.4rem}
-.inp{width:100%;padding:.7rem .9rem;font-family:'Crimson Pro',serif;font-size:.98rem;border:1.5px solid var(--border);border-radius:2px;background:var(--cream);color:var(--ink);outline:none;transition:border-color .2s}
+.field-lbl{font-family:'Playfair Display',serif;font-size:1.06rem;font-weight:600;color:var(--navy);display:block;margin-bottom:.35rem}
+.field-sub{font-size:.94rem;color:var(--ash);font-style:italic;margin-bottom:.4rem}
+.inp{width:100%;padding:.7rem .9rem;font-family:'Crimson Pro',serif;font-size:1.12rem;border:1.5px solid var(--border);border-radius:2px;background:var(--cream);color:var(--ink);outline:none;transition:border-color .2s}
 .inp:focus{border-color:var(--navy)}
-.sel{width:100%;padding:.65rem .9rem;font-family:'Crimson Pro',serif;font-size:.98rem;border:1.5px solid var(--border);border-radius:2px;background:var(--cream);color:var(--ink);outline:none;cursor:pointer}
-.ta{width:100%;padding:.7rem .9rem;font-family:'Crimson Pro',serif;font-size:.95rem;border:1.5px solid var(--border);border-radius:2px;background:var(--cream);color:var(--ink);outline:none;resize:vertical;line-height:1.65;transition:border-color .2s}
+.sel{width:100%;padding:.65rem .9rem;font-family:'Crimson Pro',serif;font-size:1.12rem;border:1.5px solid var(--border);border-radius:2px;background:var(--cream);color:var(--ink);outline:none;cursor:pointer}
+.ta{width:100%;padding:.7rem .9rem;font-family:'Crimson Pro',serif;font-size:1.4rem;border:1.5px solid var(--border);border-radius:2px;background:var(--cream);color:var(--ink);outline:none;resize:vertical;line-height:1.65;transition:border-color .2s}
 .ta:focus{border-color:var(--navy)}
 /* INTERVIEW ROOM */
 .interview-room{display:none}
 .ir-hdr{background:var(--navy);padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50}
-.ir-title{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--gold)}
-.ir-qcount{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:rgba(255,255,255,.6)}
+.ir-title{font-family:'JetBrains Mono',monospace;font-size:1.4rem;color:var(--gold)}
+.ir-qcount{font-family:'JetBrains Mono',monospace;font-size:1.02rem;color:rgba(255,255,255,.6)}
 .chat-area{background:var(--cream2);border:1px solid var(--border);border-radius:3px;padding:1.2rem;min-height:420px;max-height:560px;overflow-y:auto;margin:1.2rem 0;display:flex;flex-direction:column;gap:1rem}
 .msg{max-width:88%;padding:.9rem 1.1rem;border-radius:3px;line-height:1.65;font-size:.96rem}
 .msg-ai{background:var(--navy2);color:var(--cream);align-self:flex-start;border-left:3px solid var(--gold);position:relative}
-.msg-ai::before{content:'COL RAO (AI)';font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--gold);display:block;margin-bottom:.35rem;letter-spacing:.1em}
+.msg-ai::before{content:'COL RAO (AI)';font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--gold);display:block;margin-bottom:.35rem;letter-spacing:.1em}
 .msg-user{background:var(--white);color:var(--ink);align-self:flex-end;border:1px solid var(--border);border-right:3px solid var(--navy)}
-.msg-user::before{content:'YOU';font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--navy);display:block;margin-bottom:.35rem;letter-spacing:.1em}
-.msg-system{background:rgba(201,168,76,.1);color:var(--amber);align-self:center;font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.4rem .8rem;border-radius:20px;border:1px solid rgba(201,168,76,.3);max-width:100%;text-align:center}
+.msg-user::before{content:'YOU';font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--navy);display:block;margin-bottom:.35rem;letter-spacing:.1em}
+.msg-system{background:rgba(201,168,76,.1);color:var(--amber);align-self:center;font-family:'JetBrains Mono',monospace;font-size:1.02rem;padding:.4rem .8rem;border-radius:20px;border:1px solid rgba(201,168,76,.3);max-width:100%;text-align:center}
 .typing{display:flex;align-items:center;gap:.4rem;padding:.9rem 1.1rem;background:var(--navy2);border-left:3px solid var(--gold);border-radius:3px;align-self:flex-start;max-width:120px}
 .dot{width:7px;height:7px;background:var(--gold);border-radius:50%;animation:bounce .8s infinite}
 .dot:nth-child(2){animation-delay:.15s}
 .dot:nth-child(3){animation-delay:.3s}
 @keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
 .ans-area{display:flex;flex-direction:column;gap:.7rem;margin-top:.4rem}
-.ans-inp{width:100%;padding:.8rem 1rem;font-family:'Crimson Pro',serif;font-size:1rem;border:1.5px solid var(--border);border-radius:2px;background:var(--white);color:var(--ink);outline:none;resize:vertical;min-height:72px;line-height:1.6;transition:border-color .2s}
+.ans-inp{width:100%;padding:.8rem 1rem;font-family:'Crimson Pro',serif;font-size:1.1rem;border:1.5px solid var(--border);border-radius:2px;background:var(--white);color:var(--ink);outline:none;resize:vertical;min-height:72px;line-height:1.6;transition:border-color .2s}
 .ans-inp:focus{border-color:var(--navy)}
 .ans-row{display:flex;justify-content:space-between;align-items:center;gap:.8rem}
-.ans-hint{font-size:.8rem;color:var(--ash);font-style:italic}
+.ans-hint{font-size:.94rem;color:var(--ash);font-style:italic}
 /* REPORT */
 .rpt-cover{background:var(--navy2);padding:2rem 1.5rem;text-align:center;border-bottom:4px solid var(--gold);margin-bottom:1.5rem;position:relative}
 .rpt-cover::before{content:'';position:absolute;top:0;left:0;width:6px;height:100%;background:var(--gold)}
 .rpt-cover h2{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white);margin-bottom:.3rem}
 .rpt-name{font-size:1.9rem;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif;margin:.4rem 0}
-.rpt-date{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:rgba(255,255,255,.4);letter-spacing:.15em}
+.rpt-date{font-family:'JetBrains Mono',monospace;font-size:1.06rem;color:rgba(255,255,255,.4);letter-spacing:.15em}
 .rpt-box{background:var(--white);border:1px solid var(--border);border-radius:3px;padding:1.3rem 1.5rem;margin:.9rem 0}
-.rpt-box h3{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--navy);margin-bottom:.8rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
-.rpt-box p{font-size:.93rem;color:#444;line-height:1.7;margin-bottom:.6rem}
+.rpt-box h3{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--navy);margin-bottom:.8rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.rpt-box p{font-size:1.07rem;color:#444;line-height:1.7;margin-bottom:.6rem}
 .rpt-box p:last-child{margin-bottom:0}
 .score-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:.8rem 0}
 .score-card{background:var(--cream);padding:.9rem 1rem;border-radius:2px;border:1px solid var(--border)}
-.sc-lbl{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--ash);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem}
+.sc-lbl{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--ash);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem}
 .sc-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--navy)}
 .sc-bar{height:5px;background:rgba(26,58,92,.1);border-radius:3px;margin:.35rem 0;overflow:hidden}
 .sc-fill{height:100%;border-radius:3px;background:var(--navy);transition:width 1s ease .3s}
-.sc-flag{font-family:'JetBrains Mono',monospace;font-size:.58rem;padding:.1rem .4rem;border-radius:20px}
+.sc-flag{font-family:'JetBrains Mono',monospace;font-size:1.02rem;padding:.1rem .4rem;border-radius:20px}
 .flag-s{background:rgba(26,92,46,.1);color:var(--green)}
 .flag-m{background:rgba(139,92,0,.1);color:var(--amber)}
 .flag-w{background:rgba(139,26,26,.1);color:var(--red)}
 .qa-item{padding:.8rem 0;border-bottom:1px solid var(--border)}
 .qa-item:last-child{border-bottom:none}
-.qa-q{font-size:.88rem;color:var(--ash);font-style:italic;margin-bottom:.3rem}
-.qa-a{font-size:.93rem;color:var(--ink);line-height:1.65;margin-bottom:.3rem}
-.qa-fb{font-size:.85rem;color:var(--navy);border-left:2px solid var(--gold);padding-left:.7rem;margin-top:.4rem;font-style:italic}
-.lgl-ftr{background:#f0ece0;border-top:1px solid #d4c8a8;padding:1rem 1.5rem;font-size:.76rem;color:#6a5a40;line-height:1.7;text-align:center;margin-top:1.5rem}
-.ftr{text-align:center;padding:1.5rem;font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--ash);letter-spacing:.1em;border-top:1px solid var(--border);margin-top:1.5rem}
+.qa-q{font-size:1.02rem;color:var(--ash);font-style:italic;margin-bottom:.3rem}
+.qa-a{font-size:1.07rem;color:var(--ink);line-height:1.65;margin-bottom:.3rem}
+.qa-fb{font-size:1.1rem;color:var(--navy);border-left:2px solid var(--gold);padding-left:.7rem;margin-top:.4rem;font-style:italic}
+.lgl-ftr{background:#f0ece0;border-top:1px solid #d4c8a8;padding:1rem 1.5rem;font-size:1.05rem;color:#6a5a40;line-height:1.7;text-align:center;margin-top:1.5rem}
+.ftr{text-align:center;padding:1.5rem;font-family:'JetBrains Mono',monospace;font-size:1.05rem;color:var(--ash);letter-spacing:.1em;border-top:1px solid var(--border);margin-top:1.5rem}
 .hidden{display:none}
-.loading-msg{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--gold);text-align:center;padding:.5rem;animation:fade .8s infinite alternate}
+.loading-msg{font-family:'JetBrains Mono',monospace;font-size:1.02rem;color:var(--gold);text-align:center;padding:.5rem;animation:fade .8s infinite alternate}
 @keyframes fade{from{opacity:.5}to{opacity:1}}
 @media(max-width:560px){.score-grid{grid-template-columns:1fr}}
 
@@ -103,7 +103,7 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
     font-family: JetBrains Mono, monospace;
   }
   .usage-title {
-    font-size: .62rem;
+    font-size: 1.05rem;
     letter-spacing: .15em;
     color: var(--ash);
     text-transform: uppercase;
@@ -118,7 +118,7 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
     display: flex;
     align-items: center;
     gap: .35rem;
-    font-size: .72rem;
+    font-size: 1.02rem;
     padding: .25rem .6rem;
     border-radius: 2px;
     border: 1px solid var(--rule);
@@ -142,7 +142,7 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
     border: 1px solid rgba(107,26,26,.2);
     border-radius: 3px;
     padding: .7rem 1rem;
-    font-size: .82rem;
+    font-size: 1.4rem;
     color: var(--red);
     font-style: italic;
     margin-bottom: 1rem;
@@ -152,7 +152,7 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
     border: 1px solid rgba(26,74,46,.2);
     border-radius: 3px;
     padding: .6rem 1rem;
-    font-size: .78rem;
+    font-size: 1.06rem;
     color: var(--green);
     font-family: JetBrains Mono, monospace;
     margin-top: .5rem;
@@ -180,7 +180,7 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
   <div class="setup-card">
     <div id="usageContainer"></div>
     <h3>Before We Begin — Tell Me About Yourself</h3>
-    <p style="font-size:.88rem;color:var(--ash);margin-bottom:1.2rem;font-style:italic">This information is used to personalise your interview. The AI interviewer will use it to ask relevant, probing questions — just as a real IO would.</p>
+    <p style="font-size:1.02rem;color:var(--ash);margin-bottom:1.2rem;font-style:italic">This information is used to personalise your interview. The AI interviewer will use it to ask relevant, probing questions — just as a real IO would.</p>
 
     <div class="field-row">
       <label class="field-lbl">Your Name *</label>
@@ -236,7 +236,7 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
     </div>
 
     <div style="margin-top:1.5rem;text-align:right">
-      <button class="btn btn-primary" onclick="startInterview()" style="font-size:1rem;padding:.85rem 2.2rem">Begin Interview &rarr;</button>
+      <button class="btn btn-primary" onclick="startInterview()" style="font-size:1.1rem;padding:.85rem 2.2rem">Begin Interview &rarr;</button>
     </div>
   </div>
 </div>
@@ -262,7 +262,7 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 
 <div class="ftr">
   &copy; 2026 LEAD BY DHARMA &middot; leadbydharma.com &middot; Col Aniruddha Rao HR (Retd) &middot; Maratha Light Infantry<br>
-  <span style="font-size:.58rem;opacity:.7">AI practice simulation &middot; Not an official SSB interview &middot; Not affiliated with SSB, MoD, or Indian Armed Forces</span>
+  <span style="font-size:1.02rem;opacity:.7">AI practice simulation &middot; Not an official SSB interview &middot; Not affiliated with SSB, MoD, or Indian Armed Forces</span>
 </div>
 </div>
 
@@ -419,7 +419,7 @@ function renderUsageBar() {
         window._lbdReports.push({ diff: d, index: i });
         reportsHTML += '<div style="margin-top:.4rem">'
           + '<button onclick="showReportByIndex(' + idx + ')" '
-          + 'style="font-family:JetBrains Mono,monospace;font-size:.62rem;'
+          + 'style="font-family:JetBrains Mono,monospace;font-size:1.05rem;'
           + 'background:none;border:1px solid var(--rule);padding:.2rem .6rem;'
           + 'border-radius:2px;cursor:pointer;color:var(--navy)">'
           + '\uD83D\uDCCB ' + DIFF_LABELS[d] + ' Report \u2014 ' + r.date
@@ -622,10 +622,17 @@ document.addEventListener("DOMContentLoaded", function() {
 var AI_CODES = {
   // Owner code — unlimited interviews, never expires
   "COLRAO-OWNER": { uses: 999, owner: true },
-  // Customer codes added here when Readiness Pack purchased
-  // Format: "LBD-XXXX-7": { uses: 3 }
-  "LBD-ABCD-7": { uses: 3 }, //Trial Access - 14 Apr
-  // Uses decrements each interview — cannot be reset by browser clear
+
+  // ── READINESS PACK CODES (included with Rs.999 pack) ──────
+  // Format: "LBD-XXXX-7": { uses: 3, type: "readiness" }
+
+  // ── STANDALONE AI INTERVIEW CODES (Rs.499 — 3 sessions) ───
+  // Format: "LBD-XXXX-AI": { uses: 3, type: "standalone" }
+  // Issue these when candidate purchases the standalone product
+  // Same 3 sessions, same difficulty rules as Readiness Pack
+
+  // Demo code for testing standalone purchase
+  "DEMO-AI-1": { uses: 3, type: "standalone", demo: true },
 };
 
 var AI_USAGE_KEY   = 'lbd_ai_usage_v2';  // versioned to avoid old data
@@ -672,20 +679,20 @@ function renderCodeGate() {
   var gate = document.getElementById('aiCodeGate');
   if (!gate) return;
   gate.innerHTML = '<div class="setup-card" style="max-width:480px;margin:0 auto">'
-    + '<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;letter-spacing:.15em;color:var(--gold2);margin-bottom:.8rem">AI INTERVIEW ACCESS</div>'
-    + '<h3 style="font-size:1.2rem;margin-bottom:.4rem">Personal Interview Simulation</h3>'
-    + '<p style="font-size:.85rem;color:var(--ash);font-style:italic;margin-bottom:1.2rem;line-height:1.6">'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:1.05rem;letter-spacing:.15em;color:var(--gold2);margin-bottom:.8rem">AI INTERVIEW ACCESS</div>'
+    + '<h3 style="font-size:1.4rem;margin-bottom:.4rem">Personal Interview Simulation</h3>'
+    + '<p style="font-size:1.1rem;color:var(--ash);font-style:italic;margin-bottom:1.2rem;line-height:1.6">'
     + 'Enter the access code from your Readiness Pack purchase email. '
     + 'Each code allows 3 interview sessions across the three difficulty levels.</p>'
     + '<div style="margin-bottom:.8rem">'
-    + '<label style="font-family:JetBrains Mono,monospace;font-size:.65rem;letter-spacing:.1em;display:block;margin-bottom:.3rem;color:var(--navy)">ACCESS CODE</label>'
+    + '<label style="font-family:JetBrains Mono,monospace;font-size:1.06rem;letter-spacing:.1em;display:block;margin-bottom:.3rem;color:var(--navy)">ACCESS CODE</label>'
     + '<input id="aiCodeInput" class="inp" type="text" placeholder="e.g. LBD-XXXX-7" '
     + 'style="text-transform:uppercase;letter-spacing:.1em;font-family:JetBrains Mono,monospace" '
     + 'onkeydown="if(event.keyCode===13) submitAICode()" />'
     + '</div>'
-    + '<div id="aiCodeErr" style="display:none;color:var(--red);font-size:.82rem;font-style:italic;margin-bottom:.6rem"></div>'
+    + '<div id="aiCodeErr" style="display:none;color:var(--red);font-size:1.4rem;font-style:italic;margin-bottom:.6rem"></div>'
     + '<button onclick="submitAICode()" class="btn btn-primary" style="width:100%">Unlock Interview &rarr;</button>'
-    + '<p style="font-size:.75rem;color:var(--ash);text-align:center;margin-top:.8rem;font-style:italic">'
+    + '<p style="font-size:1.05rem;color:var(--ash);text-align:center;margin-top:.8rem;font-style:italic">'
     + 'Purchased the Readiness Pack? Your code was emailed immediately after payment.<br>'
     + 'Questions? <a href="mailto:leadbydharma@gmail.com" style="color:var(--gold2)">leadbydharma@gmail.com</a> '
     + '&middot; <a href="tel:+919878930879" style="color:var(--gold2)">+91 98789 30879</a></p>'
@@ -719,10 +726,12 @@ function renderUsageDisplay() {
   if (!container) return;
   var isOwner = currentAICode && AI_CODES[currentAICode] && AI_CODES[currentAICode].owner;
   var uses = currentAICode ? getCodeUsage(currentAICode) : 0;
+  var codeType = currentAICode && AI_CODES[currentAICode] ? (AI_CODES[currentAICode].type || '') : '';
+  var typeLabel = codeType === 'standalone' ? ' &nbsp;·&nbsp; Standalone Pack' : (codeType === 'readiness' ? ' &nbsp;·&nbsp; Readiness Pack' : '');
   var html = '<div class="usage-bar">'
     + '<div class="usage-title">AI Interview Usage'
-    + (isOwner ? ' &nbsp;·&nbsp; Owner Access — Unlimited' 
-               : ' &nbsp;·&nbsp; ' + uses + ' session' + (uses !== 1 ? 's' : '') + ' remaining')
+    + (isOwner ? ' &nbsp;·&nbsp; Owner Access — Unlimited'
+               : ' &nbsp;·&nbsp; ' + uses + ' session' + (uses !== 1 ? 's' : '') + ' remaining' + typeLabel)
     + '</div>';
   if (!isOwner) {
     var used = (currentAICode && AI_CODES[currentAICode] ? AI_CODES[currentAICode].uses : 3) - uses;
@@ -735,7 +744,22 @@ function renderUsageDisplay() {
     }
     html += '</div>';
     if (uses <= 0) {
-      html += '<div class="usage-exhausted">All interview sessions used. Your reports are permanently saved below.</div>';
+      html += '<div class="usage-exhausted">All interview sessions used. Your reports are permanently saved below.</div>'
+        + '<div style="background:rgba(184,150,62,.08);border:1px solid rgba(184,150,62,.3);border-radius:3px;'
+        + 'padding:.9rem 1rem;margin-top:.6rem">'
+        + '<div style="font-family:JetBrains Mono,monospace;font-size:.76rem;color:var(--gold2);'
+        + 'letter-spacing:.1em;margin-bottom:.4rem">WANT MORE SESSIONS?</div>'
+        + '<div style="font-size:1rem;color:var(--navy);margin-bottom:.3rem">'
+        + 'Standalone AI Interview — 3 additional sessions</div>'
+        + '<div style="font-size:.9rem;color:var(--ash);font-style:italic;margin-bottom:.6rem">'
+        + 'Rs.499 &middot; Standard, Demanding and Stress &middot; Same scored report</div>'
+        + '<a href="https://rzp.io/rzp/AukND0g" target="_blank" '
+        + 'style="display:inline-block;font-family:JetBrains Mono,monospace;font-size:.76rem;'
+        + 'letter-spacing:.1em;background:var(--gold);color:var(--navy);padding:.5rem 1.2rem;'
+        + 'border-radius:2px;text-decoration:none">Buy 3 More Sessions — Rs.499 &rarr;</a>'
+        + '<div style="font-size:.76rem;color:var(--ash);margin-top:.5rem;font-style:italic">'
+        + 'New access code emailed within minutes of payment.</div>'
+        + '</div>';
     }
   }
   html += '</div>';
@@ -874,7 +898,7 @@ async function generateReport() {
   document.getElementById('interviewRoom').style.display = 'none';
   var rDiv = document.getElementById('reportPage');
   rDiv.classList.remove('hidden');
-  rDiv.innerHTML = '<div style="text-align:center;padding:3rem;font-family:JetBrains Mono,monospace;font-size:.8rem;color:var(--navy)">'
+  rDiv.innerHTML = '<div style="text-align:center;padding:3rem;font-family:JetBrains Mono,monospace;font-size:.94rem;color:var(--navy)">'
     + '<div class="loading-msg">Analysing your interview responses...<br>This takes 20-30 seconds. Please wait.</div></div>';
 
   // Build assessment prompt from conversation
@@ -957,10 +981,10 @@ function renderReport(r) {
     var s = r.scores && r.scores[k] ? r.scores[k] : { score: 50, flag: 'Developing', comment: '' };
     scoresHtml += '<div class="score-card">'
       + '<div class="sc-lbl">' + scoreLabels[i] + '</div>'
-      + '<div class="sc-val">' + (s.score || 50) + '<span style="font-size:.9rem;font-family:JetBrains Mono,monospace;color:var(--ash)">%</span></div>'
+      + '<div class="sc-val">' + (s.score || 50) + '<span style="font-size:1.05rem;font-family:JetBrains Mono,monospace;color:var(--ash)">%</span></div>'
       + '<div class="sc-bar"><div class="sc-fill" style="width:0%" data-w="' + (s.score || 50) + '%"></div></div>'
       + '<span class="sc-flag ' + flagClass(s.flag) + '">' + (s.flag || 'Developing') + '</span>'
-      + (s.comment ? '<div style="font-size:.8rem;color:var(--ash);margin-top:.4rem;font-style:italic">' + s.comment + '</div>' : '')
+      + (s.comment ? '<div style="font-size:.94rem;color:var(--ash);margin-top:.4rem;font-style:italic">' + s.comment + '</div>' : '')
       + '</div>';
   }
 
@@ -979,23 +1003,23 @@ function renderReport(r) {
   var strengthsHtml = '';
   if (r.strengths && r.strengths.length > 0) {
     for (var i = 0; i < r.strengths.length; i++) {
-      strengthsHtml += '<li style="margin-bottom:.4rem;font-size:.93rem">' + r.strengths[i] + '</li>';
+      strengthsHtml += '<li style="margin-bottom:.4rem;font-size:1.07rem">' + r.strengths[i] + '</li>';
     }
   }
 
   var gapsHtml = '';
   if (r.gaps && r.gaps.length > 0) {
     for (var i = 0; i < r.gaps.length; i++) {
-      gapsHtml += '<li style="margin-bottom:.4rem;font-size:.93rem">' + r.gaps[i] + '</li>';
+      gapsHtml += '<li style="margin-bottom:.4rem;font-size:1.07rem">' + r.gaps[i] + '</li>';
     }
   }
 
   var rDiv = document.getElementById('reportPage');
   rDiv.innerHTML = '<div class="rpt-cover">'
-    + '<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:var(--gold);letter-spacing:.2em;margin-bottom:.4rem">SSB PI ASSESSMENT REPORT &mdash; AI SIMULATION</div>'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:1.05rem;color:var(--gold);letter-spacing:.2em;margin-bottom:.4rem">SSB PI ASSESSMENT REPORT &mdash; AI SIMULATION</div>'
     + '<h2>Personal Interview Assessment</h2>'
     + '<div class="rpt-name">' + profile.name + '</div>'
-    + '<div style="font-family:JetBrains Mono,monospace;font-size:.75rem;font-weight:600;color:' + verdictColor + ';margin:.4rem 0;letter-spacing:.1em">' + (r.overallVerdict || 'Assessment Complete').toUpperCase() + '</div>'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:1.05rem;font-weight:600;color:' + verdictColor + ';margin:.4rem 0;letter-spacing:.1em">' + (r.overallVerdict || 'Assessment Complete').toUpperCase() + '</div>'
     + '<div class="rpt-date">LEAD BY DHARMA &middot; ' + new Date().toLocaleDateString('en-IN', {year:'numeric',month:'long',day:'numeric'}).toUpperCase() + ' &middot; AI SIMULATION</div>'
     + '</div>'
 
@@ -1019,7 +1043,7 @@ function renderReport(r) {
     + '<div class="rpt-box">'
     + '<h3>Development Priorities Before Your Real SSB</h3>'
     + '<p>' + (r.developmentPriorities || '') + '</p>'
-    + '<div style="background:var(--cream);border-left:3px solid var(--navy);padding:.7rem 1rem;margin-top:.8rem;font-style:italic;font-size:.88rem">'
+    + '<div style="background:var(--cream);border-left:3px solid var(--navy);padding:.7rem 1rem;margin-top:.8rem;font-style:italic;font-size:1.02rem">'
     + 'For personalised mentorship that develops these qualities over 3+ months: <strong>leadbydharma.com</strong></div>'
     + '</div>'
 
