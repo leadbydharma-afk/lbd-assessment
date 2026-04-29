@@ -1656,6 +1656,16 @@ function sendFullReportByEmail(email, name, reportHTML) {
     + ' It selects the most real one."\n'
     + '— Col Aniruddha Rao HR (Retd.)';
 
+  // Save full report to localStorage BEFORE sending email
+  // This allows recovery if the candidate closes the tab
+  try {
+    var dims2 = computeScores();
+    saveReportToStorage(email, name, reportHTML, {
+      d1: dims2.D1.pct, d2: dims2.D2.pct,
+      d3: dims2.D3.pct, d4: dims2.D4.pct, d5: dims2.D5.pct
+    });
+  } catch(saveErr) { console.log('Storage save error:', saveErr); }
+
   emailjs.send(
     'service_t7ozvf3',
     'template_lkhepyo',
@@ -1667,7 +1677,7 @@ function sendFullReportByEmail(email, name, reportHTML) {
       reply_to:       'leadbydharma@gmail.com'
     }
   ).then(function() {
-    showGateMsg('\u2713 Report summary emailed to ' + email + '. Check inbox and spam folder.', '#4caf50');
+    showGateMsg('\u2713 Report emailed to ' + email + '. Check inbox and spam folder.', '#4caf50');
   }, function(e) {
     console.error('EmailJS:', e);
     showGateMsg('Email could not be sent. Your full report is shown on screen — use Print/Save to keep a copy.', '#ffa94d');
@@ -1682,6 +1692,119 @@ function showGateMsg(msg, color) {
   var note = document.querySelector('.gate-note');
   if (note) note.style.display='none';
 }
+
+
+// =====================================================
+// REPORT RECOVERY SYSTEM
+// Saves report to localStorage on payment confirmation
+// Retrieves it if candidate returns to the page
+// =====================================================
+
+var STORAGE_KEY_PREFIX = 'lbd_report_';
+
+function saveReportToStorage(email, name, fullReportHTML, scores) {
+  try {
+    var key = STORAGE_KEY_PREFIX + email.toLowerCase().replace(/[^a-z0-9]/g, '_');
+    var data = {
+      email:          email,
+      name:           name,
+      reportHTML:     fullReportHTML,
+      scores:         scores,
+      savedAt:        new Date().toISOString(),
+      expires:        new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString() // 90 days
+    };
+    localStorage.setItem(key, JSON.stringify(data));
+    localStorage.setItem('lbd_last_email', email.toLowerCase());
+    console.log('Report saved to localStorage for', email);
+  } catch(e) {
+    console.log('localStorage save failed:', e);
+  }
+}
+
+function getReportFromStorage(email) {
+  try {
+    var key = STORAGE_KEY_PREFIX + email.toLowerCase().replace(/[^a-z0-9]/g, '_');
+    var raw = localStorage.getItem(key);
+    if (!raw) return null;
+    var data = JSON.parse(raw);
+    // Check expiry
+    if (data.expires && new Date(data.expires) < new Date()) {
+      localStorage.removeItem(key);
+      return null;
+    }
+    return data;
+  } catch(e) { return null; }
+}
+
+function getLastEmail() {
+  try { return localStorage.getItem('lbd_last_email') || ''; }
+  catch(e) { return ''; }
+}
+
+function checkForSavedReport() {
+  // Called on page load — if a saved report exists, show retrieval option on intro page
+  var lastEmail = getLastEmail();
+  if (!lastEmail) return;
+
+  var saved = getReportFromStorage(lastEmail);
+  if (!saved) return;
+
+  // Show retrieval banner on intro page
+  var intro = document.getElementById('introPage');
+  if (!intro) return;
+
+  var savedDate = new Date(saved.savedAt).toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'});
+
+  var banner = document.createElement('div');
+  banner.id = 'recoveryBanner';
+  banner.style.cssText = 'background:rgba(26,74,46,.12);border:1.5px solid rgba(26,74,46,.35);border-radius:8px;padding:1.1rem 1.2rem;margin-bottom:1.4rem;text-align:center';
+  banner.innerHTML = '<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:#4caf50;letter-spacing:.15em;margin-bottom:.35rem">✓ PAID REPORT AVAILABLE</div>'
+    + '<div style="font-size:.95rem;color:#0d1f35;margin-bottom:.15rem"><strong>' + saved.name + '</strong> — report from ' + savedDate + '</div>'
+    + '<div style="font-size:.82rem;color:#7a6e63;margin-bottom:.7rem">' + saved.email + '</div>'
+    + '<button onclick="retrieveSavedReport()" style="background:#0d1f35;color:#f0ca7a;border:none;padding:.55rem 1.3rem;border-radius:4px;font-family:Georgia,serif;font-size:.9rem;cursor:pointer;margin-right:.5rem">View My Report →</button>'
+    + '<button onclick="hideBanner() style="background:transparent;color:#7a6e63;border:1px solid #ccc;padding:.5rem 1rem;border-radius:4px;font-family:Georgia,serif;font-size:.85rem;cursor:pointer">Take New Assessment</button>';
+
+  // Insert at top of intro page content
+  var firstChild = intro.firstElementChild;
+  if (firstChild) {
+    intro.insertBefore(banner, firstChild);
+  } else {
+    intro.appendChild(banner);
+  }
+}
+
+function hideBanner() {
+  var b = document.getElementById('recoveryBanner');
+  if (b) b.style.display = 'none';
+}
+
+function retrieveSavedReport() {
+  var lastEmail = getLastEmail();
+  var saved = getReportFromStorage(lastEmail);
+  if (!saved) {
+    alert('Saved report not found. Please re-take the assessment.');
+    return;
+  }
+
+  // Hide intro, show report
+  var intro = document.getElementById('introPage');
+  if (intro) intro.classList.add('hidden');
+  var sections = document.getElementById('assessmentSections');
+  if (sections) sections.style.display = 'none';
+
+  pendingFullReportHTML = saved.reportHTML;
+  pendingCandidateName  = saved.name;
+
+  var reportDiv = document.getElementById('report');
+  reportDiv.className = 'active';
+  reportDiv.innerHTML = saved.reportHTML;
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// Run on page load
+document.addEventListener('DOMContentLoaded', function() {
+  checkForSavedReport();
+});
 
 </script>
 </body>
