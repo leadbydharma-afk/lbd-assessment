@@ -1610,45 +1610,77 @@ function showPaymentGate(fullReportHTML, candidateName) {
 }
 
 function sendFullReportByEmail(email, name, reportHTML) {
+  // Show the full visual report on screen immediately — do not wait for email
+  showFullReportDirectly();
+
   if (typeof emailjs === 'undefined') {
-    showFullReportDirectly();
-    var err = document.getElementById('gateErr');
-    if (err) {
-      err.style.color = '#ffa94d'; err.style.display = 'block';
-      err.textContent = 'Email service unavailable. Report shown below. WhatsApp +91 98789 30879 for your emailed copy.';
-    }
+    showGateMsg('Report shown below. Email leadbydharma@gmail.com if you need an emailed copy.', '#ffa94d');
     return;
   }
+
+  // Build a compact plain-text email — stays well under EmailJS size limits
+  var dims = computeScores();
+  var d1=dims.D1, d2=dims.D2, d3=dims.D3, d4=dims.D4, d5=dims.D5;
+  var overallRaw = (d1.avg+d2.avg+d3.avg+d4.avg)/4;
+  var derailer = 5 - d5.avg;
+  var effD5 = derailer > 3.2 ? -0.8 : derailer > 2.0 ? -0.3 : 0;
+  var adj = overallRaw + effD5;
+  var verdict = adj >= 4.0 ? 'Strong Officer Potential'
+              : adj >= 3.0 ? 'Developing Officer Potential'
+              : 'Foundation Building Required';
+  var drLabel = derailer > 3.2 ? 'HIGH' : derailer > 2.0 ? 'MODERATE' : 'LOW';
+
+  var reportDate = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
+
+  var compactReport = 'LEAD BY DHARMA — Leadership Assessment Report\n'
+    + 'Candidate: ' + name + '\n'
+    + 'Date: ' + reportDate + '\n'
+    + '\n─────────────────────────────\n'
+    + 'OVERALL VERDICT: ' + verdict + '\n'
+    + '─────────────────────────────\n'
+    + '\nDIMENSION SCORES\n'
+    + 'Domain I  — Intellectual Qualities : ' + d1.pct + '%\n'
+    + 'Domain II — Social Effectiveness   : ' + d2.pct + '%\n'
+    + 'Domain III— Dynamism & Drive       : ' + d3.pct + '%\n'
+    + 'Domain IV — Character & Integrity  : ' + d4.pct + '%\n'
+    + 'Domain V  — Derailer Risk Level    : ' + drLabel + ' (' + d5.pct + '% risk score)\n'
+    + '\n─────────────────────────────\n'
+    + 'Your complete visual report with full analysis is shown on your screen.\n'
+    + 'Save or print it using the Print/Save button at the bottom of the report.\n'
+    + '\n─────────────────────────────\n'
+    + 'For mentorship and personal guidance:\n'
+    + 'Colonel Aniruddha Rao HR (Retd.) — Lead By Dharma\n'
+    + 'leadbydharma.com | leadbydharma@gmail.com\n'
+    + '+91 98789 30879 | +91 98000 12027\n'
+    + '\n"The SSB does not select the most prepared candidate.\n'
+    + ' It selects the most real one."\n'
+    + '— Col Aniruddha Rao HR (Retd.)';
+
   emailjs.send(
     'service_t7ozvf3',
     'template_lkhepyo',
     {
       to_email:       email,
       candidate_name: name,
-      report_html:    reportHTML,
-      report_date:    new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'}),
+      report_html:    compactReport,
+      report_date:    reportDate,
       reply_to:       'leadbydharma@gmail.com'
     }
   ).then(function() {
-    var succ = document.getElementById('gateSuccess');
-    if (succ) {
-      succ.style.display = 'block';
-      succ.textContent = '\u2713 Report sent to ' + email + '. Check your inbox (and spam) within 60 seconds.';
-    }
-    var row = document.querySelector('.gate-email-row');
-    if (row) row.style.display = 'none';
-    var note = document.querySelector('.gate-note');
-    if (note) note.style.display = 'none';
-    showFullReportDirectly();
-  }, function(err) {
-    console.error('EmailJS error:', err);
-    showFullReportDirectly();
-    var errEl = document.getElementById('gateErr');
-    if (errEl) {
-      errEl.style.color = '#ffa94d'; errEl.style.display = 'block';
-      errEl.textContent = 'Email could not be sent. Report shown below. Email leadbydharma@gmail.com for your copy.';
-    }
+    showGateMsg('\u2713 Report summary emailed to ' + email + '. Check inbox and spam folder.', '#4caf50');
+  }, function(e) {
+    console.error('EmailJS:', e);
+    showGateMsg('Email could not be sent. Your full report is shown on screen — use Print/Save to keep a copy.', '#ffa94d');
   });
+}
+
+function showGateMsg(msg, color) {
+  var succ = document.getElementById('gateSuccess');
+  if (succ) { succ.style.display='block'; succ.style.color=color||'#4caf50'; succ.textContent=msg; }
+  var row = document.querySelector('.gate-email-row');
+  if (row) row.style.display='none';
+  var note = document.querySelector('.gate-note');
+  if (note) note.style.display='none';
 }
 
 </script>
