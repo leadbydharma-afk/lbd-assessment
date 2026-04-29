@@ -452,426 +452,443 @@ var _origSelectTest = null; // will be set after original is defined
 // DATA — SRT SETS (7 x 60)
 // =====================================================
 const SRT = [
- ["You are leading a patrol and your radio fails mid-mission in enemy territory.",
-  "A team member collapses from exhaustion during a critical exercise.",
-  "Your commanding officer gives you an order you believe is factually wrong.",
-  "You discover a fellow cadet cheating in a written examination.",
-  "You are asked to lead a group of soldiers who have more experience than you.",
-  "Your vehicle breaks down while transporting injured soldiers to the medical post.",
-  "A junior soldier refuses to follow an order in front of the rest of the team.",
-  "You witness a senior officer behave unethically toward a civilian.",
-  "You have been incorrectly blamed for a mistake made by your team.",
-  "Your group is lost in unfamiliar terrain at night with limited supplies.",
-  "You must deliver bad news to a soldier about a family emergency.",
-  "Two team members get into a physical altercation during a field exercise.",
-  "You have been given an impossible deadline with inadequate resources.",
-  "A fire breaks out in the barracks at 2am. You are the first to wake up.",
-  "You must choose between following orders and protecting a civilian from harm.",
-  "Your team loses an important competition due to a decision you made.",
-  "A new recruit under your command is being bullied by seniors.",
-  "You are asked to give a speech in front of 500 people with five minutes to prepare.",
-  "Your closest friend confesses to a serious breach of military regulations.",
-  "You find a wallet containing Rs 50,000 and the owner's contact details.",
-  "You are the only person present when a child is drowning nearby.",
-  "Your superior takes credit for a plan you developed entirely yourself.",
-  "You are posted to a remote area with no communication for three months.",
-  "A civilian complains that your unit has damaged their property.",
-  "You must decide whether to continue an exercise in deteriorating weather.",
-  "Your team is panicking before an important evaluation. You are the calm one.",
-  "You notice a structural defect in a building that others are about to enter.",
-  "A soldier in your unit shows signs of serious mental distress.",
-  "You are offered a significant bribe to disclose classified information.",
-  "Your equipment malfunctions at the start of a critical timed exercise.",
-  "A crowd becomes hostile toward your unit during a peacekeeping exercise.",
-  "You are asked to assess a peer whose work is genuinely substandard.",
-  "You have made a significant mistake. No one has noticed yet.",
-  "You must lead a team that has recently suffered a demoralising setback.",
-  "An injured colleague cannot continue but refuses to fall behind the group.",
-  "You disagree with a popular group decision that you believe will fail.",
-  "You are tired, hungry, and wet but the mission is not yet complete.",
-  "A senior instructs you to falsify a report to avoid administrative trouble.",
-  "You witness a soldier behaving courageously but directly against orders.",
-  "You are new to a unit where everyone already has established friendships.",
-  "Your team is ahead in a competition but a shortcut would confirm the win unfairly.",
-  "You must manage a soldier who is technically excellent but socially disruptive.",
-  "You are called upon to arbitrate a dispute between two equal-ranking officers.",
-  "A civilian asks you for help with a problem that is outside your mandate.",
-  "You discover that your unit's supplies have been incorrectly documented.",
-  "You must continue an important briefing after learning disturbing personal news.",
-  "You are given command of a mission you believe is poorly planned.",
-  "A highly capable team member constantly undermines group decisions.",
-  "You find a security breach in your unit's communications system.",
-  "A fellow officer takes an unnecessary risk that endangers the entire unit.",
-  "You are the last person who can raise an objection before a bad decision is finalised.",
-  "Your group is significantly behind schedule due to factors outside your control.",
-  "A soldier asks you for advice on a serious personal problem during operations.",
-  "You must complete a task for which you have no training or experience.",
-  "Your unit is being unfairly treated by a superior from another unit.",
-  "You are exhausted but a junior soldier needs immediate guidance.",
-  "A dangerous rumour about your unit is spreading among civilians.",
-  "You must give a negative performance review to someone who is your friend.",
-  "You catch a junior soldier stealing from the stores.",
-  "At the end of a very long and difficult exercise, you are asked to give one more effort."],
- ["You are leading a night march when two soldiers begin arguing loudly.",
-  "You receive conflicting orders from two superior officers simultaneously.",
-  "A bridge your patrol must cross appears structurally unsafe.",
-  "You discover your team has been given faulty maps for an important exercise.",
-  "A senior soldier with more experience than you refuses to take you seriously.",
-  "You must complete a mission even though you are running a high fever.",
-  "Your team has captured a prisoner who appears injured and frightened.",
-  "You notice a fellow cadet has been losing sleep and appetite for two weeks.",
-  "You are given 10 minutes to plan and brief an operation with incomplete information.",
-  "A civilian offers you hospitality in a conflict zone. Your orders say refuse.",
-  "Your vehicle is ambushed. Three soldiers are wounded. Communications are down.",
-  "You are publicly embarrassed by a senior officer in front of your team.",
-  "You witness a fellow officer accept gifts from a supplier.",
-  "Your team achieves an outstanding result but nobody acknowledges your contribution.",
-  "A junior soldier under your command performs exceptionally under pressure.",
-  "You must navigate a political dispute between two local communities.",
-  "Your relief does not arrive and you must continue your post for 12 more hours.",
-  "A critically important piece of equipment breaks down with no spare available.",
-  "You are asked to lead a mission against your better tactical judgment.",
-  "A visiting dignitary makes an offensive remark to one of your soldiers.",
-  "You find that your predecessor left a serious administrative error in the records.",
-  "An exercise takes a dangerous turn and soldiers are looking to you for leadership.",
-  "You must motivate a team that has been on operations for three weeks with no rest.",
-  "You discover that a decision you made last month has caused unexpected problems.",
-  "A senior officer asks you to recommend a junior for promotion. You have reservations.",
-  "Your unit is blamed for an incident caused by another unit entirely.",
-  "You are asked to speak at a memorial for a soldier killed under your command.",
-  "A soldier confides that he has been using alcohol to cope with operational stress.",
-  "You must leave behind equipment to save a wounded soldier. The equipment is critical.",
-  "Your team completes a task but through a method you had explicitly forbidden.",
-  "A young recruit breaks down crying during a particularly difficult exercise.",
-  "You are asked to evaluate your own performance for a promotion board.",
-  "Two soldiers from your unit are found fighting off-duty.",
-  "Your commanding officer makes a decision you believe will endanger lives.",
-  "You must communicate a casualty to a soldier's family through a senior officer.",
-  "A new policy you must enforce is deeply unpopular with your entire team.",
-  "You are the only officer available when a medical emergency occurs.",
-  "Your most capable soldier wants to quit after a demoralising failure.",
-  "An unauthorised shortcut by your team actually produced a better outcome.",
-  "You are asked to provide information that is technically correct but misleading.",
-  "You are posted to a unit with a culture you find ethically uncomfortable.",
-  "A civilian insists on crossing a danger zone your unit has secured.",
-  "Your team wins an important exercise by the slimmest possible margin.",
-  "You must manage a soldier who is brilliant under pressure but difficult in peacetime.",
-  "A fellow officer confides they are considering leaving the service.",
-  "You must account for equipment that has gone missing under your watch.",
-  "You are asked to give an honest assessment of a senior officer's plan. It is poor.",
-  "Your unit is visited by inspectors without prior notice.",
-  "A project you worked on for months is cancelled without explanation.",
-  "You must integrate a soldier returning from personal leave into an ongoing operation.",
-  "A mistake in your orders causes you to be in the wrong position for an exercise.",
-  "Two officers in your unit have a rivalry that is affecting team performance.",
-  "You receive an anonymous complaint about your leadership style.",
-  "You must maintain the morale of a team that knows it is about to receive bad news.",
-  "A junior officer makes an excellent decision that contradicts your standing orders.",
-  "An important guest fails to arrive for an event you have planned extensively.",
-  "You are asked to transfer to a posting you do not want.",
-  "A language barrier prevents you from communicating with local civilians.",
-  "You must act on intelligence that may be unreliable.",
-  "You are the last officer standing after multiple casualties in a training exercise."],
- ["You are asked to lead a group you have just met into a high-pressure exercise.",
-  "An explosion occurs nearby during a field exercise. No one is hurt but everyone is shaken.",
-  "You must refuse a direct request from a person you deeply respect.",
-  "A competition you were expected to win is lost due to a last-minute error.",
-  "You discover that your promotion was given due to an administrative mix-up.",
-  "A plan you believe in strongly is rejected by the committee.",
-  "You must continue working alongside someone who has treated you unfairly.",
-  "An important exercise begins with critical equipment missing.",
-  "You are asked to make a presentation on a subject you know little about.",
-  "A member of your team openly questions your decision in front of the group.",
-  "You have 48 hours to complete a task that normally takes one week.",
-  "You are responsible for a junior who makes a serious error on your watch.",
-  "A fellow officer asks you to cover for their absence without explanation.",
-  "You receive news of a family emergency in the middle of a critical exercise.",
-  "An exercise requires you to physically restrain someone who is resisting.",
-  "You must work with someone who was recently passed over for promotion in your favour.",
-  "A technical failure occurs at the most critical moment of an important demonstration.",
-  "You are given command of a unit where the previous leader was highly popular.",
-  "A civilian journalist wants to ask questions you are not authorised to answer.",
-  "You find yourself isolated from your unit with a new set of instructions.",
-  "A colleague who helped you significantly now asks a favour you should not grant.",
-  "You must make a rapid decision with only 30 seconds and incomplete information.",
-  "Your entire team fails an important evaluation. You were the leader.",
-  "A junior soldier shows more potential than any senior in the unit.",
-  "You are asked to do something that is legal but that you believe is wrong.",
-  "Your commanding officer is absent and you must make a critical call.",
-  "You witness a soldier receiving unfair treatment from a senior.",
-  "A task you are given puts your team's safety at marginal risk.",
-  "You are asked to train soldiers in a skill you yourself need to improve.",
-  "An important piece of intelligence arrives after the decision has already been made.",
-  "You must lead a field exercise in genuinely dangerous weather.",
-  "A young soldier confesses that they joined the army for the wrong reasons.",
-  "An equipment malfunction occurs just as an inspection begins.",
-  "You are the only person available to translate but your language skills are limited.",
-  "A decision you supported strongly turns out to have been wrong.",
-  "You must complete a route march with a sprained ankle without showing it.",
-  "You must make a decision that benefits the group but disadvantages you personally.",
-  "A soldier is performing poorly for reasons you suspect are personal.",
-  "You must maintain your position in the face of strong group pressure to abandon it.",
-  "You discover that a rumour you inadvertently started has caused serious harm.",
-  "Your team succeeds in an exercise but by ignoring your instructions.",
-  "You must choose between two equally capable candidates for a single position.",
-  "A task requires you to work through the night alone.",
-  "Your judgment is questioned by someone with less experience than you.",
-  "You must apologise publicly for a mistake that was not entirely yours.",
-  "A soldier disobeys an order but the outcome of the disobedience was better.",
-  "You are separated from your team and must navigate back independently.",
-  "A team member reveals confidential information to an outsider.",
-  "You must improvise equipment from available materials to complete a task.",
-  "You are asked to evaluate someone whose personal situation you know is very difficult.",
-  "A fire drill occurs in the middle of a timed critical exercise.",
-  "You discover a fellow officer has been lying to the commanding officer.",
-  "You must maintain authority over a group that is larger and older than expected.",
-  "A supply chain failure means your team will not eat properly for two days.",
-  "You are asked to represent your unit in a public forum on short notice.",
-  "A task you have prepared extensively for is changed completely at the last minute.",
-  "Your team is demoralised after a failure. The next task begins tomorrow.",
-  "You are required to work with a unit from a different service branch.",
-  "A new regulation contradicts something you have been telling your team for months.",
-  "You must physically push your limits to complete a task that requires it."],
- ["You wake up to find a significant document has gone missing from your possession.",
-  "A new recruit who lacks confidence shows exceptional judgment in a crisis.",
-  "You must remove a soldier who has become a friend during a difficult posting.",
-  "Your plan is publicly criticised by a more experienced officer.",
-  "You are stranded in a remote area with a soldier who is mentally breaking down.",
-  "A task force you are part of has a serious disagreement about strategy.",
-  "You are asked to go beyond your authority to resolve an urgent situation.",
-  "A senior officer praises junior work that you know is flawed.",
-  "A new command structure means you must now report to someone you were equal to.",
-  "You must pass on an order you believe will produce unnecessary hardship.",
-  "Your convoy encounters an obstruction and is running two hours late.",
-  "A piece of classified information is accidentally revealed to a civilian.",
-  "You must enforce discipline on a group of soldiers after a morale-breaking event.",
-  "A foreign officer visiting your unit makes a serious cultural mistake.",
-  "You must coordinate three separate teams simultaneously toward one objective.",
-  "An administrative error means your team is under-resourced for a major exercise.",
-  "You discover a popular long-standing practice in your unit is against regulations.",
-  "A soldier collapses on a long march. The group cannot stop to wait.",
-  "You must deliver an honest assessment that will end someone's career.",
-  "Your communications equipment is jammed during a critical phase of an exercise.",
-  "You are asked to justify a decision you made that seemed right at the time.",
-  "A strategic retreat is required but your team views it as giving up.",
-  "You must lead a team through a task none of you have trained for.",
-  "An error in resource allocation means your team has half the supplies needed.",
-  "You are asked to act as mediator between two officers of equal rank.",
-  "A dangerous shortcut would save significant time in a deteriorating situation.",
-  "You must keep information from your team that would undermine their confidence.",
-  "A personal mistake in judgment caused a mission setback. The team does not know.",
-  "You are leading a group and realise mid-exercise your initial assessment was wrong.",
-  "A soldier asks you a technical question you cannot answer.",
-  "You receive an order that seems to contradict the mission objective.",
-  "Your team is told they must redo an exercise they just completed exhaustedly.",
-  "A local community refuses to cooperate with your unit during a joint exercise.",
-  "You are in command when an unexpected opportunity to gain advantage appears.",
-  "Two of your best soldiers want to transfer out after a disagreement.",
-  "Another unit has been taking credit for your team's work.",
-  "You must decide whether to report a minor infraction or handle it internally.",
-  "A new policy requires changing a procedure your team was doing correctly.",
-  "Your team is asked to compete against a team that has been preparing longer.",
-  "You must decline a social invitation from a senior officer without causing offence.",
-  "An error in your planning is discovered by a junior officer during execution.",
-  "You are the last person to leave a burning building. One person remains inside.",
-  "You must complete a physical task that you are not certain you can perform safely.",
-  "A soldier breaks down emotionally in front of the rest of the group.",
-  "You are accused of showing favouritism, which is untrue.",
-  "An important operation is put at risk by a junior's well-intentioned initiative.",
-  "You must manage an extremely capable soldier who constantly challenges authority.",
-  "A decision you delayed making has now become more complicated.",
-  "Your team is in the lead in an important exercise when a setback occurs.",
-  "You are the most senior officer available when a conflict between units breaks out.",
-  "A junior soldier impresses everyone during a crisis but then behaves poorly afterward.",
-  "You must complete a report accurately when the accurate version reflects badly on your unit.",
-  "A plan that everyone else supported has failed as you predicted.",
-  "You are asked to make a permanent decision based on temporary information.",
-  "A highly respected officer in your unit behaves in a way you find deeply wrong.",
-  "Your team is frightened before a genuinely dangerous exercise.",
-  "You must translate technical expertise into terms non-experts can act on.",
-  "An exercise that was going well suddenly changes conditions drastically.",
-  "You are tired, in pain, and behind schedule. There are four hours left.",
-  "A soldier under your command behaves heroically but also recklessly."],
- ["A fire breaks out in the cookhouse during dinner. You are the duty officer.",
-  "Two convoys from different units collide due to poor coordination.",
-  "A visiting officer criticises your unit publicly without accurate information.",
-  "You must give a command that will cause your team real hardship.",
-  "A supply vehicle has not arrived and the exercise begins in 30 minutes.",
-  "Your team is asked to perform a task in conditions for which they have not trained.",
-  "You discover a fundamental flaw in an operation plan that has already been approved.",
-  "A soldier under your command is arrested off-duty for a minor offence.",
-  "You must choose one of two routes, each with different serious risks.",
-  "Your commanding officer has made a decision based on incorrect information you provided.",
-  "You encounter a group of refugees near your operational area.",
-  "A new piece of equipment is issued that none of your team can operate.",
-  "You must explain to your team why a policy they hate is being enforced.",
-  "A mission objective changes completely 10 minutes after briefing.",
-  "You are the only officer available when a junior soldier needs urgent medical help.",
-  "Your team is running on empty. A soldier suggests an approach you had rejected.",
-  "An exercise requires you to act decisively on ambiguous intelligence.",
-  "A fellow officer is clearly struggling but refuses to ask for help.",
-  "You must maintain command in a chaotic situation with conflicting information.",
-  "An important piece of equipment is lost. You do not know how or when.",
-  "A rumour that affects troop morale turns out to be partly true.",
-  "You must balance the welfare of one soldier against the needs of the group.",
-  "An exercise is stopped due to weather. Your team's work is now nullified.",
-  "You must write an honest report that will damage a colleague's reputation.",
-  "Your team arrives at a task site to find conditions completely different from the brief.",
-  "A leadership decision you were confident about is failing in real time.",
-  "You must cross rough terrain at night with a team carrying heavy equipment.",
-  "An important ally refuses to cooperate at a critical moment.",
-  "You are asked to perform beyond your physical capacity by a well-meaning superior.",
-  "A military ceremony you are responsible for organising begins going wrong.",
-  "You are the duty officer when a serious administrative error is discovered.",
-  "A soldier you admire behaves dishonestly in a small but clear way.",
-  "You must negotiate with a difficult civilian authority to complete your mission.",
-  "Your team performs well but receives no recognition at the debrief.",
-  "A danger signal is detected but you cannot be certain it is real.",
-  "You must make an important judgment call based on conflicting expert opinions.",
-  "A superior officer is leading your team in a direction you are certain is wrong.",
-  "You have been wrong about someone. They have proven themselves under pressure.",
-  "A task is completed but not to the standard you would have required.",
-  "You are the calm centre in a situation where everyone else is panicking.",
-  "Your team is watching you for a reaction after a serious setback.",
-  "A fellow officer admits they have been struggling for the past month.",
-  "You must restore order after a breakdown in discipline during a stressful exercise.",
-  "A policy change makes your previous guidance to your team incorrect.",
-  "You must make a professional recommendation that goes against a personal preference.",
-  "Your unit is given a second chance at an exercise they previously failed.",
-  "A plan that was technically perfect fails because of human factors.",
-  "You must deal with a media inquiry about an incident involving your unit.",
-  "A night exercise requires you to remain awake for 36 consecutive hours.",
-  "You discover mid-exercise that a key assumption in your plan was wrong.",
-  "Your team is fractured along personal lines before an important cooperative task.",
-  "A serious accident occurs and you are first on the scene.",
-  "You must give a team a rest they need when the schedule cannot accommodate it.",
-  "You are asked to justify why you chose a certain course of action six months ago.",
-  "A senior officer offers you a position that requires compromising your principles.",
-  "You must continue performing at a high level despite ongoing personal difficulty.",
-  "A complex operation requires you to manage three subordinate teams simultaneously.",
-  "A fellow officer uses confidential information you shared in confidence against you.",
-  "Your team succeeds in an exercise but not in the way you intended.",
-  "You are asked to do more with significantly fewer resources than required."],
- ["You are responsible for training a group that does not want to be trained.",
-  "An order arrives that contradicts the standing instructions you operate under.",
-  "A task that should have taken a day extends into a third day with no end in sight.",
-  "You must command a group across a language barrier with no interpreter.",
-  "A junior soldier points out a serious error in your plan during execution.",
-  "You are asked to take charge of a situation entirely outside your expertise.",
-  "Your team has been together so long they have stopped challenging each other.",
-  "You must enforce a rule you personally believe is unnecessary.",
-  "A fellow officer publicly contradicts you in front of your team.",
-  "A soldier who was previously excellent under your command is now underperforming.",
-  "You are given 24 hours to prepare a complex briefing with minimal information.",
-  "Your team achieves an objective through a method you had specifically prohibited.",
-  "A situation develops that matches nothing in your training or experience.",
-  "You are asked to lead a team through a task where failure has real consequences.",
-  "A team member shows genuine heroism in direct violation of orders.",
-  "You must plan an operation against an opponent that is significantly superior.",
-  "An exhausted team must regroup and begin again after a demoralising failure.",
-  "A sensitive conversation must take place in front of witnesses.",
-  "You realise mid-mission that one of your core assumptions was dangerously wrong.",
-  "You must maintain authority with a team that knows more than you about the specific task.",
-  "A decision your superior made is clearly adversely affecting your team's welfare.",
-  "You receive feedback that contradicts your own assessment of your performance.",
-  "A team member breaks under pressure at the worst possible moment.",
-  "An opportunity to take credit for someone else's work presents itself.",
-  "You must manage the aftermath of a team decision you opposed and that failed.",
-  "A technical malfunction during an important demonstration embarrasses your unit.",
-  "You have 48 hours of leave and receive an urgent call to return early.",
-  "Your unit's integrity is questioned based on an incident before your arrival.",
-  "You must decide whether to proceed with insufficient information or wait for more.",
-  "A junior under your command shows leadership qualities superior to your own.",
-  "Your team is told the rules of an exercise have changed mid-competition.",
-  "You must arbitrate between two very different but equally valid approaches.",
-  "An important exercise coincides with the worst personal news of your life.",
-  "Your plan is sabotaged by factors you had no control over.",
-  "You must complete a task in a new environment with a team that does not know it.",
-  "A junior's honest mistake costs the team a competition they could have won.",
-  "You are tested on your knowledge in front of an audience and are not certain of the answer.",
-  "Your team begins to fracture under sustained pressure.",
-  "You are asked to provide feedback that will determine whether someone stays or leaves.",
-  "A resource you were counting on is withdrawn at the last moment.",
-  "You must maintain your own calm while your team is visibly afraid.",
-  "A situation requires you to choose between two people who both need your help.",
-  "Your preparation was thorough but the situation bears no resemblance to what you expected.",
-  "You must give honest performance feedback to someone who will resist it.",
-  "A task requires more physical endurance than you believe you have.",
-  "You must make a decision that will be unpopular but is clearly the right one.",
-  "Your team breaks a record and immediately faces a harder challenge.",
-  "You discover the team you are about to lead has a history of disrespecting officers.",
-  "An important operation is compromised by a leak from within your own unit.",
-  "A soldier under your command is clearly better suited to your role than you are.",
-  "You must choose between two courses of action, both of which have serious drawbacks.",
-  "Your commanding officer is absent when a crisis erupts requiring immediate decision.",
-  "A previously reliable team member becomes unpredictable under a new type of pressure.",
-  "You are responsible for the safety of a civilian in an operational environment.",
-  "Your team completes an exercise perfectly. Your superior asks what you would do differently.",
-  "You must begin an important task without the briefing you requested.",
-  "A soldier returns from leave and cannot re-integrate with the team.",
-  "You are asked to take over a failing project with no explanation of what went wrong.",
-  "A surprise inspection occurs when your unit is at its lowest point.",
-  "You must decide whether to tell your team something that will affect their performance."],
- ["A bridge must be crossed but it will only hold half the group at a time.",
-  "Your team is ambushed in a training scenario and must think quickly.",
-  "You arrive at a location to find the previous unit left it in a poor state.",
-  "Your team must transport a casualty over difficult terrain with limited equipment.",
-  "A senior officer arrives unexpectedly during a routine exercise.",
-  "You are required to complete a public speaking task with no preparation time.",
-  "Your planning exercise is disrupted by an unexpected change in the scenario.",
-  "A team member refuses to continue an exercise for personal reasons.",
-  "You must complete an assigned task while simultaneously managing a crisis.",
-  "A piece of equipment you are responsible for is damaged beyond repair.",
-  "Your team is performing well until a morale-critical incident derails them.",
-  "You encounter a situation that is clearly a test of your ethical boundaries.",
-  "An important document must be completed accurately under extreme time pressure.",
-  "Your team has made it to the final stage of a competition. Nerves are affecting performance.",
-  "A colleague you trust gives you advice that you believe is wrong.",
-  "You must give a speech at a passing-out parade with one hour's notice.",
-  "An exercise requires deception and you must decide how far to take it.",
-  "You discover a junior has been keeping a problem from you to avoid worrying you.",
-  "Your team's cohesion is tested by a deliberately divisive external pressure.",
-  "A task that seemed simple reveals unexpected complexity halfway through.",
-  "You must represent your unit in a dispute you were not party to.",
-  "A senior officer makes a minor but clear ethical lapse in front of you.",
-  "You are given responsibility for an outcome you cannot directly control.",
-  "An exercise designed to be done in a group must now be completed alone.",
-  "Your commanding officer expects a result that is not achievable with available resources.",
-  "A plan you did not design is now your responsibility to execute.",
-  "You are asked to motivate a team that has lost faith in the mission.",
-  "A routine task becomes dangerous due to an environmental change.",
-  "You must identify which of several team members is causing a hidden problem.",
-  "A competitor uses an unfair method to gain advantage. You notice. Others have not.",
-  "You are asked to complete your task in front of a live audience.",
-  "A critical piece of intelligence arrives too late to be fully acted upon.",
-  "You must manage a handover to a new team while your own task is still incomplete.",
-  "A group of civilians is obstructing your team's access to an important location.",
-  "You are responsible for a group divided on a fundamental approach.",
-  "An exercise requires you to make a public call that might be wrong.",
-  "Your team runs out of water during a long field exercise.",
-  "You are the most experienced person in the room when a crisis begins.",
-  "A task that requires collaboration is being dominated by one person.",
-  "You must continue an exercise after receiving genuinely frightening information.",
-  "A decision you made six months ago is now being reviewed and questioned.",
-  "Your team has 15 minutes to solve a problem that normally takes an hour.",
-  "An unexpected resource becomes available and it changes your plan significantly.",
-  "You must complete a dangerous task with a team that has lost confidence.",
-  "A task requires you to work in conditions that test your physical limits.",
-  "You discover a team member has been dishonest with you consistently.",
-  "You must remain professional when someone is deliberately trying to unsettle you.",
-  "A group exercise falls apart due to a communication failure between teams.",
-  "You are asked to evaluate your own leadership after a very difficult exercise.",
-  "You must take over leadership of a team mid-exercise without any briefing.",
-  "A natural obstacle blocks your planned route and there is no clear alternative.",
-  "Your most important exercise of the year begins under the worst possible conditions.",
-  "A fellow officer needs help with a task outside your expertise.",
-  "You must document a failure accurately when the temptation to soften it is real.",
-  "A soldier you lead tells you something that changes your understanding of them entirely.",
-  "You are at the limit of your physical and mental capacity. The task is not done.",
-  "A misunderstanding between units puts both at risk.",
-  "An exercise scenario is changed to target specifically your known weakness.",
-  "You must complete a task using only the resources that remain after a major loss.",
-  "A crisis requires you to simultaneously lead your team and support an injured colleague."]
+  [
+    "You are leading a college project group and your team lead goes absent two days before submission.",
+    "During a college trek, the guide loses the trail. You are the only one who has studied the map.",
+    "Your group is presenting in five minutes. The person who was supposed to speak has frozen with anxiety.",
+    "You are the elected class representative. Two faculty members give contradicting instructions for the same assignment.",
+    "Your college sports team is losing badly at half-time. The captain is injured and looks to you.",
+    "You discover that a close friend has been submitting your work as their own to a professor.",
+    "You find an error in your exam paper that was marked correct, giving you 8 extra marks.",
+    "Your project group wants to use data from a source you believe is unreliable but it supports your conclusion.",
+    "A senior in your college asks you to pass on the exam question paper he claims to have obtained.",
+    "You notice a classmate copying in an examination. The invigilator has not seen it.",
+    "A new student joins your group and is being subtly excluded by the rest of the team.",
+    "Two of your closest friends have had a serious falling-out. Both expect you to take sides.",
+    "A classmate makes an offensive joke in front of a group. Everyone laughs except you.",
+    "Your team member\'s personal problem is affecting group performance. Others are getting frustrated.",
+    "A professor publicly criticises your work in a way you believe is unfair.",
+    "You made a decision that caused your team to lose an inter-college competition. Everyone is dejected.",
+    "You are responsible for the college cultural event. The main speaker cancels six hours before the event.",
+    "You have been incorrectly blamed for a mistake that was actually made by another team member.",
+    "You are in the middle of your most important exam when you realise you have been studying the wrong syllabus.",
+    "Your group is significantly behind on a shared assignment. You are the only one who has completed your part.",
+    "You witness a senior student bullying a junior in the college corridor.",
+    "You are offered a very good internship but accepting it means abandoning your current team mid-project.",
+    "Your friend confides that they have been involved in something that could get them expelled.",
+    "You disagree with a popular group decision that you believe will lead to failure. Everyone else agrees.",
+    "You must give honest feedback to a friend about their work that you know will hurt them.",
+    "You arrive at college to find your scheduled exam postponed with no explanation.",
+    "Your college accommodation has a serious problem the night before your placement exam.",
+    "The equipment required for your practical examination is unavailable.",
+    "You are suddenly asked to represent your college at a debate you were not prepared for.",
+    "You are given a task that requires skills you do not have and two days to complete it.",
+    "A group member is technically excellent but constantly undermines team decisions.",
+    "Your team has divided into two factions that refuse to work together.",
+    "You are asked to assess a peer whose work is genuinely below standard.",
+    "A team member takes credit for work that was done collectively.",
+    "You are new to a study group where everyone already has established dynamics.",
+    "You are asked to speak at a college assembly in front of 800 students with ten minutes notice.",
+    "You are assigned to lead a group of seniors as part of a leadership exercise.",
+    "A professor challenges your answer in front of the class and you are confident you are correct.",
+    "You must deliver a presentation to an audience that includes industry experts and you are the least experienced.",
+    "You are applying for a position and the selection panel is clearly unimpressed with your initial answer.",
+    "You have failed an important examination that you were confident about.",
+    "You have put significant effort into a project that receives very poor feedback.",
+    "Your college team has lost five consecutive matches. You must motivate them before the sixth.",
+    "A personal setback has affected your concentration during a critical academic period.",
+    "You are exhausted from three consecutive sleepless nights of study but have one more paper tomorrow.",
+    "Your study group has become unproductive. No one is taking ownership.",
+    "A college function you are organising is going wrong because volunteers are not showing up.",
+    "You must convince a resistant senior professor to change an unfair evaluation criterion.",
+    "Your team is panicking before an important presentation. You are the calm one.",
+    "You find a serious factual error in a report about to be submitted to the college administration.",
+    "You find a wallet with Rs 5,000 and the owner\'s phone number.",
+    "You are the only witness to an incident that could result in a friend being unfairly punished.",
+    "You see a stranger being harassed on public transport. You are alone.",
+    "You must continue an important task after receiving deeply distressing personal news.",
+    "Your project is complete but you notice a serious error. Correcting it means restarting significant work.",
+    "A junior student seeks your help with a problem outside your area of knowledge.",
+    "You are asked to arbitrate a dispute between two students of equal standing.",
+    "Your group wants to take a shortcut that saves time but involves cutting a corner on quality.",
+    "You must manage a friend in your team who is emotionally volatile but technically your best contributor.",
+    "At the end of an exhausting college expedition you are asked for one more effort when you have nothing left."
+  ],
+  [
+    "You are the only one in your hostel corridor awake when you hear someone calling for help outside.",
+    "Your college NSS camp has no coordinator present. The scheduled activity is about to begin.",
+    "You are travelling by train when an elderly co-passenger has a medical emergency.",
+    "A fire alarm goes off in your college library. No staff member is present.",
+    "Your study group\'s presentation format is rejected by the professor one hour before the slot.",
+    "You discover that the winning entry in your college competition was plagiarised.",
+    "A professor offers to pass you in exchange for a favour that feels inappropriate.",
+    "Your internship manager asks you to adjust figures in a report to make it look better.",
+    "You overhear two classmates planning to leak an exam question paper.",
+    "You realise mid-presentation that you have used copyrighted material without attribution.",
+    "A classmate who has been struggling all semester breaks down in the library before finals.",
+    "You are organising a group activity and one member is being deliberately excluded by others.",
+    "A senior student who has been mentoring you makes a request that makes you uncomfortable.",
+    "Your roommate\'s habits are seriously affecting your sleep and academic performance.",
+    "A classmate from a different background is being mocked for their cultural practices.",
+    "You are the student coordinator for a workshop. The chief guest does not arrive. 200 students are waiting.",
+    "You accidentally delete an important shared document that took your team three weeks to create.",
+    "You are responsible for collecting funds for a college event and discover the account is short.",
+    "Your team submitted a report with a significant error. The professor wants to know who is responsible.",
+    "A decision you made as class representative has led to an unfair outcome for a fellow student.",
+    "You witness a professor behaving inappropriately toward a classmate.",
+    "You are asked to present findings that contradict what your project supervisor expected to find.",
+    "A popular senior student is spreading false information about a junior. You know the truth.",
+    "You must stand up and disagree with a faculty decision in a public forum.",
+    "Your internship team is about to submit work with a factual error. The deadline is in 30 minutes.",
+    "You reach your internship location on the first day to find no one was informed about your arrival.",
+    "Your laptop crashes the night before a major project submission.",
+    "You are assigned a completely different role from the one you prepared for during a group exercise.",
+    "A key team member drops out of your project one week before the deadline.",
+    "You are stuck in traffic and will miss a placement interview unless you find an alternative immediately.",
+    "Two strong personalities in your project group are in constant disagreement.",
+    "Your team wants to split work equally but one member\'s section is significantly harder than others.",
+    "A team member is going through a personal crisis and their contribution has dropped significantly.",
+    "You have been chosen as team leader but the most experienced member expected the role.",
+    "Your group\'s strategy is failing but everyone is emotionally invested in it.",
+    "You are asked to lead a workshop for students one year senior to you.",
+    "Your idea is rejected in a group meeting. You are convinced it is the right approach.",
+    "You are selected for an opportunity that several more experienced candidates applied for.",
+    "A senior professional dismisses your suggestion at an internship without hearing it fully.",
+    "You must negotiate with a college authority for a student group you represent.",
+    "You did not get the internship you had prepared intensively for.",
+    "Your contribution to a successful project is not acknowledged in the final presentation.",
+    "You are dropped from the college team you have been part of for two years.",
+    "A project you led fails publicly at a college exhibition.",
+    "You have been working on something for months and are told to restart it from scratch.",
+    "Your college society has lost its faculty advisor and is becoming directionless.",
+    "A college event you are organising is running three hours late due to technical problems.",
+    "A group of volunteers you are leading is becoming disheartened by a series of small setbacks.",
+    "Two sub-groups in your team are working in opposite directions without realising it.",
+    "You must give feedback to a team member that they will not want to hear.",
+    "You find out the person who received an award you believe you deserved used connections to influence the decision.",
+    "A friend asks you to testify falsely on their behalf in a college disciplinary proceeding.",
+    "You see someone in your group taking stationery from the college store without permission.",
+    "You are offered a significant advantage if you share your team\'s strategy with a competing group.",
+    "You must continue an important task after being publicly embarrassed in front of your peers.",
+    "You must continue leading your group after receiving news that has personally affected you.",
+    "A person you are responsible for makes a serious mistake in front of others.",
+    "You are asked to deliver a task you have never done before with no training available.",
+    "A group you are part of is making a decision without all the relevant information.",
+    "You reach a situation where all options have significant downsides.",
+    "Two people in your group have a conflict that started outside college and is now affecting the team."
+  ],
+  [
+    "You are in a new job and your supervisor is unavailable during a client presentation crisis.",
+    "During your first week at work, you notice an inefficient process but nobody mentions it.",
+    "You are travelling with your college team for a competition when the vehicle has a problem.",
+    "The person responsible for an important submission is unreachable on the deadline day.",
+    "You are the most experienced person in a new study group that is completely lost.",
+    "Your project teammate has used AI-generated content they have presented as original work.",
+    "You overhear your manager discussing an action you believe may harm a customer.",
+    "A colleague asks you to misrepresent hours worked on a project to meet billing targets.",
+    "You realise the report you submitted last week contained an error that no one has noticed.",
+    "You discover a classmate has been impersonating a professor in emails to get deadline extensions.",
+    "A close friend in your team is consistently underperforming and the team is losing patience.",
+    "A new colleague at your internship is being systematically excluded from team activities.",
+    "You are mediating between two team members who have very different working styles.",
+    "A senior colleague makes an offhand remark you believe is inappropriate.",
+    "Your project team is diverse. Two members have significant communication difficulties.",
+    "You gave a commitment to a client during your internship that your company cannot fulfil.",
+    "A task you delegated to a junior was done incorrectly. The error reached the client.",
+    "You are the only person aware of a safety concern in a shared workspace.",
+    "Your team missed a deadline because of collective failure to communicate. You are the coordinator.",
+    "You made a promise to a peer that you are now unable to keep.",
+    "Your internship supervisor is taking an approach you believe will harm the client.",
+    "You observe a colleague taking credit for another person\'s work in front of senior management.",
+    "You must tell a mentor that their advice, which you followed, produced a bad outcome.",
+    "A group decision is about to harm someone who is not in the room.",
+    "You are the only one in your peer group who disagrees with a plan that everyone is excited about.",
+    "Your role at your internship changes significantly halfway through. You must adapt quickly.",
+    "You are asked to move cities for an opportunity at two days notice.",
+    "Your presentation format is changed by the client one hour before you are due to present.",
+    "The software your project depends on becomes unavailable on the day of the final demonstration.",
+    "You are assigned a mentor who has a very different working style from yours.",
+    "You are the best-performing member of a team but your individual success is creating tension.",
+    "Your team is completing a task you believe is pointless but the client requires it.",
+    "A team member who joined late is taking over the direction of the project.",
+    "Your team is split between the safe approach and the risky one that might deliver better results.",
+    "A team member is working significantly harder than everyone else and showing signs of burnout.",
+    "You are asked to represent your organisation at an industry event as the most junior person.",
+    "You are assigned a responsibility you do not feel ready for.",
+    "A senior professional publicly questions your methodology in front of your peers.",
+    "You receive very harsh feedback on work you are genuinely proud of.",
+    "You are passed over for an opportunity in favour of someone you believe you are better qualified than.",
+    "A project you have led for six months is cancelled the week before launch.",
+    "You receive your worst ever performance review.",
+    "A professional relationship ends badly and you must continue working with that person.",
+    "You fail an important certification exam that many of your peers have passed.",
+    "Your careful preparation for an opportunity proves to have been for the wrong thing.",
+    "Your team is capable but entirely lacking in motivation for a project none of them chose.",
+    "You must lead a team that includes your friends and your authority is not being taken seriously.",
+    "A new member of your team has better technical skills than you and knows it.",
+    "Your team has developed a strong plan that your supervisor wants to change significantly.",
+    "You must inspire your team to put in extra effort during a period when everyone is already stretched.",
+    "You find a significant billing error in your favour that your employer will not notice.",
+    "A colleague shares confidential information with you and asks you to keep it from your supervisor.",
+    "You are asked to evaluate a friend\'s work fairly, knowing a poor evaluation could damage your friendship.",
+    "An opportunity you want is offered to you due to a misunderstanding about your qualifications.",
+    "You must continue working professionally with someone you know has been dishonest.",
+    "You must manage the project after discovering it was based on incorrect data.",
+    "A colleague leaves your team abruptly and their unfinished work falls entirely on you.",
+    "A plan you are following is clearly not working but changing it mid-way will cause disruption.",
+    "You must complete a task that someone senior started and left without explanation.",
+    "You receive conflicting instructions from two people who both have authority over you.",
+    "At the close of a demanding project you are asked to summarise what went wrong as well as right."
+  ],
+  [
+    "Your class has been asked to organise a farewell event with three days notice and no budget.",
+    "During a college industrial visit, a peer is missing and no authority figure is nearby.",
+    "You are part of a college team when sudden weather conditions make continuing the outdoor activity risky.",
+    "The coordinator of your college community service programme resigns mid-project.",
+    "A fellow volunteer at an NGO you work with is absent and the scheduled activity has no one to lead.",
+    "You discover the dataset your team used is not credible, but the submission is already made.",
+    "A client asks you to present information that is technically accurate but misleading.",
+    "You are asked to write a testimonial for a colleague you would struggle to write honestly.",
+    "You have access to information that would help your presentation but obtaining it was not entirely proper.",
+    "A classmate who helped you significantly during the year asks you to return the favour in an exam.",
+    "A peer you are close to is making a career decision you believe is seriously mistaken.",
+    "You are managing a volunteer group with very unequal levels of commitment.",
+    "A team member\'s frustration is showing in their communication with clients.",
+    "You notice a colleague is struggling with something they have not shared with the team.",
+    "Two team members have a conflict that began outside work and is now affecting the office.",
+    "You are the student safety monitor during a trekking activity and notice a potential hazard.",
+    "Your college team has prepared a report based on data you now believe may be incorrect.",
+    "You gave advice to a junior student that they followed and which produced a bad outcome.",
+    "A task delegated to you has grown significantly beyond what you agreed to take on.",
+    "You agreed to cover for a classmate\'s absence and later discover they were absent for a dishonest reason.",
+    "A popular professor at your college is teaching inaccurate content. You are certain of this.",
+    "Your project team is taking a direction you believe is ethically questionable.",
+    "A friend asks you to support their complaint against a teacher. You believe it is not entirely fair.",
+    "You must disagree with a unanimous group decision in front of a senior panel.",
+    "You have information that will cause significant inconvenience but which people need to know.",
+    "Your internship stipend is delayed for two months and you must manage.",
+    "You are moved to a project with no relevance to your career direction.",
+    "Your college changes its evaluation system mid-semester, disadvantaging your preparation.",
+    "A planned activity for your volunteer group falls through at the last minute.",
+    "You must complete an important task in a location with poor internet and no support.",
+    "Your team is divided between two equally strong but incompatible approaches.",
+    "A team member absent for personal reasons returns expecting to rejoin as if nothing changed.",
+    "Your team is well-coordinated but one member is consistently under-contributing.",
+    "Two members of your team have begun a personal relationship that is creating group dynamics issues.",
+    "You are the most junior person in a team that needs to change direction but is resistant.",
+    "You must chair a college committee meeting that includes several faculty members.",
+    "An idea you proposed is being implemented but credit is going to someone else. You must now lead it.",
+    "You are asked to mentor students who are only slightly junior to you.",
+    "An important decision is being made and the group is waiting for you to take a position.",
+    "You receive contradictory feedback from two people you respect highly.",
+    "You did not get selected for a programme and a peer with fewer qualifications did.",
+    "A misunderstanding has damaged your reputation in a group that is important to you.",
+    "Something you worked very hard to build is being dismantled by a decision you had no input into.",
+    "You are going through a difficult personal period that you cannot discuss with your team.",
+    "You must perform at your best immediately after a significant personal disappointment.",
+    "The student body you lead has lost confidence in itself after a series of setbacks.",
+    "You must motivate a study group for a subject that none of you find interesting.",
+    "A project you are leading is behind schedule and the team is blaming each other.",
+    "A new, very capable person joins your team and the existing dynamic begins to shift.",
+    "You must lead a group through a task you are all finding genuinely difficult.",
+    "You are asked to make a decision under time pressure that you believe deserves more careful thought.",
+    "You see someone misrepresenting their experience to get an opportunity.",
+    "A close friend is about to make a significant decision based on inaccurate information.",
+    "You can accomplish your goal through a shortcut that technically involves no dishonesty but feels wrong.",
+    "You must tell a person in authority something they will not want to hear at an important moment.",
+    "The person you are working with has a significantly different definition of success for the project.",
+    "A decision delegated to you proves more consequential than was understood at delegation.",
+    "You must manage the fallout from a decision made above you but implemented through you.",
+    "A situation requires a skill set that does not yet exist in your team.",
+    "You are halfway through a significant commitment when you receive information that changes everything.",
+    "At the end of an intense project, the evaluation focuses entirely on one mistake made early on."
+  ],
+  [
+    "You join a new team at work and quickly realise the team\'s approach to the project is fundamentally flawed.",
+    "Your manager asks you to commit to a client something you know your team cannot fulfil.",
+    "During an important client meeting, your colleague gives incorrect information confidently.",
+    "You are the most junior person in a room and the most experienced person is wrong about something important.",
+    "A task you agreed to complete has expanded to three times its original scope.",
+    "You discover a process your organisation has been using has been harming clients unknowingly.",
+    "A colleague you respect is about to be unfairly blamed for a failure you contributed to.",
+    "You are trusted with information that changes your view of a decision your team has already made.",
+    "Your organisation\'s decision will benefit the majority but unfairly disadvantage one person you know.",
+    "A mentor who has helped you significantly is acting in a way you believe is unethical.",
+    "You are asked to lead a project with a team that has already failed at this once before.",
+    "Two of your colleagues apply for the same position. You are asked by the hiring manager for your view.",
+    "You disagree with the approach being taken by your team but it is not your decision to make.",
+    "A junior colleague repeatedly asks for help at moments that are very inconvenient for you.",
+    "You must work closely with someone who has been openly critical of you.",
+    "A task requires skills you do not have. Admitting this will expose a gap in your application.",
+    "You find an error in your work that no one else will notice. Correcting it will cost you significant time.",
+    "Your team succeeds significantly and only some members are acknowledged. You are not among them.",
+    "A decision you disagreed with turns out to have been correct. Your manager remembers your objection.",
+    "You are asked for an honest assessment of a project that your friend is leading.",
+    "Your sports team is eliminated from a competition because of an error of judgement you made.",
+    "You must choose between your personal interest and what is better for your group.",
+    "A very capable person you brought into your team is unhappy and considering leaving.",
+    "You are given a budget to manage and discover it is inadequate for what has been promised.",
+    "A decision needs to be made requiring information that is difficult to get in the available time.",
+    "You must complete a task while unwell in a way that does not alarm your team.",
+    "You have taken a risk that has not paid off and your team is dealing with the consequences.",
+    "A contact who helped your career asks you for a favour that puts you in an awkward position.",
+    "You are asked to evaluate a peer honestly when your honest view is significantly negative.",
+    "Your team\'s plan is well-structured but you have a gut feeling it will not work.",
+    "A major opportunity opens up but taking it means leaving a commitment you already made.",
+    "You receive credit for something you did not do alone and the others are waiting to see how you respond.",
+    "Your decision-making is being second-guessed by someone with less information than you.",
+    "A colleague shares a personal problem that affects their work and asks for your confidence.",
+    "You are in the middle of an important task when you become aware of a more urgent situation elsewhere.",
+    "Your group is going to fail unless someone takes ownership of a task nobody wants.",
+    "A client is unreasonably demanding. Your organisation\'s policy says to accommodate them.",
+    "You made an error under pressure that you are fairly confident no one else will notice.",
+    "You must manage expectations for a project that is behind schedule without causing panic.",
+    "Your team\'s success depends on cooperation from another team that has no incentive to cooperate.",
+    "You are asked to take on additional responsibility when you are already at your limit.",
+    "A deadline is approaching and you need one more day but have no basis to ask for an extension.",
+    "You must deliver disappointing news to someone who has been working very hard.",
+    "An opportunity you have worked toward for a long time arrives at a difficult personal moment.",
+    "You are asked to represent your organisation in a situation where you do not have full information.",
+    "Your judgment about a colleague turns out to have been significantly wrong.",
+    "You have agreed to lead something and now doubt whether you were ready to take it on.",
+    "A person you manage is capable but requires more support than you have time to give.",
+    "You observe that your organisation\'s stated values and its actual practices are inconsistent.",
+    "You must maintain focus and quality during a period of significant personal difficulty.",
+    "At the end of an extremely demanding period you are asked for one final effort when you have little left.",
+    "A trusted colleague shares information that changes what you know. It was shared in confidence.",
+    "You are the quiet person in a loud group making a poor decision.",
+    "Your team celebrates a success you know was partly due to a fortunate error.",
+    "You receive an unfair assessment. Challenging it will create difficulty. Accepting it will leave the record wrong.",
+    "A person who reported to you previously now works alongside you as a peer.",
+    "You must make a decision with incomplete information and no time to wait for more.",
+    "A well-intentioned plan you proposed is failing and the team is continuing out of loyalty to you.",
+    "Your colleague is consistently late to meetings. It is affecting the team. They are not your subordinate.",
+    "You are asked to take over a project from a colleague who built it and is very protective of it."
+  ],
+  [
+    "You are part of a student committee that has received funds. A member suggests using some for personal convenience.",
+    "Your organisation has a rule causing harm in a specific case. You have the authority to bend it.",
+    "A vendor your company uses regularly offers you a gift above what your organisation\'s policy permits.",
+    "A junior colleague confides they lied on their job application. They are excellent at their job.",
+    "You are in charge of distributing a limited resource among team members who all genuinely need it.",
+    "Your organisation is making a public commitment you believe it cannot keep.",
+    "A colleague shares information that would help your career if acted on but was shared in confidence.",
+    "You discover a decision that benefited you was made partly because someone advocated for you without your knowledge.",
+    "Your team has been asked to implement a policy you believe is unfair. It is not your decision.",
+    "A client asks you to cut a corner that will not affect outcomes but violates a process you believe matters.",
+    "You must give a public assessment of a project your colleagues worked hard on but which fell short.",
+    "A peer is being treated unfairly by a senior. Speaking up will cost you but staying silent feels wrong.",
+    "You are part of a successful team. A member who contributed significantly is not receiving recognition.",
+    "Your career advice to a junior colleague led them to a decision that is not working out well.",
+    "You must work with a team that has been told to work with you but does not want to.",
+    "A project requires a skill set you have partly but not fully. You can admit this or proceed.",
+    "You observe a pattern of behaviour in your organisation that no one seems willing to name.",
+    "A person asks for honest feedback. Their work is genuinely poor. They will take criticism badly.",
+    "You are given two equally important tasks and only have time to do one well.",
+    "Your manager makes a factual error in a client meeting. You are present and know the correct answer.",
+    "You have just joined a new group. An established norm conflicts with your personal values.",
+    "A team member is going above and beyond but the effort is invisible to senior leadership.",
+    "You must make a decision that will disappoint a large number of people for the benefit of a few.",
+    "A colleague\'s mistake is about to be attributed to you. Correcting this will embarrass your colleague.",
+    "A very senior person makes a decision that you, with specific knowledge, know is likely to fail.",
+    "Your final year project partner wants to take the work in a direction you believe is wrong.",
+    "A friend asks you to recommend them for a role. You believe they are not the right fit.",
+    "You are negotiating for your group. The other side\'s offer is better for your group but worse for a third party.",
+    "Your team is competing for a prize. You discover an advantage other teams do not have access to.",
+    "You are asked to keep a secret that, if revealed, would help someone who deserves to know.",
+    "A person in your team has a lighter workload than others. The arrangement was agreed before you joined.",
+    "You receive an email not intended for you that contains important information about your situation.",
+    "A task you are responsible for is going wrong because of a factor outside your control.",
+    "Two mentors give you completely opposite advice about a significant decision.",
+    "A project you recommended is failing. Your credibility is at stake.",
+    "You are asked to write a performance evaluation for yourself.",
+    "A colleague who is better at your job than you asks you for advice on how to improve.",
+    "The most effective solution to your problem involves disrupting someone else\'s work.",
+    "Your team has achieved success through a combination of skill and luck. The attribution is all skill.",
+    "You must represent a position in a meeting that you personally disagree with.",
+    "A senior person praises you publicly for something that was significantly a team effort.",
+    "You are asked to produce an optimistic assessment of a situation you believe is genuinely difficult.",
+    "A well-meaning person is taking an action that will create problems they cannot foresee.",
+    "You are put in a position of trust that you did not ask for and are not sure you want.",
+    "A task you thought would be simple is revealing itself to be significantly more complex.",
+    "You realise you have been operating on a wrong assumption for several weeks.",
+    "A person who has not been contributing to your project claims co-authorship.",
+    "Your team\'s morale is low. The honest explanation will make it worse.",
+    "You must choose between saying something true that will cause conflict and staying silent.",
+    "You have been selected for something based on a presentation that was accurate but incomplete.",
+    "A junior person in your group has identified the right solution and a senior is dismissing it.",
+    "You are managing a project and your instinct tells you something is wrong but you cannot identify what.",
+    "A team that you led previously reflects poorly on its experience. You were part of the reason.",
+    "You must start over on something important because your initial approach was fundamentally wrong.",
+    "Two people you trust give you contradictory assessments of your own performance.",
+    "Your honest assessment of a situation differs significantly from what your group wants to hear.",
+    "You must decide whether to raise a concern with low probability but serious consequences.",
+    "A well-respected person in your field endorses a view you believe is wrong.",
+    "You complete a demanding cycle of work and immediately face the beginning of another.",
+    "At the end of a very demanding assignment you are asked to reflect honestly on what you would do differently."
+  ],
+  [
+    "You are part of a local community drive and the organiser falls ill on the day of the event.",
+    "You see a child in distress in a public place and no parent or guardian is visible.",
+    "You are on public transport when a confrontation between two passengers escalates.",
+    "A community space you use is being damaged by people from your own peer group.",
+    "You are the first person to arrive at a minor road accident. Emergency services are on their way.",
+    "A neighbour asks for help with a situation beyond your knowledge but within your capacity to assist.",
+    "You notice a public facility is being used in a way that will cause harm to others.",
+    "A younger person in your neighbourhood looks to you for guidance on a serious decision.",
+    "You are part of a group that is making others around you uncomfortable.",
+    "A stranger asks you for directions to a place you know requires caution to reach.",
+    "You have been selected for a competitive programme. A friend who applied with you was not.",
+    "You are performing at your best when you notice a competitor in difficulty.",
+    "A friend who is competing against you for the same opportunity asks you for advice.",
+    "You receive an advantage in a competitive setting that others did not receive.",
+    "You succeed partly because of help you received that others did not have access to.",
+    "You are in your first professional role and given a task with unclear instructions.",
+    "Your first manager at work has a style that conflicts with how you work best.",
+    "You are new to an organisation and notice something that experienced people have stopped seeing.",
+    "You are asked to contribute an opinion in a meeting where you are the most junior person.",
+    "A senior colleague at your first job asks for your honest view on their work.",
+    "You are responsible for communicating a decision that affects your peers but was made by others.",
+    "You must represent a group view that is not entirely your personal view.",
+    "You are asked to take notes in a meeting that becomes contentious.",
+    "Your project deliverable changes scope after you have already started.",
+    "A deadline is extended but you had already completed the work to the original deadline.",
+    "A person from a very different background joins your close-knit group.",
+    "A long-standing group dynamic is being disrupted by change.",
+    "A tradition in your organisation is being challenged and people expect you to take a position.",
+    "You disagree with the majority on something that matters to you but is low stakes to others.",
+    "You are asked to include someone in your group at the request of an authority figure.",
+    "During an important examination, you notice a classmate near you in serious distress.",
+    "You must perform a task requiring full concentration while something concerning happens nearby.",
+    "You face a choice between two options where each has a significant downside.",
+    "A situation demands that you act before you have enough information.",
+    "You must make a decision that others will judge after the fact with information you did not have.",
+    "Your preparation and the actual demand turn out to be significantly different.",
+    "Something you expected to find easy turns out to be genuinely difficult.",
+    "A skill you believed you had is tested and found to be less developed than you thought.",
+    "You must deliver under pressure in front of an audience that includes people who doubted you.",
+    "The outcome of a significant effort is uncertain and you must continue regardless.",
+    "You are asked to give an account of something that reflects badly on you but is accurate.",
+    "You must acknowledge a weakness in front of a person whose respect you value.",
+    "A person who criticised you publicly turns out to have been correct.",
+    "You receive recognition you feel you have not fully earned.",
+    "You must ask for help with something you feel you should be able to do on your own.",
+    "A period of sustained difficulty ends and you must find the energy to begin again.",
+    "You are in a situation where doing the right thing will not be recognised.",
+    "An opportunity you have prepared for passes without the outcome you sought.",
+    "You are at the end of a long effort. The finish line moves further away.",
+    "You have done everything correctly and the outcome is still uncertain.",
+    "You finish one challenge and immediately face a harder one.",
+    "Your best effort in a situation was not enough.",
+    "A period of preparation ends and you step into the thing you were preparing for.",
+    "You must begin something important having never done anything like it before.",
+    "Something you have relied on is no longer available and you must adapt.",
+    "A long preparation produces a result that is different from what you expected.",
+    "You face a moment that requires everything you have been building toward.",
+    "The hardest part of something turns out to be different from what you anticipated.",
+    "You come to the end of the most demanding period you have experienced and face one final demand.",
+    "A difficult period ends and you must give an honest account of what you learned to someone who matters."
+  ]
 ];
 
 // =====================================================
@@ -1324,164 +1341,133 @@ function genWATReport(){
   var words = WAT[selSet];
   var wordCount = isDemoMode ? DEMO_SITS : words.length;
   var totalLabel = isDemoMode ? DEMO_SITS : 60;
-
   var answered = 0;
-  for(var i = 0; i < wordCount; i++){
-    if(watAns[i] && watAns[i].trim().length > 0) answered++;
+  for(var i=0;i<wordCount;i++){
+    if(watAns[i]&&watAns[i].trim().length>0) answered++;
   }
   var blank = totalLabel - answered;
-
   var allText = '';
   for(var k in watAns){ allText += watAns[k].toLowerCase() + ' '; }
 
-  var posW = ['help','serve','lead','achieve','build','protect','together','strong','duty','honour','victory','hope','succeed','overcome','courage','determined','committed','action','forward','responsibility'];
-  var negW = ['fail','afraid','alone','difficult','impossible','hate','angry','never','give up','avoid','weak','scared','worry','cannot','helpless','lost','hopeless'];
-  var posC = 0, negC = 0;
+  var posW=['help','serve','lead','achieve','build','protect','together','strong','duty',
+    'honour','victory','hope','succeed','overcome','courage','determined','committed',
+    'action','forward','responsibility','team','effort','learn','grow','inspire',
+    'honest','fair','support','right','truth','persist','rise','begin','act'];
+  var negW=['fail','afraid','alone','difficult','impossible','hate','angry','never',
+    'give up','avoid','weak','scared','worry','cannot','helpless','lost',
+    'hopeless','quit','useless','pointless'];
+  var posC=0,negC=0;
   for(var i=0;i<posW.length;i++) if(allText.indexOf(posW[i])>=0) posC++;
   for(var i=0;i<negW.length;i++) if(allText.indexOf(negW[i])>=0) negC++;
 
   var tone, toneNote;
   if(posC > negC*2){
     tone = 'strongly positive and action-oriented';
-    toneNote = 'Your WAT responses show a predominantly positive, action-oriented emotional orientation. This is the pattern the SSB psychologist looks for \u2014 not forced positivity, but a genuine default orientation toward agency and forward movement.';
+    toneNote = 'Your WAT responses show a predominantly positive, forward-directed orientation. For a young civilian aspiring to military leadership, this is a strong signal. The SSB psychologist is not looking for someone who has never experienced doubt or fear — they are looking for someone whose natural instinct points toward action, service, and possibility. Your responses suggest that is genuinely who you are. The development task is to deepen this and ensure it holds under pressure.';
   } else if(posC > negC){
-    tone = 'broadly positive with some negative associations';
-    toneNote = 'Your WAT responses are broadly positive, with some negative associations appearing when specific words are presented. Review which words triggered negative responses \u2014 they reveal specific sensitivities. Work on building forward-directed associations with challenging words.';
+    tone = 'broadly positive with some avoidant associations';
+    toneNote = 'Your WAT responses are broadly positive, with some avoidant or passive associations on specific stimulus words. This is very common in young civilian candidates. Your life experience has produced associations to words like Failure, Fear, and Defeat that reflect civilian reality rather than officer-like orientation. The development work is not to pretend these associations do not exist but to consciously build new ones through deliberate action, responsibility, and exposure to difficulty over the coming months.';
   } else {
-    tone = 'showing notable negative or avoidant associations';
-    toneNote = 'Your WAT responses show a notable number of negative or avoidant associations. This is significant because the SSB WAT is specifically designed to reveal underlying psychological orientation. The development work here is not to practise positive sentences but to genuinely shift your emotional orientation over months.';
+    tone = 'showing notable avoidant or passive associations';
+    toneNote = 'Your WAT responses show a notable number of avoidant, passive, or negative associations. As a young civilian, it is entirely normal to have these associations — you have not yet been through the experiences that reshape them. What is important is that you understand what they reveal and do the genuine life work that changes them. This is not about what you write in practice — it is about who you become in the months before your board.';
   }
 
-  // Per-word coaching
-  var wordCoachHtml = '<div class="rpt-box"><h3>Response Analysis \u2014 First ' + Math.min(12, wordCount) + ' Words</h3>';
-  wordCoachHtml += '<p style="font-size:1.4rem;color:var(--ash);font-style:italic;margin-bottom:.8rem">The psychologist reads for: positive/negative orientation, active/passive construction, consistency of character.</p>';
+  var wordCoachHtml = '<div class="rpt-box"><h3>Response Analysis — First ' + Math.min(12,wordCount) + ' Words</h3>';
+  wordCoachHtml += '<p style="font-size:.88rem;color:var(--ash);font-style:italic;margin-bottom:.8rem">The psychologist assessing your WAT knows you are a young civilian. They are not looking for a soldier’s responses. They are assessing whether you have the orientation and values that can be shaped into officer-like character.</p>';
 
-  for(var wi = 0; wi < Math.min(12, wordCount) && wi < words.length; wi++){
-    var wans = watAns[wi];
-    var word = words[wi];
-    if(!wans || !wans.trim()){
+  for(var wi=0;wi<Math.min(12,wordCount)&&wi<words.length;wi++){
+    var wans=watAns[wi], word=words[wi];
+    if(!wans||!wans.trim()){
       wordCoachHtml += '<div class="q-stat" style="flex-direction:column;gap:.2rem;padding:.7rem 0;border-bottom:1px solid var(--border)">'
-        + '<div style="display:flex;gap:.5rem;align-items:baseline">'
-        + '<div style="font-family:Playfair Display,serif;font-size:1.1rem;font-weight:700;min-width:130px;color:var(--navy)">' + word + '</div>'
-        + '<div style="font-size:1.12rem;color:var(--red);font-style:italic">Not attempted</div>'
-        + '</div></div>';
+        +'<div style="display:flex;gap:.5rem;align-items:baseline">'
+        +'<div style="font-family:Playfair Display,serif;font-size:1rem;font-weight:700;min-width:130px;color:var(--navy)">'+word+'</div>'
+        +'<div style="font-size:.88rem;color:var(--red);font-style:italic">Not attempted — every blank is a missed opportunity to show your orientation.</div>'
+        +'</div></div>';
       continue;
     }
-    var wa = wans.trim();
-    var wal = wa.toLowerCase();
-    var isTooLong = wa.split(/\s+/).length > 20;
-    var isNeg = /fail|afraid|lost|alone|difficult|impossible|angry|weak|scared|defeat|never|cannot/.test(wal);
-    var isActive = /\b(i|he|she|they|we|soldiers|officers|leaders?|team|men)\s+(will|can|must|should|would|did|do|lead|serve|act|fight|protect|achieve|help|build)\b/.test(wal);
+    var wa=wans.trim(), wal=wa.toLowerCase();
+    var isTooLong=wa.split(/\s+/).length>20;
+    var isTooShort=wa.split(/\s+/).length<4;
+    var isNeg=/fail|afraid|lost|alone|difficult|impossible|angry|weak|scared|defeat|never|cannot|helpless|hopeless/.test(wal);
+    var isActive=/(i|we|one|a person|the student|young people|officers?)\s+(will|can|must|should|would|did|do|lead|serve|act|protect|achieve|help|build|rise|choose|decide|commit)/.test(wal);
+    var hasOfficerOrientation=/service|duty|honest|right|fair|nation|others|team|lead|responsibility|courage|overcome|persist/.test(wal);
+    var isPerformed=/should be|ought to|one must|people should|it is important/.test(wal);
 
-    var note = '', noteCol = 'var(--navy)';
-    if(isTooLong){
-      note = 'Too long for WAT pace. ~15 seconds per word. Keep it short, positive, action-directed.';
-      noteCol = 'var(--amber)';
+    var note='', noteCol='var(--navy)';
+    if(isTooShort){
+      note='Too brief. Aim for one complete sentence showing your instinctive orientation with an active subject, verb, and purpose.';
+      noteCol='var(--amber)';
+    } else if(isTooLong){
+      note='Too long for 15-second WAT pace. One clear sentence showing your orientation — not an essay.';
+      noteCol='var(--amber)';
     } else if(isNeg){
-      note = 'Negative association. This word triggered a response looking toward difficulty rather than toward overcoming or action. Build forward-directed associations with challenging words.';
-      noteCol = 'var(--red)';
+      note='Avoidant or negative association. This is your default orientation to this word right now. Development work: build genuine new associations through lived experience before your board.';
+      noteCol='var(--red)';
+    } else if(isPerformed){
+      note='“One should…” and “People ought to…” sound composed rather than instinctive. Write from your own perspective: “I would…” or make it personal.';
+      noteCol='var(--amber)';
+    } else if(isActive&&hasOfficerOrientation){
+      note='Good response for a civilian aspirant. Active orientation, values-grounded, personal. This is the pattern that signals genuine officer potential.';
+      noteCol='var(--green)';
     } else if(isActive){
-      note = 'Good \u2014 active construction with a clear agent taking purposeful action. This is the model.';
-      noteCol = 'var(--green)';
+      note='Active construction present. Strengthen by grounding the action in a value or purpose — not just what you would do but why it matters.';
+      noteCol='var(--amber)';
     } else {
-      note = 'Adequate but passive construction. Rewrite with an active agent doing something purposeful.';
-      noteCol = 'var(--navy)';
+      note='Adequate but does not yet clearly signal officer-like orientation. Ask: does this response show someone who steps forward, takes responsibility, and acts for others?';
+      noteCol='var(--navy)';
     }
 
     wordCoachHtml += '<div class="q-stat" style="flex-direction:column;gap:.2rem;padding:.7rem 0;border-bottom:1px solid var(--border)">'
-      + '<div style="display:flex;gap:.5rem;align-items:baseline">'
-      + '<div style="font-family:Playfair Display,serif;font-size:1.1rem;font-weight:700;min-width:130px;color:var(--navy)">' + word + '</div>'
-      + '<div style="font-size:1.02rem;color:var(--ink);font-style:italic">' + wa + '</div>'
-      + '</div>'
-      + '<div style="padding-left:130px;font-size:1.4rem;font-style:italic;color:' + noteCol + ';line-height:1.5">' + note + '</div>'
-      + '</div>';
+      +'<div style="display:flex;gap:.5rem;align-items:baseline">'
+      +'<div style="font-family:Playfair Display,serif;font-size:1rem;font-weight:700;min-width:130px;color:var(--navy)">'+word+'</div>'
+      +'<div style="font-size:.88rem;color:var(--ink);font-style:italic">'+wa+'</div>'
+      +'</div>'
+      +'<div style="padding-left:130px;font-size:.85rem;font-style:italic;color:'+noteCol+';line-height:1.5">'+note+'</div>'
+      +'</div>';
   }
 
   var demoNoteW = isDemoMode
-    ? '<p style="font-size:.94rem;color:var(--ash);margin-top:.8rem;font-style:italic">Demo \u2014 ' + DEMO_SITS + ' words shown. Full Single Set has 60 words. <a href="ssb_psych_paid.html" style="color:var(--gold)">Purchase a pack \u2192</a></p>'
+    ? '<p style="font-size:.82rem;color:var(--ash);margin-top:.8rem;font-style:italic">Demo — '+DEMO_SITS+' words shown. Full Single Set has 60 words. <a href="ssb_psych_paid.html" style="color:var(--gold)">Purchase a pack →</a></p>'
     : '';
   wordCoachHtml += demoNoteW + '</div>';
 
   var colRaoNoteW = '<div class="rpt-box" style="border:2px solid var(--gold);background:rgba(201,168,76,.04)">'
-    + '<h3>What the WAT Reveals That You Cannot Control</h3>'
-    + '<p>The WAT eliminates deliberation. You have 15 seconds. Your first association is the product of years of how you have been thinking and what your emotional default setting is. A candidate who has spent months in avoidance and self-doubt will produce different WAT associations from one who has spent those same months in action, service, and honest self-examination.</p>'
-    + '<p>Practise the WAT to build speed. But understand that the real preparation is the life you live in the months before your board.</p>'
-    + '<div style="background:var(--cream);border-left:3px solid var(--gold);padding:.7rem 1rem;margin-top:1rem;border-radius:0 2px 2px 0">'
-    + '<em style="font-size:1.05rem">&ldquo;The uniform gave me more than I could ever give back to it. Not because of what it asked me to do \u2014 but because of what it asked me to be.&rdquo;</em><br>'
-    + '<span style="font-family:JetBrains Mono,monospace;font-size:1.06rem;color:var(--ash);letter-spacing:.1em">&mdash; Colonel Aniruddha Rao HR (Retd.) &middot; leadbydharma.com</span>'
-    + '</div></div>';
+    +'<h3>A Note From Col Rao on WAT for Civilian Aspirants</h3>'
+    +'<p>You are a young civilian. The SSB psychologist assessing your WAT knows this. They are not comparing you to a serving officer. They are asking one question about every response: does this person have the instinctive orientation, values, and emotional intelligence that could be shaped into officer-like character through training and experience?</p>'
+    +'<p>The WAT is assessed on pattern, not on individual words. One avoidant response to Fear does not define you. But consistent avoidance across ten challenging words tells the psychologist something real about how you instinctively relate to difficulty. That pattern is what the months before your board must address.</p>'
+    +'<p>What you write in WAT practice will not change your pattern. What you do in your daily life will. Take on responsibilities you have been avoiding. Have honest conversations you have been putting off. Do difficult things and reflect on what you learned. This is the only preparation that genuinely shifts WAT responses.</p>'
+    +'<div style="background:var(--cream);border-left:3px solid var(--gold);padding:.7rem 1rem;margin-top:1rem;border-radius:0 2px 2px 0">'
+    +'<em style="font-size:.92rem">&ldquo;India does not need your best performance. India needs your best self.&rdquo;</em><br>'
+    +'<span style="font-family:JetBrains Mono,monospace;font-size:.65rem;color:var(--ash);letter-spacing:.1em">&mdash; Colonel Aniruddha Rao HR (Retd.) &middot; leadbydharma.com</span>'
+    +'</div></div>';
 
-  var blankColorW = blank > (isDemoMode ? 2 : 8) ? '#8b1a1a' : '#1a5c2e';
-
+  var blankColorW = blank>(isDemoMode?2:8)?'#8b1a1a':'#1a5c2e';
   document.getElementById('testArea').classList.add('hidden');
   var ra = document.getElementById('reportArea');
   ra.classList.remove('hidden');
   ra.innerHTML = '<div class="rpt-hdr">'
-    + '<div style="font-family:JetBrains Mono,monospace;font-size:1.05rem;color:var(--gold);letter-spacing:.2em;margin-bottom:.4rem">WAT ' + (isDemoMode ? 'DEMO ' : '') + 'REPORT \u00b7 SET ' + (selSet+1) + '</div>'
-    + '<div style="font-family:Playfair Display,serif;font-size:1.6rem;color:var(--white)">Word Association Test</div>'
-    + '<div style="font-family:JetBrains Mono,monospace;font-size:1.05rem;color:rgba(255,255,255,.4);margin-top:.4rem">LEAD BY DHARMA \u00b7 ' + new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'}).toUpperCase() + '</div>'
-    + '</div>'
-    + '<div class="rpt-box"><h3>Completion</h3>'
-    + '<div class="stat-row"><span>Words attempted</span><span class="stat-val">' + answered + '/' + totalLabel + '</span></div>'
-    + '<div class="stat-row"><span>Unattempted</span><span class="stat-val" id="watBlankV">' + blank + '</span></div>'
-    + '<div class="stat-row"><span>Overall tone</span><span class="stat-val">' + tone + '</span></div>'
-    + '<div class="stat-row"><span>Positive markers</span><span class="stat-val" style="color:#1a5c2e">' + posC + '</span></div>'
-    + '<div class="stat-row"><span>Negative markers</span><span class="stat-val" style="color:' + (negC>5?'#8b1a1a':'#8b5c00') + '">' + negC + '</span></div>'
-    + '</div>'
-    + '<div class="rpt-box"><h3>What Your Association Pattern Reveals</h3><p>' + toneNote + '</p></div>'
-    + wordCoachHtml
-    + colRaoNoteW
-    + '<div class="lgl-ftr">Educational practice tool only \u00b7 Not an official SSB assessment \u00b7 \u00a9 2026 Lead By Dharma \u00b7 leadbydharma.com</div>'
-    + '<div style="text-align:center;padding:1rem 0;display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap">'
-    + '<button class="btn btn-primary" onclick="window.print()">Print Report</button>'
-    + '<button class="btn btn-outline" onclick="goHome()">Try Another Test</button></div>';
+    +'<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:var(--gold);letter-spacing:.2em;margin-bottom:.4rem">WAT '+(isDemoMode?'DEMO ':'')+' REPORT · SET '+(selSet+1)+'</div>'
+    +'<div style="font-family:Playfair Display,serif;font-size:1.6rem;color:var(--white)">Word Association Test</div>'
+    +'<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:rgba(255,255,255,.4);margin-top:.4rem">LEAD BY DHARMA · '+new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'}).toUpperCase()+'</div>'
+    +'</div>'
+    +'<div class="rpt-box"><h3>Completion</h3>'
+    +'<div class="stat-row"><span>Words attempted</span><span class="stat-val">'+answered+'/'+totalLabel+'</span></div>'
+    +'<div class="stat-row"><span>Unattempted</span><span class="stat-val" id="watBlankV">'+blank+'</span></div>'
+    +'<div class="stat-row"><span>Overall orientation</span><span class="stat-val">'+tone+'</span></div>'
+    +'<div class="stat-row"><span>Positive markers</span><span class="stat-val" style="color:#1a5c2e">'+posC+'</span></div>'
+    +'<div class="stat-row"><span>Avoidant markers</span><span class="stat-val" style="color:'+(negC>5?'#8b1a1a':'#8b5c00')+'">'+negC+'</span></div>'
+    +'</div>'
+    +'<div class="rpt-box"><h3>What Your Association Pattern Reveals</h3><p>'+toneNote+'</p></div>'
+    +wordCoachHtml
+    +colRaoNoteW
+    +'<div class="lgl-ftr">Educational practice tool only · Not an official SSB assessment · © 2026 Lead By Dharma · leadbydharma.com</div>'
+    +'<div style="text-align:center;padding:1rem 0;display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap">'
+    +'<button class="btn btn-primary" onclick="window.print()">Print Report</button>'
+    +'<button class="btn btn-outline" onclick="goHome()">Try Another Test</button></div>';
 
   document.getElementById('watBlankV').style.color = blankColorW;
 }
 
-
-function renderSDT(){
-  var sdtTimerSecs = isDemoMode ? 120 : 900;
-  var sdtTimerLabel = isDemoMode ? '02:00' : '15:00';
-  var DEMO_SDT_SECS = 2;
-  var sdtSecCount = isDemoMode ? DEMO_SDT_SECS : SDT_SECS.length;
-  var sdtHeader = isDemoMode
-    ? 'SDT &middot; DEMO &middot; ' + DEMO_SDT_SECS + ' Sections'
-    : 'SDT &middot; Set ' + (selSet+1) + ' &middot; 5 Sections';
-
-  var html = '<div class="timer-bar">'
-    + '<div class="timer-lbl">' + sdtHeader + '</div>'
-    + '<div class="timer-val" id="timerDisp">' + sdtTimerLabel + '</div>'
-    + '<button class="btn btn-sm" style="background:var(--gold);color:var(--navy);border:none;cursor:pointer;font-family:Playfair Display,serif;border-radius:2px;padding:.4rem 1rem" onclick="submitSDT()">Submit &rarr;</button>'
-    + '<div style="display:flex;align-items:center;gap:.3rem">'
-    + '<button class="extend-btn" id="extendBtn" onclick="extendTime()">'
-    + (isDemoMode ? '+1 min' : '+3 min') + '</button>'
-    + '<span class="extend-uses" id="extendUses">' + EXTEND_MAX + ' left</span>'
-    + '</div>'
-    + '</div>'
-    + '<div style="padding:1rem 0">'
-    + '<div class="sdt-intro">Write what five different people would say about you. The most important rule: be honest. The SSB psychologist reads all five sections together and looks for consistency or inconsistency. An SDT where everyone says only positives is not credible.</div>';
-
-  for (var i = 0; i < sdtSecCount; i++) {
-    var sec = SDT_SECS[i];
-    html += '<div class="sdt-field">'
-      + '<div class="sdt-label">' + sec.label + '</div>'
-      + '<div class="sdt-sublbl">' + sec.sub + '</div>'
-      + '<textarea class="sdt-ta" id="sdt_' + sec.id + '"'
-      + ' placeholder="' + sec.ph + '" rows="4"'
-      + ' data-sid="' + sec.id + '" oninput="sdtSave(this.dataset.sid,this.value)"></textarea>'
-      + '</div>';
-  }
-
-  html += '<div style="text-align:right;padding:1rem 0">'
-    + '<button class="btn btn-primary" onclick="submitSDT()">Submit SDT &rarr;</button>'
-    + '</div></div>';
-
-  document.getElementById('testArea').innerHTML = html;
-  startTimer(sdtTimerSecs, submitSDT);
-}
-
-function sdtSave(k,v){ sdtAns[k]=v; }
 function submitSDT(){ clearInterval(timerInt); genSDTReport(); }
 
 function genSDTReport(){
