@@ -634,7 +634,29 @@
   }
   .legal-footer a { color: #8b6c1a; text-decoration: none; }
 
+
+  .report-gate{background:var(--navy,#0d1f35);border-radius:8px;padding:2rem 1.5rem;margin:1.5rem 0;text-align:center;border:1px solid rgba(184,150,62,.35)}
+  .gate-title{font-family:Georgia,serif;font-size:1.2rem;color:#f0ca7a;margin-bottom:.4rem}
+  .gate-sub{font-size:.93rem;color:rgba(245,240,228,.72);font-style:italic;margin-bottom:1.2rem;line-height:1.6}
+  .gate-price{font-family:Georgia,serif;font-size:2rem;color:#fff;margin-bottom:1rem}
+  .gate-price sup{font-size:1rem;vertical-align:super}
+  .gate-features{display:flex;flex-direction:column;gap:.35rem;margin-bottom:1.2rem;text-align:left;max-width:340px;margin-left:auto;margin-right:auto}
+  .gate-feature{font-size:.88rem;color:rgba(245,240,228,.8)}
+  .gate-feature::before{content:"✓  ";color:#b8963e;font-weight:bold}
+  .gate-email-row{display:flex;gap:.5rem;max-width:380px;margin:.6rem auto;flex-wrap:wrap}
+  .gate-email-input{flex:1;padding:.65rem 1rem;font-family:Georgia,serif;font-size:.95rem;border:1.5px solid rgba(184,150,62,.4);border-radius:4px;background:rgba(255,255,255,.08);color:#fff;outline:none;min-width:0}
+  .gate-email-input::placeholder{color:rgba(255,255,255,.4)}
+  .gate-email-input:focus{border-color:#b8963e}
+  .gate-pay-btn{padding:.65rem 1.4rem;background:#b8963e;color:#0d1f35;border:none;border-radius:4px;font-family:Georgia,serif;font-size:.88rem;cursor:pointer;white-space:nowrap;transition:background .2s}
+  .gate-pay-btn:hover:not(:disabled){background:#d4ac5a}
+  .gate-pay-btn:disabled{opacity:.5;cursor:not-allowed}
+  .gate-err{font-size:.82rem;margin-top:.4rem;display:none}
+  .gate-success{font-size:.9rem;color:#4caf50;margin-top:.6rem}
+  .gate-note{font-size:.76rem;color:rgba(245,240,228,.35);margin-top:.5rem;font-style:italic}
+  @media(max-width:480px){.gate-email-row{flex-direction:column}.gate-pay-btn{width:100%}}
 </style>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded",function(){if(typeof emailjs!=="undefined")emailjs.init({publicKey:"v3yBcZA4mS0rDgGum"});});</script>
 </head>
 <body>
 
@@ -1327,7 +1349,9 @@ If that description resonates with you — if you are willing to do that work �
 
   const reportDiv = document.getElementById('report');
   reportDiv.className = 'active';
-  reportDiv.innerHTML = `
+
+  // Build full report HTML (for paid delivery)
+  const fullReportHTML = `
     <div class="report-cover">
       <div class="header-label" style="margin-bottom:0.5rem">ASSESSMENT REPORT</div>
       <h2>Officer &amp; Leadership Potential</h2>
@@ -1414,7 +1438,32 @@ If that description resonates with you — if you are willing to do that work �
     </div>
   `;
 
+  // ── SHOW FREE SUMMARY ────────────────────────────────────
+  const summaryHTML = buildSummaryReport(
+    { D1:d1, D2:d2, D3:d3, D4:d4 },
+    candidateName,
+    verdictTitle,
+    verdictText,
+    derailerRiskScore
+  );
+
+  reportDiv.innerHTML = summaryHTML;
+  reportDiv.className = 'active';
+
+  // ── SHOW PAYMENT GATE ────────────────────────────────────
+  showPaymentGate(fullReportHTML, candidateName);
+
+  // Auto-send if returning from Razorpay with email param
+  if (window._autoSendEmail) {
+    pendingEmailAddr = window._autoSendEmail;
+    window._autoSendEmail = null;
+    setTimeout(function() {
+      sendFullReportByEmail(pendingEmailAddr, candidateName, fullReportHTML);
+    }, 500);
+  }
+
   window.scrollTo({top: 0, behavior:'smooth'});
+
   document.getElementById('progressFill').style.width = '100%';
   document.getElementById('progressPct').textContent = '100%';
 
@@ -1426,6 +1475,181 @@ If that description resonates with you — if you are willing to do that work �
     });
   }, 100);
 }
+
+var RAZORPAY_REPORT_LINK='https://rzp.io/rzp/6TnQ8Ui';
+var pendingFullReportHTML='';
+var pendingCandidateName='';
+var pendingEmailAddr='';
+
+function initiatePayment(){
+  var email=(document.getElementById('gateEmail').value||'').trim();
+  if(!email||email.indexOf('@')<1){
+    var e=document.getElementById('gateErr');
+    e.style.color='#ff8080';e.style.display='block';
+    e.textContent='Please enter a valid email address.';return;
+  }
+  document.getElementById('gateErr').style.display='none';
+  pendingEmailAddr=email;
+  window.open(RAZORPAY_REPORT_LINK,'_blank');
+  var btn=document.querySelector('.gate-pay-btn');
+  if(btn){btn.textContent='I have paid — Send Report';btn.onclick=confirmPaymentAndSend;btn.style.background='#4caf50';btn.style.color='#fff';}
+  var note=document.querySelector('.gate-note');
+  if(note) note.textContent='After completing payment, click the button above.';
+}
+
+function confirmPaymentAndSend(){
+  var email=pendingEmailAddr||(document.getElementById('gateEmail').value||'').trim();
+  if(!email||email.indexOf('@')<1){
+    var e=document.getElementById('gateErr');
+    e.style.color='#ff8080';e.style.display='block';
+    e.textContent='Please enter your email address.';return;
+  }
+  pendingEmailAddr=email;
+  var btn=document.querySelector('.gate-pay-btn');
+  if(btn){btn.disabled=true;btn.textContent='Sending…';}
+  sendFullReportByEmail(email,pendingCandidateName,pendingFullReportHTML);
+}
+
+function showFullReportDirectly(){
+  var gate=document.getElementById('payGate');
+  if(gate) gate.remove();
+  var rd=document.getElementById('report');
+  rd.innerHTML=pendingFullReportHTML;
+  rd.scrollIntoView({behavior:'smooth'});
+}
+
+(function(){
+  var p=new URLSearchParams(window.location.search);
+  if(p.get('paid')==='true') window._returnedFromPayment=true;
+})();
+
+
+function buildSummaryReport(d1obj, d2obj, d3obj, d4obj, candidateName, verdictClass, verdictTitle, verdictText, derailerRisk) {
+  var dimList = [
+    { label:'Intellectual Qualities', avg: typeof d1obj==='object' ? d1obj.avg : d1obj },
+    { label:'Social Effectiveness',   avg: typeof d2obj==='object' ? d2obj.avg : d2obj },
+    { label:'Dynamism & Drive',       avg: typeof d3obj==='object' ? d3obj.avg : d3obj },
+    { label:'Character & Integrity',  avg: typeof d4obj==='object' ? d4obj.avg : d4obj }
+  ];
+  dimList.sort(function(a,b){ return b.avg - a.avg; });
+  var top1    = dimList[0];
+  var bottom1 = dimList[dimList.length - 1];
+  var shortVerdict = verdictText.length > 180 ? verdictText.substring(0,180) + '\u2026' : verdictText;
+
+  return '<div class="report-cover">'
+    + '<div class="header-label" style="margin-bottom:.5rem">FREE SUMMARY REPORT</div>'
+    + '<h2>Officer &amp; Leadership Potential</h2>'
+    + '<div class="report-name">' + candidateName + '</div>'
+    + '<div class="report-date">LEAD BY DHARMA \u00b7 '
+    + new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'}).toUpperCase()
+    + '</div></div>'
+    + '<div class="verdict-box ' + verdictClass + '">'
+    + '<div class="verdict-label">Overall Verdict</div>'
+    + '<div class="verdict-title">' + verdictTitle + '</div>'
+    + '<div class="verdict-text">' + shortVerdict + '</div>'
+    + '</div>'
+    + '<div class="rpt-section">'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:.65rem;letter-spacing:.2em;color:#b8963e;margin-bottom:.5rem">YOUR STRONGEST DIMENSION</div>'
+    + '<div style="background:rgba(26,74,46,.08);border-left:3px solid #4caf50;padding:.6rem .9rem;border-radius:0 4px 4px 0;font-size:.95rem">'
+    + '\u2713 <strong>' + top1.label + '</strong> \u2014 This is your relative strength in the profile.'
+    + '</div></div>'
+    + '<div class="rpt-section">'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:.65rem;letter-spacing:.2em;color:#b8963e;margin-bottom:.5rem">PRIMARY AREA FOR DEVELOPMENT</div>'
+    + '<div style="background:rgba(184,150,62,.06);border-left:3px solid rgba(184,150,62,.5);padding:.6rem .9rem;border-radius:0 4px 4px 0;font-size:.95rem">'
+    + '\u2192 <strong>' + bottom1.label + '</strong> \u2014 This dimension has the most room for growth.'
+    + '</div></div>'
+    + '<div class="rpt-section" style="background:rgba(0,0,0,.06);border:1px dashed rgba(184,150,62,.35);border-radius:6px;padding:.9rem 1rem;text-align:center;margin-top:1rem">'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:.6rem;color:#b8963e;letter-spacing:.15em;margin-bottom:.35rem">\uD83D\uDD12 UNLOCKED IN FULL REPORT</div>'
+    + '<div style="color:rgba(245,240,228,.55);font-size:.86rem;font-style:italic;line-height:1.6">'
+    + 'Derailer risk profile \u00b7 All 5 dimension scores \u00b7 Per-question pattern analysis \u00b7 SSB-stage implications \u00b7 Col Rao\u2019s personal note'
+    + '</div></div>';
+}
+
+
+function showPaymentGate(fullReportHTML, candidateName) {
+  pendingFullReportHTML = fullReportHTML;
+  pendingCandidateName  = candidateName;
+
+  if (window._returnedFromPayment) {
+    var html = '<div class="report-gate" id="payGate" style="background:rgba(26,74,46,.15);border-color:rgba(26,74,46,.4)">'
+      + '<div class="gate-title" style="color:#4caf50">\u2713 Payment Received</div>'
+      + '<div class="gate-sub">Enter your email and we will send your complete detailed report immediately.</div>'
+      + '<div class="gate-email-row">'
+      + '<input class="gate-email-input" type="email" id="gateEmail" placeholder="Your email address" />'
+      + '<button class="gate-pay-btn" style="background:#4caf50;color:#fff" onclick="confirmPaymentAndSend()">Send My Report \u2192</button>'
+      + '</div><div class="gate-err" id="gateErr"></div>'
+      + '<div class="gate-success" id="gateSuccess"></div>'
+      + '<div class="gate-note">Report emailed within 60 seconds &middot; leadbydharma.com</div>'
+      + '</div>';
+    document.getElementById('report').insertAdjacentHTML('beforeend', html);
+    return;
+  }
+
+  var html = '<div class="report-gate" id="payGate">'
+    + '<div class="gate-title">Unlock Your Complete Report</div>'
+    + '<div class="gate-sub">Your summary is above. The full report includes all dimension scores,<br>per-question pattern analysis, SSB-stage implications, and Col Rao\u2019s personal note.</div>'
+    + '<div class="gate-price"><sup>\u20b9</sup>99</div>'
+    + '<div class="gate-features">'
+    + '<div class="gate-feature">All 5 dimension scores with percentage breakdown</div>'
+    + '<div class="gate-feature">Per-question pattern analysis across all 75 questions</div>'
+    + '<div class="gate-feature">SSB-stage implications for each dimension</div>'
+    + '<div class="gate-feature">Derailer risk deep-dive with specific patterns</div>'
+    + '<div class="gate-feature">Col Rao\u2019s personal assessment note</div>'
+    + '<div class="gate-feature">Mentorship bridge \u2014 what to work on before your board</div>'
+    + '</div>'
+    + '<div class="gate-email-row">'
+    + '<input class="gate-email-input" type="email" id="gateEmail" placeholder="Your email address" />'
+    + '<button class="gate-pay-btn" onclick="initiatePayment()">Pay \u20b999 \u2192</button>'
+    + '</div>'
+    + '<div class="gate-err" id="gateErr"></div>'
+    + '<div class="gate-success" id="gateSuccess"></div>'
+    + '<div class="gate-note">Full report emailed within 60 seconds of payment &middot; leadbydharma.com</div>'
+    + '</div>';
+  document.getElementById('report').insertAdjacentHTML('beforeend', html);
+}
+
+function sendFullReportByEmail(email, name, reportHTML) {
+  if (typeof emailjs === 'undefined') {
+    showFullReportDirectly();
+    var err = document.getElementById('gateErr');
+    if (err) {
+      err.style.color = '#ffa94d'; err.style.display = 'block';
+      err.textContent = 'Email service unavailable. Report shown below. WhatsApp +91 98789 30879 for your emailed copy.';
+    }
+    return;
+  }
+  emailjs.send(
+    'service_t7ozvf3',
+    'template_lkhepyo',
+    {
+      to_email:       email,
+      candidate_name: name,
+      report_html:    reportHTML,
+      report_date:    new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'}),
+      reply_to:       'leadbydharma@gmail.com'
+    }
+  ).then(function() {
+    var succ = document.getElementById('gateSuccess');
+    if (succ) {
+      succ.style.display = 'block';
+      succ.textContent = '\u2713 Report sent to ' + email + '. Check your inbox (and spam) within 60 seconds.';
+    }
+    var row = document.querySelector('.gate-email-row');
+    if (row) row.style.display = 'none';
+    var note = document.querySelector('.gate-note');
+    if (note) note.style.display = 'none';
+    showFullReportDirectly();
+  }, function(err) {
+    console.error('EmailJS error:', err);
+    showFullReportDirectly();
+    var errEl = document.getElementById('gateErr');
+    if (errEl) {
+      errEl.style.color = '#ffa94d'; errEl.style.display = 'block';
+      errEl.textContent = 'Email could not be sent. Report shown below. Email leadbydharma@gmail.com for your copy.';
+    }
+  });
+}
+
 </script>
 </body>
 </html>
