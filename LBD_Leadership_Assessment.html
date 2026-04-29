@@ -1440,8 +1440,9 @@ If that description resonates with you — if you are willing to do that work �
 
   // ── SHOW FREE SUMMARY ────────────────────────────────────
   const summaryHTML = buildSummaryReport(
-    { D1:d1, D2:d2, D3:d3, D4:d4 },
+    d1, d2, d3, d4,
     candidateName,
+    verdictClass,
     verdictTitle,
     verdictText,
     derailerRiskScore
