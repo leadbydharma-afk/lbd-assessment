@@ -170,6 +170,10 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
     color:var(--ash);cursor:pointer;margin-left:.4rem;transition:all .15s}
   .demo-link button:hover{border-color:var(--navy);color:var(--navy)}
 
+
+  .promo-store-box{border:1.5px solid rgba(240,202,122,.4)!important;
+    background:rgba(107,26,26,.04)}
+
 </style>
 </head>
 <body>
@@ -266,6 +270,52 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 </div>
 
 <script>
+// ═══════════════════════════════════════════════════════════
+// MAY 2026 PROMOTIONAL OFFER — Rs.99, 2-Day Access
+// Auto-reverts June 1 2026. Manual revert: set PROMO_ACTIVE=false
+// ═══════════════════════════════════════════════════════════
+var PROMO_ACTIVE = (function(){
+  var d=new Date(); return d.getFullYear()===2026 && d.getMonth()===4;
+})(); // getMonth() 4 = May
+var PROMO_PRICE=99, PROMO_DAYS=2;
+var PROMO_RZP='https://rzp.io/rzp/PROMO99MAY';
+
+function buildPromoCountdown(){
+  var end=new Date('2026-06-01T00:00:00+05:30'),diff=end-new Date();
+  if(diff<=0) return '';
+  var d=Math.floor(diff/86400000),h=Math.floor(diff%86400000/3600000),m=Math.floor(diff%3600000/60000);
+  return '<span style="font-family:JetBrains Mono,monospace;font-size:.68rem;color:#f0ca7a">'+d+'d '+h+'h '+m+'m remaining · Ends May 31</span>';
+}
+
+function buildPromoBanner(prod){
+  if(!PROMO_ACTIVE) return '';
+  return '<div style="background:linear-gradient(135deg,#6B1A1A,#0D1F35);border:1.5px solid rgba(240,202,122,.4);border-radius:6px;padding:.85rem 1.1rem;margin-bottom:1.1rem;text-align:center">'
+    +'<div style="font-family:JetBrains Mono,monospace;font-size:.58rem;letter-spacing:.2em;color:#f0ca7a;margin-bottom:.25rem">MAY 2026 PROMOTIONAL OFFER</div>'
+    +'<div style="font-family:Georgia,serif;font-size:1.05rem;color:#fff;margin-bottom:.15rem">'+prod+' — Rs.99 for 5-Day Access</div>'
+    +'<div style="font-size:.82rem;color:rgba(245,240,228,.6);font-style:italic;margin-bottom:.3rem">Full access for 2 days from first use · Normal pricing resumes June 1</div>'
+    +buildPromoCountdown()
+    +'</div>';
+}
+
+function isPromoExpired(code){
+  try{
+    var k='lbd_px_'+code,s=localStorage.getItem(k);
+    if(!s) return false;
+    return (new Date()-new Date(s))/86400000>PROMO_DAYS;
+  }catch(e){return false;}
+}
+function markPromoFirstUse(code){
+  try{ var k='lbd_px_'+code; if(!localStorage.getItem(k)) localStorage.setItem(k,new Date().toISOString()); }catch(e){}
+}
+function promoDaysLeft(code){
+  try{
+    var k='lbd_px_'+code,s=localStorage.getItem(k);
+    if(!s) return 5;
+    return Math.max(0,Math.ceil(5-(new Date()-new Date(s))/86400000));
+  }catch(e){return 5;}
+}
+
+
 // =====================================================
 // IQ PAYMENT GATE
 // =====================================================
@@ -273,9 +323,111 @@ var IQ_UNLOCKED = false;
 var IQ_DEMO = false;
 
 var IQ_CODES = {
-  "COLRAO-OWNER": {used: false, owner: true},  // Owner master code — full access
-  "DEMO-IQ-1": {used: false, demo: true}
-};
+  "COLRAO-OWNER": {used:false, owner:true},
+  "DEMO-IQ-1":    {used:false, demo:true},
+
+  // IQ/EQ/AQ/SQ Assessment (Rs.199)
+  "LBD-YLWJ-IQ": {used:false},
+  "LBD-QQGY-IQ": {used:false},
+  "LBD-CQNQ-IQ": {used:false},
+  "LBD-NDMG-IQ": {used:false},
+  "LBD-QJDJ-IQ": {used:false},
+  "LBD-SCZN-IQ": {used:false},
+  "LBD-KWTM-IQ": {used:false},
+  "LBD-YZRN-IQ": {used:false},
+  "LBD-QNFZ-IQ": {used:false},
+  "LBD-YPXT-IQ": {used:false},
+  "LBD-BRLT-IQ": {used:false},
+  "LBD-QLPF-IQ": {used:false},
+  "LBD-TRBR-IQ": {used:false},
+  "LBD-GQYR-IQ": {used:false},
+  "LBD-YCXH-IQ": {used:false},
+  "LBD-WMQB-IQ": {used:false},
+  "LBD-SFZY-IQ": {used:false},
+  "LBD-QKRP-IQ": {used:false},
+  "LBD-BKDY-IQ": {used:false},
+  "LBD-NWRJ-IQ": {used:false},
+  "LBD-STPH-IQ": {used:false},
+  "LBD-TNQR-IQ": {used:false},
+  "LBD-NWKK-IQ": {used:false},
+  "LBD-KYVP-IQ": {used:false},
+  "LBD-WXMM-IQ": {used:false},
+  "LBD-RCLT-IQ": {used:false},
+  "LBD-QYCC-IQ": {used:false},
+  "LBD-RTFP-IQ": {used:false},
+  "LBD-JJMR-IQ": {used:false},
+  "LBD-JGNX-IQ": {used:false},
+  "LBD-CHHB-IQ": {used:false},
+  "LBD-RDXJ-IQ": {used:false},
+  "LBD-SJZC-IQ": {used:false},
+  "LBD-NQDT-IQ": {used:false},
+  "LBD-MBPF-IQ": {used:false},
+  "LBD-TBYW-IQ": {used:false},
+  "LBD-SSMP-IQ": {used:false},
+  "LBD-MXDM-IQ": {used:false},
+  "LBD-XKMY-IQ": {used:false},
+  "LBD-YXKR-IQ": {used:false},
+  "LBD-SQMT-IQ": {used:false},
+  "LBD-WHJB-IQ": {used:false},
+  "LBD-GLPM-IQ": {used:false},
+  "LBD-GQKP-IQ": {used:false},
+  "LBD-HMQK-IQ": {used:false},
+  "LBD-JCGK-IQ": {used:false},
+  "LBD-QTCW-IQ": {used:false},
+  "LBD-RHWY-IQ": {used:false},
+  "LBD-YWPQ-IQ": {used:false},
+  "LBD-FWVW-IQ": {used:false},
+  "LBD-SSQM-IQ": {used:false},
+  "LBD-PJLJ-IQ": {used:false},
+  "LBD-LXZV-IQ": {used:false},
+  "LBD-WWKP-IQ": {used:false},
+  "LBD-TSCJ-IQ": {used:false},
+  "LBD-PYQR-IQ": {used:false},
+  "LBD-QCQZ-IQ": {used:false},
+  "LBD-NJJZ-IQ": {used:false},
+  "LBD-SQVB-IQ": {used:false},
+  "LBD-HPKR-IQ": {used:false},
+  "LBD-MPGW-IQ": {used:false},
+  "LBD-MDTQ-IQ": {used:false},
+  "LBD-GWDG-IQ": {used:false},
+  "LBD-FPKJ-IQ": {used:false},
+  "LBD-LWBP-IQ": {used:false},
+  "LBD-VMCT-IQ": {used:false},
+  "LBD-RSJB-IQ": {used:false},
+  "LBD-NYXS-IQ": {used:false},
+  "LBD-XQSR-IQ": {used:false},
+  "LBD-LLVV-IQ": {used:false},
+  "LBD-MTSD-IQ": {used:false},
+  "LBD-KWCS-IQ": {used:false},
+  "LBD-ZZTT-IQ": {used:false},
+  "LBD-LHSS-IQ": {used:false},
+  "LBD-KFWT-IQ": {used:false},
+  "LBD-NTPF-IQ": {used:false},
+  "LBD-VVGC-IQ": {used:false},
+  "LBD-ZJKT-IQ": {used:false},
+  "LBD-NXQQ-IQ": {used:false},
+  "LBD-PPCM-IQ": {used:false},
+  "LBD-FKTL-IQ": {used:false},
+  "LBD-NVFH-IQ": {used:false},
+  "LBD-BGCX-IQ": {used:false},
+  "LBD-SNHP-IQ": {used:false},
+  "LBD-RCQP-IQ": {used:false},
+  "LBD-QQXL-IQ": {used:false},
+  "LBD-LYMZ-IQ": {used:false},
+  "LBD-LSBQ-IQ": {used:false},
+  "LBD-VZSH-IQ": {used:false},
+  "LBD-XHDZ-IQ": {used:false},
+  "LBD-MBNK-IQ": {used:false},
+  "LBD-DBPJ-IQ": {used:false},
+  "LBD-QPKV-IQ": {used:false},
+  "LBD-RXDP-IQ": {used:false},
+  "LBD-GRLG-IQ": {used:false},
+  "LBD-HFDT-IQ": {used:false},
+  "LBD-GVPP-IQ": {used:false},
+  "LBD-BXCM-IQ": {used:false},
+  "LBD-HNQT-IQ": {used:false},
+  "LBD-KFXD-IQ": {used:false},
+};;
 
 function showUnlockAfterPay() {
   setTimeout(function() {
@@ -838,6 +990,8 @@ function genReport(){
     }
   }
 })();
+
+
 
 </script>
 </body>

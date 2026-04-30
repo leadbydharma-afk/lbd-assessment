@@ -158,6 +158,10 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
     margin-top: .5rem;
   }
 
+
+  .promo-store-box{border:1.5px solid rgba(240,202,122,.4)!important;
+    background:rgba(107,26,26,.04)}
+
 </style>
 </head>
 <body>
@@ -267,6 +271,52 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 </div>
 
 <script>
+// ═══════════════════════════════════════════════════════════
+// MAY 2026 PROMOTIONAL OFFER — Rs.99, 2-Day Access
+// Auto-reverts June 1 2026. Manual revert: set PROMO_ACTIVE=false
+// ═══════════════════════════════════════════════════════════
+var PROMO_ACTIVE = (function(){
+  var d=new Date(); return d.getFullYear()===2026 && d.getMonth()===4;
+})(); // getMonth() 4 = May
+var PROMO_PRICE=99, PROMO_DAYS=2;
+var PROMO_RZP='https://rzp.io/rzp/PROMO99MAY';
+
+function buildPromoCountdown(){
+  var end=new Date('2026-06-01T00:00:00+05:30'),diff=end-new Date();
+  if(diff<=0) return '';
+  var d=Math.floor(diff/86400000),h=Math.floor(diff%86400000/3600000),m=Math.floor(diff%3600000/60000);
+  return '<span style="font-family:JetBrains Mono,monospace;font-size:.68rem;color:#f0ca7a">'+d+'d '+h+'h '+m+'m remaining · Ends May 31</span>';
+}
+
+function buildPromoBanner(prod){
+  if(!PROMO_ACTIVE) return '';
+  return '<div style="background:linear-gradient(135deg,#6B1A1A,#0D1F35);border:1.5px solid rgba(240,202,122,.4);border-radius:6px;padding:.85rem 1.1rem;margin-bottom:1.1rem;text-align:center">'
+    +'<div style="font-family:JetBrains Mono,monospace;font-size:.58rem;letter-spacing:.2em;color:#f0ca7a;margin-bottom:.25rem">MAY 2026 PROMOTIONAL OFFER</div>'
+    +'<div style="font-family:Georgia,serif;font-size:1.05rem;color:#fff;margin-bottom:.15rem">'+prod+' — Rs.99 for 5-Day Access</div>'
+    +'<div style="font-size:.82rem;color:rgba(245,240,228,.6);font-style:italic;margin-bottom:.3rem">Full access for 2 days from first use · Normal pricing resumes June 1</div>'
+    +buildPromoCountdown()
+    +'</div>';
+}
+
+function isPromoExpired(code){
+  try{
+    var k='lbd_px_'+code,s=localStorage.getItem(k);
+    if(!s) return false;
+    return (new Date()-new Date(s))/86400000>PROMO_DAYS;
+  }catch(e){return false;}
+}
+function markPromoFirstUse(code){
+  try{ var k='lbd_px_'+code; if(!localStorage.getItem(k)) localStorage.setItem(k,new Date().toISOString()); }catch(e){}
+}
+function promoDaysLeft(code){
+  try{
+    var k='lbd_px_'+code,s=localStorage.getItem(k);
+    if(!s) return 5;
+    return Math.max(0,Math.ceil(5-(new Date()-new Date(s))/86400000));
+  }catch(e){return 5;}
+}
+
+
 // =====================================================
 // STATE
 // =====================================================
@@ -620,20 +670,114 @@ document.addEventListener("DOMContentLoaded", function() {
 // Persisted in localStorage but code is source of truth
 // =====================================================
 var AI_CODES = {
-  // Owner code — unlimited interviews, never expires
-  "COLRAO-OWNER": { uses: 999, owner: true },
+  "COLRAO-OWNER": {uses:999, owner:true},
+  "DEMO-AI-1":    {uses:3, type:"standalone", demo:true},
 
-  // ── READINESS PACK CODES (included with Rs.999 pack) ──────
-  // Format: "LBD-XXXX-7": { uses: 3, type: "readiness" }
+  // Standalone AI Interview (Rs.499)
+  "LBD-DSCX-AI": {uses:3, type:"standalone"},
+  "LBD-BBMN-AI": {uses:3, type:"standalone"},
+  "LBD-PLWW-AI": {uses:3, type:"standalone"},
+  "LBD-KJFG-AI": {uses:3, type:"standalone"},
+  "LBD-MQYH-AI": {uses:3, type:"standalone"},
+  "LBD-PNXW-AI": {uses:3, type:"standalone"},
+  "LBD-CSXY-AI": {uses:3, type:"standalone"},
+  "LBD-NBJG-AI": {uses:3, type:"standalone"},
+  "LBD-LGHB-AI": {uses:3, type:"standalone"},
+  "LBD-LZGZ-AI": {uses:3, type:"standalone"},
+  "LBD-LKVN-AI": {uses:3, type:"standalone"},
+  "LBD-QLVK-AI": {uses:3, type:"standalone"},
+  "LBD-RHVR-AI": {uses:3, type:"standalone"},
+  "LBD-GYBR-AI": {uses:3, type:"standalone"},
+  "LBD-JBHL-AI": {uses:3, type:"standalone"},
+  "LBD-LKJM-AI": {uses:3, type:"standalone"},
+  "LBD-FJYJ-AI": {uses:3, type:"standalone"},
+  "LBD-SJJB-AI": {uses:3, type:"standalone"},
+  "LBD-ZHNR-AI": {uses:3, type:"standalone"},
+  "LBD-FWBX-AI": {uses:3, type:"standalone"},
+  "LBD-GHGQ-AI": {uses:3, type:"standalone"},
+  "LBD-ZXWC-AI": {uses:3, type:"standalone"},
+  "LBD-PQVQ-AI": {uses:3, type:"standalone"},
+  "LBD-VNRW-AI": {uses:3, type:"standalone"},
+  "LBD-NPXW-AI": {uses:3, type:"standalone"},
+  "LBD-GPPJ-AI": {uses:3, type:"standalone"},
+  "LBD-FNKF-AI": {uses:3, type:"standalone"},
+  "LBD-PFVR-AI": {uses:3, type:"standalone"},
+  "LBD-JLBV-AI": {uses:3, type:"standalone"},
+  "LBD-WQKD-AI": {uses:3, type:"standalone"},
+  "LBD-PVLQ-AI": {uses:3, type:"standalone"},
+  "LBD-WBNK-AI": {uses:3, type:"standalone"},
+  "LBD-WXYZ-AI": {uses:3, type:"standalone"},
+  "LBD-JXYK-AI": {uses:3, type:"standalone"},
+  "LBD-TGGH-AI": {uses:3, type:"standalone"},
+  "LBD-PKXP-AI": {uses:3, type:"standalone"},
+  "LBD-SGFX-AI": {uses:3, type:"standalone"},
+  "LBD-DFWK-AI": {uses:3, type:"standalone"},
+  "LBD-XQFX-AI": {uses:3, type:"standalone"},
+  "LBD-JWLZ-AI": {uses:3, type:"standalone"},
+  "LBD-ZDFN-AI": {uses:3, type:"standalone"},
+  "LBD-KRQX-AI": {uses:3, type:"standalone"},
+  "LBD-YLYC-AI": {uses:3, type:"standalone"},
+  "LBD-QTBD-AI": {uses:3, type:"standalone"},
+  "LBD-HSRY-AI": {uses:3, type:"standalone"},
+  "LBD-JJXQ-AI": {uses:3, type:"standalone"},
+  "LBD-FWHZ-AI": {uses:3, type:"standalone"},
+  "LBD-LCCP-AI": {uses:3, type:"standalone"},
+  "LBD-YWYB-AI": {uses:3, type:"standalone"},
+  "LBD-CVHH-AI": {uses:3, type:"standalone"},
+  "LBD-SCVY-AI": {uses:3, type:"standalone"},
+  "LBD-HCHF-AI": {uses:3, type:"standalone"},
+  "LBD-LWRP-AI": {uses:3, type:"standalone"},
+  "LBD-HYKC-AI": {uses:3, type:"standalone"},
+  "LBD-JMDR-AI": {uses:3, type:"standalone"},
+  "LBD-PMWJ-AI": {uses:3, type:"standalone"},
+  "LBD-WHCQ-AI": {uses:3, type:"standalone"},
+  "LBD-ZPFL-AI": {uses:3, type:"standalone"},
+  "LBD-BWMQ-AI": {uses:3, type:"standalone"},
+  "LBD-TCGN-AI": {uses:3, type:"standalone"},
+  "LBD-KMBH-AI": {uses:3, type:"standalone"},
+  "LBD-CTLB-AI": {uses:3, type:"standalone"},
+  "LBD-DTLR-AI": {uses:3, type:"standalone"},
+  "LBD-MRHW-AI": {uses:3, type:"standalone"},
+  "LBD-LJBT-AI": {uses:3, type:"standalone"},
+  "LBD-CLBN-AI": {uses:3, type:"standalone"},
+  "LBD-CNPQ-AI": {uses:3, type:"standalone"},
+  "LBD-BCWD-AI": {uses:3, type:"standalone"},
+  "LBD-KKSZ-AI": {uses:3, type:"standalone"},
+  "LBD-XPXW-AI": {uses:3, type:"standalone"},
+  "LBD-TNXR-AI": {uses:3, type:"standalone"},
+  "LBD-GXCW-AI": {uses:3, type:"standalone"},
+  "LBD-LDRN-AI": {uses:3, type:"standalone"},
+  "LBD-DSQQ-AI": {uses:3, type:"standalone"},
+  "LBD-JTYQ-AI": {uses:3, type:"standalone"},
+  "LBD-VSHR-AI": {uses:3, type:"standalone"},
+  "LBD-WQQF-AI": {uses:3, type:"standalone"},
+  "LBD-JGZR-AI": {uses:3, type:"standalone"},
+  "LBD-CVDM-AI": {uses:3, type:"standalone"},
+  "LBD-DYBG-AI": {uses:3, type:"standalone"},
+  "LBD-WMPN-AI": {uses:3, type:"standalone"},
+  "LBD-MCQF-AI": {uses:3, type:"standalone"},
+  "LBD-ZSFW-AI": {uses:3, type:"standalone"},
+  "LBD-NDJN-AI": {uses:3, type:"standalone"},
+  "LBD-NBVX-AI": {uses:3, type:"standalone"},
+  "LBD-SHBJ-AI": {uses:3, type:"standalone"},
+  "LBD-FLNS-AI": {uses:3, type:"standalone"},
+  "LBD-HTPV-AI": {uses:3, type:"standalone"},
+  "LBD-DQCC-AI": {uses:3, type:"standalone"},
+  "LBD-MBQP-AI": {uses:3, type:"standalone"},
+  "LBD-SLCB-AI": {uses:3, type:"standalone"},
+  "LBD-PPCV-AI": {uses:3, type:"standalone"},
+  "LBD-ZHLW-AI": {uses:3, type:"standalone"},
+  "LBD-ZVZB-AI": {uses:3, type:"standalone"},
+  "LBD-SDKN-AI": {uses:3, type:"standalone"},
+  "LBD-LYXR-AI": {uses:3, type:"standalone"},
+  "LBD-QKCK-AI": {uses:3, type:"standalone"},
+  "LBD-LSVY-AI": {uses:3, type:"standalone"},
+  "LBD-LPJW-AI": {uses:3, type:"standalone"},
+  "LBD-GNNS-AI": {uses:3, type:"standalone"},
 
-  // ── STANDALONE AI INTERVIEW CODES (Rs.499 — 3 sessions) ───
-  // Format: "LBD-XXXX-AI": { uses: 3, type: "standalone" }
-  // Issue these when candidate purchases the standalone product
-  // Same 3 sessions, same difficulty rules as Readiness Pack
-
-  // Demo code for testing standalone purchase
-  "DEMO-AI-1": { uses: 3, type: "standalone", demo: true },
-};
+  // Readiness Pack codes also work here (added via SSB file)
+  // RP codes: LBD-XXXX-RP — add those here too with uses:3, type:"readiness"
+};;
 
 var AI_USAGE_KEY   = 'lbd_ai_usage_v2';  // versioned to avoid old data
 var currentAICode  = null;
@@ -664,9 +808,16 @@ function saveCodeUsage(code, uses) {
 function redeemAICode(code) {
   code = code.trim().toUpperCase();
   if (!AI_CODES[code]) return { ok: false, msg: 'Code not recognised. Check your email for the correct code.' };
+  // Promo 5-day expiry check
+  if (PROMO_ACTIVE) {
+    markPromoFirstUse(code);
+    if (isPromoExpired(code)) {
+      return { ok: false, msg: 'Your 2-day promotional access has expired. Purchase a new pack to continue.' };
+    }
+  }
   var uses = getCodeUsage(code);
-  if (uses <= 0) return { ok: false, msg: 'All interview attempts for this code have been used. Contact leadbydharma@gmail.com if you believe this is an error.' };
-  return { ok: true, uses: uses, owner: AI_CODES[code].owner || false };
+  if (uses <= 0) return { ok: false, msg: 'All interview attempts for this code have been used.' };
+  return { ok: true, uses: uses };
 }
 
 function decrementAIUses(code) {
@@ -1076,6 +1227,8 @@ document.addEventListener('keydown', function(e) {
     sendAnswer();
   }
 });
+
+
 </script>
 </body>
 </html>
