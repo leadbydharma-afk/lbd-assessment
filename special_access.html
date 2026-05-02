@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lead By Dharma — Special Access · May 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ─────────────────────────────────────────────────── */
+:root {
+  --navy:   #0D1F35;
+  --navy2:  #0A1929;
+  --gold:   #B8963E;
+  --gold2:  #D4AC5A;
+  --gold3:  #F0CA7A;
+  --cream:  #F5F0E4;
+  --light:  #EDE6D2;
+  --ash:    #7A6E63;
+  --ink:    #1A1512;
+  --white:  #FDFAF4;
+  --green:  #1A4A2E;
+  --red:    #6B1A1A;
+  --border: rgba(184,150,62,.22);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--navy2);
+  color: var(--cream);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 17px;
+  line-height: 1.75;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── TEXTURE OVERLAY ────────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(184,150,62,.07) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(107,26,26,.12) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── HEADER ─────────────────────────────────────────────────── */
+.site-header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .9rem 2rem;
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+}
+.site-header a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .62rem;
+  letter-spacing: .18em;
+  color: var(--ash);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.site-header a:hover { color: var(--gold3); }
+.header-brand {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gold3);
+  letter-spacing: .12em;
+  text-decoration: none !important;
+}
+
+/* ── HERO ───────────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 4rem 1.5rem 2.5rem;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.offer-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: .22em;
+  color: var(--gold3);
+  border: 1px solid rgba(240,202,122,.3);
+  padding: .3rem .9rem;
+  border-radius: 2px;
+  margin-bottom: 1.2rem;
+  text-transform: uppercase;
+}
+.hero h1 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 600;
+  color: var(--white);
+  line-height: 1.25;
+  margin-bottom: .6rem;
+  letter-spacing: .04em;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--gold3);
+}
+.hero-sub {
+  font-size: 1rem;
+  color: rgba(245,240,228,.65);
+  font-style: italic;
+  margin-bottom: 1.4rem;
+}
+.hero-rule {
+  width: 60px;
+  height: 1px;
+  background: var(--gold);
+  margin: 0 auto 1.4rem;
+  opacity: .5;
+}
+.countdown-wrap {
+  display: inline-block;
+  background: rgba(0,0,0,.25);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: .45rem 1.1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem;
+  color: var(--gold2);
+  letter-spacing: .1em;
+}
+
+/* ── OFFERS GRID ────────────────────────────────────────────── */
+.offers-section {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 2rem;
+}
+.offers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-bottom: 1rem;
+}
+@media (max-width: 640px) {
+  .offers-grid { grid-template-columns: 1fr; }
+}
+
+.offer-card {
+  background: rgba(13,31,53,.7);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.6rem 1.4rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .25s;
+}
+.offer-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0;
+  transition: opacity .3s;
+}
+.offer-card:hover { border-color: rgba(184,150,62,.45); }
+.offer-card:hover::before { opacity: 1; }
+.offer-card.featured {
+  border-color: rgba(184,150,62,.35);
+  background: rgba(13,31,53,.85);
+}
+
+.offer-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .58rem;
+  letter-spacing: .2em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: .5rem;
+  display: block;
+}
+.offer-name {
+  font-family: 'Cinzel', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: .3rem;
+  line-height: 1.3;
+}
+.offer-desc {
+  font-size: .9rem;
+  color: rgba(245,240,228,.6);
+  font-style: italic;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+.offer-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  margin-bottom: .3rem;
+}
+.offer-price {
+  font-family: 'Cinzel', serif;
+  font-size: 2rem;
+  color: var(--white);
+  font-weight: 400;
+}
+.offer-price sup { font-size: .9rem; vertical-align: super; }
+.offer-orig {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem;
+  color: var(--ash);
+  text-decoration: line-through;
+}
+.offer-access {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .65rem;
+  color: var(--gold2);
+  letter-spacing: .08em;
+  margin-bottom: 1rem;
+}
+
+.offer-includes {
+  list-style: none;
+  margin-bottom: 1.2rem;
+}
+.offer-includes li {
+  font-size: .88rem;
+  color: rgba(245,240,228,.75);
+  padding: .18rem 0;
+  padding-left: .8rem;
+  position: relative;
+}
+.offer-includes li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-size: .8rem;
+}
+
+/* ── SET SELECTOR ───────────────────────────────────────────── */
+.set-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin-bottom: .8rem;
+}
+.set-btn {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .68rem;
+  letter-spacing: .06em;
+  color: var(--gold2);
+  border: 1px solid rgba(184,150,62,.35);
+  border-radius: 2px;
+  padding: .3rem .65rem;
+  cursor: pointer;
+  background: transparent;
+  transition: all .2s;
+  text-decoration: none;
+}
+.set-btn:hover {
+  background: rgba(184,150,62,.12);
+  border-color: var(--gold);
+  color: var(--gold3);
+}
+
+/* ── DIFFICULTY SELECTOR ────────────────────────────────────── */
+.diff-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin-bottom: .8rem;
+}
+.diff-btn {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .68rem;
+  letter-spacing: .06em;
+  border: 1px solid rgba(184,150,62,.35);
+  border-radius: 2px;
+  padding: .3rem .75rem;
+  cursor: pointer;
+  background: transparent;
+  transition: all .2s;
+  text-decoration: none;
+  color: var(--gold2);
+}
+.diff-btn:hover {
+  background: rgba(184,150,62,.12);
+  border-color: var(--gold);
+  color: var(--gold3);
+}
+
+/* ── FORM SECTION ───────────────────────────────────────────── */
+.form-section {
+  position: relative;
+  z-index: 1;
+  max-width: 660px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 4rem;
+}
+
+.form-card {
+  background: rgba(13,31,53,.8);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2rem 2rem;
+  backdrop-filter: blur(8px);
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 1.8rem;
+}
+.form-header .kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: .2em;
+  color: var(--gold);
+  display: block;
+  margin-bottom: .4rem;
+}
+.form-header h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.2rem;
+  color: var(--white);
+  font-weight: 500;
+  margin-bottom: .4rem;
+}
+.form-header p {
+  font-size: .88rem;
+  color: rgba(245,240,228,.55);
+  font-style: italic;
+}
+
+.form-rule {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  margin: 1.4rem 0;
+}
+
+.field-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .8rem 1rem;
+  margin-bottom: .8rem;
+}
+.field-group.single { grid-template-columns: 1fr; }
+@media (max-width: 520px) { .field-group { grid-template-columns: 1fr; } }
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+}
+.field label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: .16em;
+  color: var(--gold2);
+  text-transform: uppercase;
+}
+.field input, .field select {
+  background: rgba(0,0,0,.25);
+  border: 1px solid rgba(184,150,62,.25);
+  border-radius: 3px;
+  color: var(--cream);
+  font-family: 'EB Garamond', serif;
+  font-size: .95rem;
+  padding: .55rem .85rem;
+  outline: none;
+  transition: border-color .2s;
+  -webkit-appearance: none;
+}
+.field input::placeholder { color: rgba(245,240,228,.25); font-style: italic; }
+.field input:focus,
+.field select:focus { border-color: var(--gold); }
+.field select option { background: #0d1f35; color: var(--cream); }
+
+.field-note {
+  font-size: .8rem;
+  color: rgba(245,240,228,.35);
+  font-style: italic;
+  margin-top: .1rem;
+}
+
+.offer-select-section {
+  margin: 1.4rem 0;
+}
+.offer-select-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: .16em;
+  color: var(--gold2);
+  text-transform: uppercase;
+  margin-bottom: .6rem;
+  display: block;
+}
+.offer-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+}
+.offer-radio {
+  display: flex;
+  align-items: flex-start;
+  gap: .7rem;
+  cursor: pointer;
+  padding: .65rem .85rem;
+  border: 1px solid rgba(184,150,62,.18);
+  border-radius: 3px;
+  transition: border-color .2s, background .2s;
+}
+.offer-radio:hover { border-color: rgba(184,150,62,.4); background: rgba(184,150,62,.04); }
+.offer-radio input[type=radio] { margin-top: .25rem; accent-color: var(--gold); flex-shrink: 0; }
+.offer-radio-content {}
+.offer-radio-title {
+  font-family: 'Cinzel', serif;
+  font-size: .9rem;
+  color: var(--white);
+  display: block;
+  margin-bottom: .05rem;
+}
+.offer-radio-desc {
+  font-size: .82rem;
+  color: rgba(245,240,228,.5);
+  font-style: italic;
+}
+.offer-radio.selected {
+  border-color: rgba(184,150,62,.5);
+  background: rgba(184,150,62,.06);
+}
+
+/* Sub-selector shown when set/difficulty is chosen */
+.sub-selector { display: none; padding: .6rem 0 0 1.8rem; }
+.sub-selector.active { display: block; }
+.sub-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .58rem;
+  letter-spacing: .14em;
+  color: var(--gold);
+  margin-bottom: .4rem;
+  display: block;
+}
+.sub-btns { display: flex; flex-wrap: wrap; gap: .35rem; }
+.sub-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .65rem;
+  padding: .28rem .6rem;
+  border: 1px solid rgba(184,150,62,.3);
+  border-radius: 2px;
+  color: var(--gold2);
+  background: transparent;
+  cursor: pointer;
+  transition: all .18s;
+}
+.sub-btn:hover,
+.sub-btn.active {
+  background: rgba(184,150,62,.14);
+  border-color: var(--gold);
+  color: var(--gold3);
+}
+
+.submit-row {
+  text-align: center;
+  margin-top: 1.6rem;
+}
+.submit-btn {
+  font-family: 'Cinzel', serif;
+  font-size: .88rem;
+  letter-spacing: .12em;
+  color: var(--navy);
+  background: var(--gold);
+  border: none;
+  border-radius: 3px;
+  padding: .75rem 2.2rem;
+  cursor: pointer;
+  transition: background .2s;
+  width: 100%;
+  max-width: 320px;
+}
+.submit-btn:hover { background: var(--gold2); }
+.submit-btn:disabled { opacity: .45; cursor: not-allowed; }
+
+.form-err {
+  color: #ff8a80;
+  font-size: .82rem;
+  font-style: italic;
+  text-align: center;
+  margin-top: .6rem;
+  display: none;
+}
+.form-success {
+  text-align: center;
+  padding: 2rem 1rem;
+  display: none;
+}
+.form-success .tick {
+  font-size: 2.5rem;
+  margin-bottom: .6rem;
+}
+.form-success h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.15rem;
+  color: var(--white);
+  margin-bottom: .5rem;
+}
+.form-success p {
+  font-size: .92rem;
+  color: rgba(245,240,228,.7);
+  font-style: italic;
+  margin-bottom: .3rem;
+}
+.pay-link-box {
+  background: rgba(0,0,0,.2);
+  border: 1px solid rgba(184,150,62,.3);
+  border-radius: 4px;
+  padding: .8rem 1rem;
+  margin: 1rem 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem;
+  color: var(--gold2);
+}
+.pay-now-btn {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: .88rem;
+  letter-spacing: .1em;
+  color: var(--navy);
+  background: var(--gold);
+  border: none;
+  border-radius: 3px;
+  padding: .65rem 2rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background .2s;
+  margin-top: .6rem;
+}
+.pay-now-btn:hover { background: var(--gold2); }
+
+/* ── FOOTER ─────────────────────────────────────────────────── */
+.page-footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 1.5rem;
+  border-top: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .62rem;
+  letter-spacing: .1em;
+  color: var(--ash);
+}
+.page-footer a { color: var(--ash); text-decoration: none; }
+.page-footer a:hover { color: var(--gold2); }
+
+/* ── DIVIDER ─────────────────────────────────────────────────── */
+.section-divider {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: .5rem 0 1.5rem;
+}
+.section-divider::before {
+  content: '';
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  height: 1px;
+  background: var(--border);
+  margin: 0 auto .8rem;
+}
+.section-divider span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .62rem;
+  letter-spacing: .2em;
+  color: var(--ash);
+  text-transform: uppercase;
+}
+
+@media (max-width: 480px) {
+  .form-card { padding: 1.4rem 1.2rem; }
+  .hero { padding: 2.5rem 1.2rem 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <a href="https://leadbydharma-afk.github.io/lbd-assessment/" class="header-brand">Lead By Dharma</a>
+  <a href="https://leadbydharma-afk.github.io/lbd-assessment/">← Back to products</a>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="offer-badge">&#9733; May 2026 &nbsp;·&nbsp; Special Access Offer &#9733;</div>
+  <h1>Try Before You<br><em>Commit</em></h1>
+  <p class="hero-sub">One set. One session. Real assessment. Rs.99.</p>
+  <div class="hero-rule"></div>
+  <div class="countdown-wrap" id="countdown">Loading...</div>
+</section>
+
+<!-- OFFERS -->
+<section class="offers-section">
+  <div class="offers-grid">
+
+    <!-- SSB Psychology Set -->
+    <div class="offer-card featured">
+      <span class="offer-tag">SSB Psychology Suite</span>
+      <div class="offer-name">Any Single Set<br>2-Day Access</div>
+      <div class="offer-desc">One complete set — SRT, WAT and SDT with coaching report</div>
+      <div class="offer-price-row">
+        <div class="offer-price"><sup>₹</sup>99</div>
+        <div class="offer-orig">₹149</div>
+      </div>
+      <div class="offer-access">2 days from first use</div>
+      <ul class="offer-includes">
+        <li>60 SRT situations with per-response coaching</li>
+        <li>60 WAT words with association analysis</li>
+        <li>5 SDT sections with psychologist notes</li>
+        <li>Choose any set from 1 to 7</li>
+      </ul>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.62rem;
+        letter-spacing:.14em;color:var(--gold2);margin-bottom:.4rem">
+        PICK YOUR SET
+      </div>
+      <div class="set-selector">
+        <a class="set-btn" data-set="1" href="https://rzp.io/rzp/DkHmfCa" target="_blank">Set 1</a>
+        <a class="set-btn" data-set="2" href="https://rzp.io/rzp/yibLBOe" target="_blank">Set 2</a>
+        <a class="set-btn" data-set="3" href="https://rzp.io/rzp/hkH6lcNY" target="_blank">Set 3</a>
+        <a class="set-btn" data-set="4" href="https://rzp.io/rzp/djhQxbC" target="_blank">Set 4</a>
+        <a class="set-btn" data-set="5" href="https://rzp.io/rzp/Cm9fKrzs" target="_blank">Set 5</a>
+        <a class="set-btn" data-set="6" href="https://rzp.io/rzp/19Fm4Pe6" target="_blank">Set 6</a>
+        <a class="set-btn" data-set="7" href="https://rzp.io/rzp/nkgx4Cr4" target="_blank">Set 7</a>
+      </div>
+      <div style="font-size:.72rem;color:var(--ash);font-style:italic">
+        Access code emailed · 2 days from first entry
+      </div>
+    </div>
+
+    <!-- AI Interview -->
+    <div class="offer-card">
+      <span class="offer-tag">AI Personal Interview</span>
+      <div class="offer-name">One Session,<br>Any Difficulty</div>
+      <div class="offer-desc">Standard, Demanding or Stress — your choice, one complete session</div>
+      <div class="offer-price-row">
+        <div class="offer-price"><sup>₹</sup>99</div>
+        <div class="offer-orig">₹499</div>
+      </div>
+      <div class="offer-access">Single session · 48-hour access window</div>
+      <ul class="offer-includes">
+        <li>12 personalised interview questions</li>
+        <li>Col Rao AI interviewer persona</li>
+        <li>Scored report across 5 dimensions</li>
+        <li>Question-by-question feedback</li>
+        <li>Choose: Standard, Demanding, or Stress</li>
+        <li>Must use within 48 hours of purchase</li>
+      </ul>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.62rem;
+        letter-spacing:.14em;color:var(--gold2);margin-bottom:.4rem">
+        PICK YOUR LEVEL
+      </div>
+      <div class="diff-selector">
+        <a class="diff-btn" href="https://rzp.io/rzp/AukND0g" target="_blank">Standard</a>
+        <a class="diff-btn" href="https://rzp.io/rzp/AukND0g" target="_blank">Demanding</a>
+        <a class="diff-btn" href="https://rzp.io/rzp/AukND0g" target="_blank">Stress</a>
+      </div>
+      <div style="font-size:.72rem;color:var(--ash);font-style:italic">
+        Access code emailed · 48-hr window from payment · Repurchase if expired
+      </div>
+    </div>
+
+  </div>
+
+  <div style="text-align:center;font-size:.82rem;color:rgba(245,240,228,.4);
+    font-style:italic;padding:.5rem 0">
+    Access codes emailed within minutes of payment &middot;
+    <a href="https://leadbydharma-afk.github.io/lbd-assessment/"
+      style="color:var(--gold);text-decoration:none">See all products →</a>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="section-divider">
+  <span>Register · Tell us about yourself</span>
+</div>
+
+<!-- FORM SECTION -->
+<section class="form-section">
+  <div class="form-card">
+
+    <div class="form-header">
+      <span class="kicker">Special Access Registration</span>
+      <h2>One form. Instant access.</h2>
+      <p>Fill in your details and select what you would like to try.
+        We will email your access code within minutes of payment.</p>
+    </div>
+
+    <div id="formBody">
+
+      <!-- Personal Details -->
+      <div class="field-group">
+        <div class="field">
+          <label>Full Name</label>
+          <input type="text" id="f_name" placeholder="Your full name" autocomplete="name">
+        </div>
+        <div class="field">
+          <label>Age</label>
+          <input type="number" id="f_age" placeholder="e.g. 19" min="15" max="35">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field">
+          <label>Email Address</label>
+          <input type="email" id="f_email" placeholder="your@email.com" autocomplete="email">
+          <span class="field-note">Access code sent here</span>
+        </div>
+        <div class="field">
+          <label>I am a</label>
+          <select id="f_category">
+            <option value="">Select one</option>
+            <option value="defence_aspirant">Defence Aspirant (NDA/CDS/AFCAT/TES)</option>
+            <option value="just_exploring">Just here for the experience</option>
+            <option value="parent">Parent of an aspirant</option>
+            <option value="teacher">Teacher / Educator</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field">
+          <label>Written Exam Attempts</label>
+          <select id="f_written">
+            <option value="">Select</option>
+            <option value="0">0 — Preparing for first attempt</option>
+            <option value="1">1 attempt</option>
+            <option value="2">2 attempts</option>
+            <option value="3">3 attempts</option>
+            <option value="4+">4 or more</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>SSB Attempts</label>
+          <select id="f_ssb">
+            <option value="">Select</option>
+            <option value="0">0 — Never been to SSB</option>
+            <option value="1">1 attempt</option>
+            <option value="2">2 attempts</option>
+            <option value="3">3 attempts</option>
+            <option value="4+">4 or more</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group single">
+        <div class="field">
+          <label>City / Town / Village &amp; State</label>
+          <input type="text" id="f_location" placeholder="e.g. Pune, Maharashtra">
+        </div>
+      </div>
+
+      <div class="form-rule"></div>
+
+      <!-- Offer Selection -->
+      <div class="offer-select-section">
+        <span class="offer-select-label">What would you like to access?</span>
+        <div class="offer-radio-group">
+
+          <label class="offer-radio" id="radio_ssb">
+            <input type="radio" name="offer" value="ssb" onchange="onOfferChange(this)">
+            <div class="offer-radio-content">
+              <span class="offer-radio-title">SSB Psychology Set — Rs.99</span>
+              <span class="offer-radio-desc">Any single set · SRT + WAT + SDT · 2-day access</span>
+              <div class="sub-selector" id="sub_ssb">
+                <span class="sub-label">Pick your set</span>
+                <div class="sub-btns">
+                  <button class="sub-btn" onclick="selectSet(this,1)" type="button">Set 1</button>
+                  <button class="sub-btn" onclick="selectSet(this,2)" type="button">Set 2</button>
+                  <button class="sub-btn" onclick="selectSet(this,3)" type="button">Set 3</button>
+                  <button class="sub-btn" onclick="selectSet(this,4)" type="button">Set 4</button>
+                  <button class="sub-btn" onclick="selectSet(this,5)" type="button">Set 5</button>
+                  <button class="sub-btn" onclick="selectSet(this,6)" type="button">Set 6</button>
+                  <button class="sub-btn" onclick="selectSet(this,7)" type="button">Set 7</button>
+                </div>
+              </div>
+            </div>
+          </label>
+
+          <label class="offer-radio" id="radio_ai">
+            <input type="radio" name="offer" value="ai" onchange="onOfferChange(this)">
+            <div class="offer-radio-content">
+              <span class="offer-radio-title">AI Personal Interview — Rs.99</span>
+              <span class="offer-radio-desc">One session · Any difficulty · 48-hour access window</span>
+              <div class="sub-selector" id="sub_ai">
+                <span class="sub-label">Pick difficulty</span>
+                <div class="sub-btns">
+                  <button class="sub-btn" onclick="selectDiff(this,'standard')" type="button">Standard</button>
+                  <button class="sub-btn" onclick="selectDiff(this,'demanding')" type="button">Demanding</button>
+                  <button class="sub-btn" onclick="selectDiff(this,'stress')" type="button">Stress</button>
+                </div>
+              </div>
+            </div>
+          </label>
+
+          <label class="offer-radio" id="radio_both">
+            <input type="radio" name="offer" value="both" onchange="onOfferChange(this)">
+            <div class="offer-radio-content">
+              <span class="offer-radio-title">Both — SSB Set + AI Interview — Rs.198</span>
+              <span class="offer-radio-desc">Best value · Choose your set and difficulty below</span>
+              <div class="sub-selector" id="sub_both">
+                <span class="sub-label">SSB Set</span>
+                <div class="sub-btns" id="both_set_btns">
+                  <button class="sub-btn" onclick="selectBothSet(this,1)" type="button">Set 1</button>
+                  <button class="sub-btn" onclick="selectBothSet(this,2)" type="button">Set 2</button>
+                  <button class="sub-btn" onclick="selectBothSet(this,3)" type="button">Set 3</button>
+                  <button class="sub-btn" onclick="selectBothSet(this,4)" type="button">Set 4</button>
+                  <button class="sub-btn" onclick="selectBothSet(this,5)" type="button">Set 5</button>
+                  <button class="sub-btn" onclick="selectBothSet(this,6)" type="button">Set 6</button>
+                  <button class="sub-btn" onclick="selectBothSet(this,7)" type="button">Set 7</button>
+                </div>
+                <span class="sub-label" style="margin-top:.5rem">AI Interview Difficulty</span>
+                <div class="sub-btns" id="both_diff_btns">
+                  <button class="sub-btn" onclick="selectBothDiff(this,'standard')" type="button">Standard</button>
+                  <button class="sub-btn" onclick="selectBothDiff(this,'demanding')" type="button">Demanding</button>
+                  <button class="sub-btn" onclick="selectBothDiff(this,'stress')" type="button">Stress</button>
+                </div>
+              </div>
+            </div>
+          </label>
+
+        </div>
+      </div>
+
+      <div class="form-rule"></div>
+
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn" onclick="submitForm()" type="button">
+          Proceed to Payment →
+        </button>
+        <div class="form-err" id="formErr"></div>
+        <div style="font-size:.76rem;color:rgba(245,240,228,.3);margin-top:.6rem;font-style:italic">
+          Payment opens in a new tab &middot; Access code emailed within minutes
+        </div>
+      </div>
+
+    </div><!-- end formBody -->
+
+    <!-- Success state -->
+    <div class="form-success" id="formSuccess">
+      <div class="tick">✓</div>
+      <h3 id="successName">Registration Confirmed</h3>
+      <p>Your payment page is opening now.</p>
+      <div class="pay-link-box" id="payLinkBox"></div>
+      <p style="font-size:.82rem;color:rgba(245,240,228,.5);margin-top:.6rem">
+        After payment, your access code will be emailed to <strong id="successEmail"></strong> within minutes.
+      </p>
+      <div id="aiExpiryNote" style="display:none;background:rgba(107,26,26,.15);
+        border:1px solid rgba(184,150,62,.25);border-radius:4px;padding:.6rem .9rem;
+        margin:.6rem 0;font-size:.82rem;color:#f0ca7a;font-style:italic">
+        &#9888; AI Interview: your 48-hour access window starts from the moment of payment.
+        Enter your code in the AI Interview within 48 hours or you will need to repurchase.
+      </div>
+      <a class="pay-now-btn" id="payNowBtn" href="#" target="_blank">Open Payment Page →</a>
+      <p style="font-size:.76rem;color:rgba(245,240,228,.35);margin-top:.8rem;font-style:italic">
+        Questions? Email leadbydharma@gmail.com or WhatsApp +91 98789 30879
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <p>
+    <a href="https://leadbydharma-afk.github.io/lbd-assessment/">leadbydharma.com</a>
+    &nbsp;&middot;&nbsp;
+    leadbydharma@gmail.com
+    &nbsp;&middot;&nbsp;
+    +91 98789 30879
+    &nbsp;&middot;&nbsp;
+    Offer valid May 2026 only
+  </p>
+</footer>
+
+<script>
+// ── PROMO ACTIVE CHECK ───────────────────────────────────────
+var PROMO_ACTIVE = (function(){
+  var d = new Date();
+  return d.getFullYear()===2026 && d.getMonth()===4; // May only
+})();
+
+if (!PROMO_ACTIVE) {
+  document.querySelector('.offer-badge').textContent = 'Offer Expired';
+  document.querySelector('.countdown-wrap').textContent = 'This offer has ended. See current products.';
+}
+
+// ── COUNTDOWN ────────────────────────────────────────────────
+function updateCountdown() {
+  var end  = new Date('2026-06-01T00:00:00+05:30');
+  var diff = end - new Date();
+  if (diff <= 0) {
+    document.getElementById('countdown').textContent = 'Offer has ended.';
+    return;
+  }
+  var d = Math.floor(diff/86400000),
+      h = Math.floor(diff%86400000/3600000),
+      m = Math.floor(diff%3600000/60000),
+      s = Math.floor(diff%60000/1000);
+  document.getElementById('countdown').textContent =
+    d + 'd ' + h + 'h ' + m + 'm ' + s + 's remaining · Ends May 31';
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// ── RAZORPAY LINKS ───────────────────────────────────────────
+var SSB_LINKS = {
+  1:'https://rzp.io/rzp/DkHmfCa',
+  2:'https://rzp.io/rzp/yibLBOe',
+  3:'https://rzp.io/rzp/hkH6lcNY',
+  4:'https://rzp.io/rzp/djhQxbC',
+  5:'https://rzp.io/rzp/Cm9fKrzs',
+  6:'https://rzp.io/rzp/19Fm4Pe6',
+  7:'https://rzp.io/rzp/nkgx4Cr4'
+};
+var AI_LINK = 'https://rzp.io/rzp/AukND0g'; // Rs.99 standalone AI
+
+// ── STATE ────────────────────────────────────────────────────
+var selectedOffer = null;
+var selectedSet   = null;
+var selectedDiff  = null;
+var bothSet       = null;
+var bothDiff      = null;
+
+// ── OFFER SELECTION ──────────────────────────────────────────
+function onOfferChange(radio) {
+  selectedOffer = radio.value;
+  ['radio_ssb','radio_ai','radio_both'].forEach(function(id){
+    document.getElementById(id).classList.remove('selected');
+  });
+  document.getElementById('radio_' + selectedOffer).classList.add('selected');
+  document.getElementById('sub_ssb').classList.remove('active');
+  document.getElementById('sub_ai').classList.remove('active');
+  document.getElementById('sub_both').classList.remove('active');
+  document.getElementById('sub_' + selectedOffer).classList.add('active');
+}
+
+function selectSet(btn, n) {
+  document.querySelectorAll('#sub_ssb .sub-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  selectedSet = n;
+}
+function selectDiff(btn, d) {
+  document.querySelectorAll('#sub_ai .sub-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  selectedDiff = d;
+}
+function selectBothSet(btn, n) {
+  document.querySelectorAll('#both_set_btns .sub-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  bothSet = n;
+}
+function selectBothDiff(btn, d) {
+  document.querySelectorAll('#both_diff_btns .sub-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  bothDiff = d;
+}
+
+// ── FORM VALIDATION AND SUBMIT ───────────────────────────────
+function submitForm() {
+  var err = document.getElementById('formErr');
+  err.style.display = 'none';
+
+  var name     = document.getElementById('f_name').value.trim();
+  var age      = document.getElementById('f_age').value.trim();
+  var email    = document.getElementById('f_email').value.trim();
+  var category = document.getElementById('f_category').value;
+  var written  = document.getElementById('f_written').value;
+  var ssb      = document.getElementById('f_ssb').value;
+  var location = document.getElementById('f_location').value.trim();
+
+  // Validate
+  if (!name)          { showErr('Please enter your name.'); return; }
+  if (!age || age<15) { showErr('Please enter your age.'); return; }
+  if (!email || email.indexOf('@')<1) { showErr('Please enter a valid email address.'); return; }
+  if (!category)      { showErr('Please tell us who you are.'); return; }
+  if (!written)       { showErr('Please select your written exam attempts.'); return; }
+  if (!ssb)           { showErr('Please select your SSB attempts.'); return; }
+  if (!location)      { showErr('Please enter your city and state.'); return; }
+  if (!selectedOffer) { showErr('Please select what you would like to access.'); return; }
+
+  if (selectedOffer==='ssb' && !selectedSet)    { showErr('Please pick an SSB set (1–7).'); return; }
+  if (selectedOffer==='ai' && !selectedDiff)    { showErr('Please pick a difficulty level.'); return; }
+  // Check AI 48-hr expiry for returning users
+  if ((selectedOffer==='ai' || selectedOffer==='both') && isAISpecialExpired()) {
+    showErr('Your 48-hour AI Interview access has expired. Please purchase again below — Rs.99 for a new session.');
+    return;
+  }
+  if (selectedOffer==='both' && !bothSet)       { showErr('Please pick an SSB set.'); return; }
+  if (selectedOffer==='both' && !bothDiff)      { showErr('Please pick a difficulty level.'); return; }
+
+  // Determine payment link and description
+  var payLink = '', desc = '';
+  if (selectedOffer==='ssb') {
+    payLink = SSB_LINKS[selectedSet];
+    desc = 'SSB Psychology Set ' + selectedSet + ' — Rs.99 · 2-day access';
+  } else if (selectedOffer==='ai') {
+    payLink = AI_LINK;
+    desc = 'AI Interview — ' + selectedDiff.charAt(0).toUpperCase()+selectedDiff.slice(1) + ' level — Rs.99';
+  } else {
+    // Both — open SSB first, note AI separately
+    payLink = SSB_LINKS[bothSet];
+    desc = 'SSB Set ' + bothSet + ' + AI Interview (' + bothDiff + ') — Rs.198 total (2 separate payments)';
+  }
+
+  // Submit to Formspree for registration
+  submitToFormspree({
+    name, age, email, category, written, ssb, location,
+    offer: desc
+  });
+
+  // Show success state
+  document.getElementById('formBody').style.display = 'none';
+  var succ = document.getElementById('formSuccess');
+  succ.style.display = 'block';
+  document.getElementById('successName').textContent = 'Thank you, ' + name.split(' ')[0] + '.';
+  document.getElementById('successEmail').textContent = email;
+  document.getElementById('payLinkBox').textContent = desc;
+  document.getElementById('payNowBtn').href = payLink;
+  // Show 48-hr expiry note for AI purchases
+  var aiNote = document.getElementById('aiExpiryNote');
+  if (aiNote) {
+    aiNote.style.display = (selectedOffer==='ai' || selectedOffer==='both') ? 'block' : 'none';
+  }
+
+  // Open payment in new tab
+  window.open(payLink, '_blank');
+
+  // Mark AI 48-hr expiry start
+  if (selectedOffer === 'ai' || selectedOffer === 'both') {
+    markAISpecialFirstUse();
+  }
+
+  // If 'both', remind about second payment
+  if (selectedOffer==='both') {
+    setTimeout(function(){
+      var p = document.createElement('p');
+      p.style.cssText = 'font-size:.82rem;color:var(--gold2);margin-top:.6rem;font-style:italic';
+      p.textContent = 'After completing the SSB Set payment, please also pay Rs.99 for the AI Interview:';
+      var a = document.createElement('a');
+      a.href = AI_LINK; a.target = '_blank';
+      a.className = 'pay-now-btn';
+      a.style.fontSize = '.82rem';
+      a.style.padding = '.5rem 1.4rem';
+      a.style.marginTop = '.4rem';
+      a.style.display = 'inline-block';
+      a.textContent = 'Pay for AI Interview →';
+      succ.appendChild(p);
+      succ.appendChild(a);
+    }, 1200);
+  }
+}
+
+function showErr(msg) {
+  var err = document.getElementById('formErr');
+  err.textContent = msg;
+  err.style.display = 'block';
+}
+
+
+// ── AI INTERVIEW 48-HR EXPIRY ────────────────────────────────
+var AI_EXPIRY_KEY = 'lbd_ai_special_start';
+
+function markAISpecialFirstUse() {
+  try {
+    if (!localStorage.getItem(AI_EXPIRY_KEY)) {
+      localStorage.setItem(AI_EXPIRY_KEY, new Date().toISOString());
+    }
+  } catch(e) {}
+}
+
+function isAISpecialExpired() {
+  try {
+    var start = localStorage.getItem(AI_EXPIRY_KEY);
+    if (!start) return false;
+    return (new Date() - new Date(start)) > 48 * 3600 * 1000;
+  } catch(e) { return false; }
+}
+
+function getAIHoursRemaining() {
+  try {
+    var start = localStorage.getItem(AI_EXPIRY_KEY);
+    if (!start) return 48;
+    var hours = 48 - (new Date() - new Date(start)) / 3600000;
+    return Math.max(0, hours);
+  } catch(e) { return 48; }
+}
+
+function submitToFormspree(data) {
+  // Formspree submission — replace with your form ID if desired
+  // Currently using same Formspree as the application form
+  var FORMSPREE_URL = 'https://formspree.io/f/xeepyprw';
+  fetch(FORMSPREE_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      'Full Name':       data.name,
+      'Age':             data.age,
+      'Email':           data.email,
+      'Who I am':        data.category,
+      'Written Attempts':data.written,
+      'SSB Attempts':    data.ssb,
+      'Location':        data.location,
+      'Offer Selected':  data.offer,
+      '_subject':        'LBD Special Access — ' + data.name + ' · ' + data.offer
+    })
+  }).catch(function(e){ console.log('Formspree error:', e); });
+  // Silent — we never block the user flow on Formspree success/failure
+}
+</script>
+
+</body>
+</html>
