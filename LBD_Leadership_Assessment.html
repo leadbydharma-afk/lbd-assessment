@@ -1807,5 +1807,111 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 </script>
+
+<!-- ═══ MAY OFFER STRIP — remove June 1 or auto-hides ═══ -->
+<div id="mayOfferStrip" style="display:none">
+  <style>
+    #mayOfferStrip {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 9999;
+      background: linear-gradient(90deg, #6B1A1A 0%, #0D1F35 60%);
+      border-top: 1px solid rgba(240,202,122,.4);
+      padding: .55rem 1.2rem;
+      display: flex !important;
+      align-items: center;
+      justify-content: space-between;
+      gap: .8rem;
+      flex-wrap: wrap;
+    }
+    #mayOfferStrip .strip-left {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      flex-wrap: wrap;
+    }
+    #mayOfferStrip .strip-badge {
+      font-family: JetBrains Mono, monospace;
+      font-size: .58rem;
+      letter-spacing: .18em;
+      color: #f0ca7a;
+      white-space: nowrap;
+    }
+    #mayOfferStrip .strip-text {
+      font-family: Georgia, serif;
+      font-size: .88rem;
+      color: rgba(245,240,228,.85);
+    }
+    #mayOfferStrip .strip-cd {
+      font-family: JetBrains Mono, monospace;
+      font-size: .68rem;
+      color: rgba(240,202,122,.7);
+      white-space: nowrap;
+    }
+    #mayOfferStrip .strip-btn {
+      font-family: Georgia, serif;
+      font-size: .82rem;
+      font-weight: 500;
+      color: #0D1F35;
+      background: #B8963E;
+      border: none;
+      border-radius: 3px;
+      padding: .4rem 1.1rem;
+      cursor: pointer;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-block;
+      transition: background .2s;
+      flex-shrink: 0;
+    }
+    #mayOfferStrip .strip-btn:hover { background: #D4AC5A; }
+    #mayOfferStrip .strip-close {
+      background: none;
+      border: none;
+      color: rgba(245,240,228,.4);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0 .2rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    #mayOfferStrip .strip-close:hover { color: rgba(245,240,228,.8); }
+    @media (max-width: 520px) {
+      #mayOfferStrip .strip-cd { display: none; }
+      #mayOfferStrip .strip-text { font-size: .78rem; }
+    }
+  </style>
+  <div class="strip-left">
+    <span class="strip-badge">&#9733; MAY OFFER</span>
+    <span class="strip-text">Any SSB Set or AI Interview &mdash; <strong style="color:#f0ca7a">Rs.99</strong></span>
+    <span class="strip-cd" id="stripCd"></span>
+  </div>
+  <a class="strip-btn" href="https://leadbydharma-afk.github.io/lbd-assessment/special_access.html" target="_blank">
+    See Offer &rarr;
+  </a>
+  <button class="strip-close" onclick="document.getElementById('mayOfferStrip').style.display='none'" title="Close">&times;</button>
+</div>
+<script>
+(function(){
+  var d=new Date(), active=d.getFullYear()===2026&&d.getMonth()===4;
+  if(!active) return;
+  var strip=document.getElementById('mayOfferStrip');
+  if(!strip) return;
+  strip.style.display='flex';
+  // Add bottom padding to body so content isn't hidden behind strip
+  document.body.style.paddingBottom='52px';
+  // Countdown
+  function tick(){
+    var end=new Date('2026-06-01T00:00:00+05:30'),diff=end-new Date();
+    if(diff<=0){strip.style.display='none';return;}
+    var d2=Math.floor(diff/86400000),h=Math.floor(diff%86400000/3600000),m=Math.floor(diff%3600000/60000),s=Math.floor(diff%60000/1000);
+    var el=document.getElementById('stripCd');
+    if(el) el.textContent=d2+'d '+h+'h '+m+'m '+s+'s left';
+  }
+  tick(); setInterval(tick,1000);
+})();
+</script>
+<!-- ═══ END MAY OFFER STRIP ═══ -->
+
 </body>
 </html>
