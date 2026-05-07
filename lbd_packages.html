@@ -1419,39 +1419,44 @@ async function handleSubmit(e) {
 
 
 
+
+
 <!-- ═══ MAY OFFER STRIP ═══ -->
-<div id="mayOfferStrip">
-  <div class="strip-left">
-    <span class="strip-badge">&#9733; MAY OFFER</span>
-    <span class="strip-text">Any SSB Set or AI Interview &mdash; <strong style="color:#f0ca7a">Rs.99</strong></span>
-    <span class="strip-cd" id="stripCd"></span>
-  </div>
-  <a class="strip-btn" href="https://leadbydharma-afk.github.io/lbd-assessment/special_access.html" target="_blank">See Offer &rarr;</a>
-  <button class="strip-close" onclick="document.getElementById('mayOfferStrip').style.display='none'">&#215;</button>
-</div>
+<div id="lbdMayStrip" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:99999;font-family:Georgia,serif"></div>
 <script>
-window.addEventListener('load', function(){
-  var d = new Date();
-  var active = d.getFullYear() === 2026 && d.getMonth() === 4;
-  if (!active) return;
-  var strip = document.getElementById('mayOfferStrip');
-  if (!strip) return;
-  strip.classList.add('strip-visible');
-  document.body.style.paddingBottom = '56px';
+function lbdCloseStrip(){ document.getElementById('lbdMayStrip').style.display='none'; }
+(function(){
+  var d=new Date();
+  if(!(d.getFullYear()===2026 && d.getMonth()===4)) return;
+  var strip=document.getElementById('lbdMayStrip');
+  if(!strip) return;
+  strip.innerHTML=''
+    +'<div style="background:linear-gradient(90deg,#6B1A1A 0%,#0D1F35 55%);border-top:2px solid #B8963E;padding:.7rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap">'
+    +'<div style="display:flex;align-items:center;gap:.8rem;flex-wrap:wrap">'
+    +'<div style="background:#B8963E;color:#0D1F35;font-family:JetBrains Mono,monospace;font-size:.65rem;font-weight:700;letter-spacing:.18em;padding:.25rem .7rem;border-radius:2px;white-space:nowrap">&#9733; MAY 2026</div>'
+    +'<div style="color:#fff;font-size:1rem">'
+    +'<span style="color:#f0ca7a;font-size:1.15rem;font-weight:700">MAY MONTH OFFER</span>'
+    +' &mdash; Any SSB Set or AI Interview at '
+    +'<span style="color:#f0ca7a;font-size:1.2rem;font-weight:700">Rs.99</span>'
+    +'</div>'
+    +'<div id="lbdStripCd" style="font-family:JetBrains Mono,monospace;font-size:.7rem;color:rgba(240,202,122,.75);white-space:nowrap"></div>'
+    +'</div>'
+    +'<div style="display:flex;align-items:center;gap:.6rem;flex-shrink:0">'
+    +'<a href="https://leadbydharma-afk.github.io/lbd-assessment/special_access.html" target="_blank" style="background:#B8963E;color:#0D1F35;font-family:Georgia,serif;font-size:.92rem;font-weight:600;padding:.5rem 1.4rem;border-radius:3px;text-decoration:none;white-space:nowrap;display:inline-block">Explore Offer &#8594;</a>'
+    +'<button onclick="lbdCloseStrip()" style="background:none;border:none;color:rgba(245,240,228,.5);font-size:1.3rem;cursor:pointer;padding:0 .25rem;line-height:1">&#215;</button>'
+    +'</div>'
+    +'</div>';
+  strip.style.display='block';
+  document.body.style.paddingBottom='58px';
   function tick(){
-    var end = new Date('2026-06-01T00:00:00+05:30');
-    var diff = end - new Date();
-    if (diff <= 0) { strip.style.display = 'none'; return; }
-    var dd = Math.floor(diff/86400000);
-    var hh = Math.floor(diff%86400000/3600000);
-    var mm = Math.floor(diff%3600000/60000);
-    var ss = Math.floor(diff%60000/1000);
-    var el = document.getElementById('stripCd');
-    if (el) el.textContent = dd+'d '+hh+'h '+mm+'m '+ss+'s left';
+    var end=new Date('2026-06-01T00:00:00+05:30'),diff=end-new Date();
+    if(diff<=0){strip.style.display='none';return;}
+    var dd=Math.floor(diff/86400000),hh=Math.floor(diff%86400000/3600000),mm=Math.floor(diff%3600000/60000),ss=Math.floor(diff%60000/1000);
+    var el=document.getElementById('lbdStripCd');
+    if(el) el.textContent=dd+'d '+hh+'h '+mm+'m '+ss+'s remaining';
   }
-  tick();
-  setInterval(tick, 1000);
-});
+  tick(); setInterval(tick,1000);
+})();
 </script>
 <!-- ═══ END MAY OFFER STRIP ═══ -->
 
