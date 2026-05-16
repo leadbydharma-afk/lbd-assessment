@@ -10,7 +10,8 @@
   --navy:#1a3a5c;--navy2:#0d1f35;--gold:#c9a84c;--gold2:#e8c87a;
   --cream:#faf5e8;--cream2:#f0e8d0;--ink:#1a1a14;--ash:#7a7a6a;
   --green:#1a5c2e;--red:#8b1a1a;--amber:#8b5c00;--white:#ffffff;
-  --iq:#1a3a5c;--eq:#5c1a3a;--aq:#1a5c3a;--sq:#3a1a5c;
+  --iq:#1a3a5c;--eq:#5c1a3a;--aq:#1a5c3a;--vq: #5C4033;
+    --sq:#3a1a5c;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(--ink);min-height:100vh}
@@ -200,6 +201,7 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
   @media(max-width:520px){ #mayOfferStrip .strip-cd{display:none} #mayOfferStrip .strip-text{font-size:.78rem} }
 
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div class="hdr">
@@ -207,7 +209,7 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
   <h1>Know Your <span>Intelligence Profile</span></h1>
   <div class="hdr-sub">IQ · EQ · AQ · SQ — Four dimensions that determine officer potential</div>
   <div class="hdr-meta">
-    <span><b>80</b> Questions</span>
+    <span><b>93</b> Questions</span>
     <span><b>4</b> Dimensions</span>
     <span><b>~30 min</b></span>
     <span>Col Aniruddha Rao HR (Retd)</span>
@@ -347,112 +349,8 @@ function promoDaysLeft(code){
 var IQ_UNLOCKED = false;
 var IQ_DEMO = false;
 
-var IQ_CODES = {
-  "COLRAO-OWNER": {used:false, owner:true},
-  "DEMO-IQ-1":    {used:false, demo:true},
-
-  // IQ/EQ/AQ/SQ Assessment (Rs.199)
-  "LBD-YLWJ-IQ": {used:false},
-  "LBD-QQGY-IQ": {used:false},
-  "LBD-CQNQ-IQ": {used:false},
-  "LBD-NDMG-IQ": {used:false},
-  "LBD-QJDJ-IQ": {used:false},
-  "LBD-SCZN-IQ": {used:false},
-  "LBD-KWTM-IQ": {used:false},
-  "LBD-YZRN-IQ": {used:false},
-  "LBD-QNFZ-IQ": {used:false},
-  "LBD-YPXT-IQ": {used:false},
-  "LBD-BRLT-IQ": {used:false},
-  "LBD-QLPF-IQ": {used:false},
-  "LBD-TRBR-IQ": {used:false},
-  "LBD-GQYR-IQ": {used:false},
-  "LBD-YCXH-IQ": {used:false},
-  "LBD-WMQB-IQ": {used:false},
-  "LBD-SFZY-IQ": {used:false},
-  "LBD-QKRP-IQ": {used:false},
-  "LBD-BKDY-IQ": {used:false},
-  "LBD-NWRJ-IQ": {used:false},
-  "LBD-STPH-IQ": {used:false},
-  "LBD-TNQR-IQ": {used:false},
-  "LBD-NWKK-IQ": {used:false},
-  "LBD-KYVP-IQ": {used:false},
-  "LBD-WXMM-IQ": {used:false},
-  "LBD-RCLT-IQ": {used:false},
-  "LBD-QYCC-IQ": {used:false},
-  "LBD-RTFP-IQ": {used:false},
-  "LBD-JJMR-IQ": {used:false},
-  "LBD-JGNX-IQ": {used:false},
-  "LBD-CHHB-IQ": {used:false},
-  "LBD-RDXJ-IQ": {used:false},
-  "LBD-SJZC-IQ": {used:false},
-  "LBD-NQDT-IQ": {used:false},
-  "LBD-MBPF-IQ": {used:false},
-  "LBD-TBYW-IQ": {used:false},
-  "LBD-SSMP-IQ": {used:false},
-  "LBD-MXDM-IQ": {used:false},
-  "LBD-XKMY-IQ": {used:false},
-  "LBD-YXKR-IQ": {used:false},
-  "LBD-SQMT-IQ": {used:false},
-  "LBD-WHJB-IQ": {used:false},
-  "LBD-GLPM-IQ": {used:false},
-  "LBD-GQKP-IQ": {used:false},
-  "LBD-HMQK-IQ": {used:false},
-  "LBD-JCGK-IQ": {used:false},
-  "LBD-QTCW-IQ": {used:false},
-  "LBD-RHWY-IQ": {used:false},
-  "LBD-YWPQ-IQ": {used:false},
-  "LBD-FWVW-IQ": {used:false},
-  "LBD-SSQM-IQ": {used:false},
-  "LBD-PJLJ-IQ": {used:false},
-  "LBD-LXZV-IQ": {used:false},
-  "LBD-WWKP-IQ": {used:false},
-  "LBD-TSCJ-IQ": {used:false},
-  "LBD-PYQR-IQ": {used:false},
-  "LBD-QCQZ-IQ": {used:false},
-  "LBD-NJJZ-IQ": {used:false},
-  "LBD-SQVB-IQ": {used:false},
-  "LBD-HPKR-IQ": {used:false},
-  "LBD-MPGW-IQ": {used:false},
-  "LBD-MDTQ-IQ": {used:false},
-  "LBD-GWDG-IQ": {used:false},
-  "LBD-FPKJ-IQ": {used:false},
-  "LBD-LWBP-IQ": {used:false},
-  "LBD-VMCT-IQ": {used:false},
-  "LBD-RSJB-IQ": {used:false},
-  "LBD-NYXS-IQ": {used:false},
-  "LBD-XQSR-IQ": {used:false},
-  "LBD-LLVV-IQ": {used:false},
-  "LBD-MTSD-IQ": {used:false},
-  "LBD-KWCS-IQ": {used:false},
-  "LBD-ZZTT-IQ": {used:false},
-  "LBD-LHSS-IQ": {used:false},
-  "LBD-KFWT-IQ": {used:false},
-  "LBD-NTPF-IQ": {used:false},
-  "LBD-VVGC-IQ": {used:false},
-  "LBD-ZJKT-IQ": {used:false},
-  "LBD-NXQQ-IQ": {used:false},
-  "LBD-PPCM-IQ": {used:false},
-  "LBD-FKTL-IQ": {used:false},
-  "LBD-NVFH-IQ": {used:false},
-  "LBD-BGCX-IQ": {used:false},
-  "LBD-SNHP-IQ": {used:false},
-  "LBD-RCQP-IQ": {used:false},
-  "LBD-QQXL-IQ": {used:false},
-  "LBD-LYMZ-IQ": {used:false},
-  "LBD-LSBQ-IQ": {used:false},
-  "LBD-VZSH-IQ": {used:false},
-  "LBD-XHDZ-IQ": {used:false},
-  "LBD-MBNK-IQ": {used:false},
-  "LBD-DBPJ-IQ": {used:false},
-  "LBD-QPKV-IQ": {used:false},
-  "LBD-RXDP-IQ": {used:false},
-  "LBD-GRLG-IQ": {used:false},
-  "LBD-HFDT-IQ": {used:false},
-  "LBD-GVPP-IQ": {used:false},
-  "LBD-BXCM-IQ": {used:false},
-  "LBD-HNQT-IQ": {used:false},
-  "LBD-KFXD-IQ": {used:false},
-};;
+// IQ_CODES removed — validation via Supabase
+;;
 
 function showUnlockAfterPay() {
   setTimeout(function() {
@@ -461,24 +359,45 @@ function showUnlockAfterPay() {
   }, 800);
 }
 
-function redeemIQCode() {
-  var code = document.getElementById("iqCodeInput").value.trim().toUpperCase();
-  var errEl = document.getElementById("iqCodeErr");
-  errEl.style.display = "none";
+
+// ── Supabase — secure code validation ────────────────────────
+const supabaseUrl = 'https://cyguqfqmnjtjoztcjres.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Z3VxZnFtbmp0am96dGNqcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTcwMzEsImV4cCI6MjA5Mzc5MzAzMX0.sCi_iXTN18gVjXIQPqewpAjVRmM2gSgMKJpYsV1m7QM';
+const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+async function redeemIQCode() {
+  var code = document.getElementById('iqCodeInput').value.trim().toUpperCase();
+  var errEl = document.getElementById('iqCodeErr');
+  var btn = document.querySelector('#unlockBox button') || document.querySelector('.btn-primary');
+  errEl.style.display = 'none';
   if (!code) return;
-  if (code === "DEMO-IQ-1" || code === "LBD-DEMO-IQ") {
+
+  // Demo codes — local, no Supabase needed
+  if (code === 'DEMO-IQ-1' || code === 'LBD-DEMO-IQ') {
     launchIQDemo(); return;
   }
-  if (IQ_CODES[code] && !IQ_CODES[code].used) {
-    if (!IQ_CODES[code].owner) IQ_CODES[code].used = true;  // owner code never expires
+
+  // All other codes — validate via Supabase
+  if (btn) { btn.textContent = 'Checking...'; btn.disabled = true; }
+
+  const { data, error } = await _supabase.rpc('verify_access_code', { input_code: code });
+
+  if (btn) { btn.textContent = 'Unlock →'; btn.disabled = false; }
+
+  if (error) {
+    errEl.textContent = 'System error. Please try again or contact leadbydharma@gmail.com';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const result = data && data[0];
+  if (result && result.is_valid) {
     IQ_UNLOCKED = true;
-    document.getElementById("payGate").classList.add("hidden");
-    document.getElementById("introPage").classList.remove("hidden");
-  } else if (IQ_CODES[code] && IQ_CODES[code].used) {
-    errEl.textContent = "This code has already been used.";
-    errEl.style.display = "block";
+    document.getElementById('payGate').classList.add('hidden');
+    document.getElementById('introPage').classList.remove('hidden');
   } else {
-    errEl.style.display = "block";
+    errEl.textContent = 'Invalid, expired, or already used code. Contact leadbydharma@gmail.com';
+    errEl.style.display = 'block';
   }
 }
 
@@ -498,7 +417,7 @@ function launchIQDemo() {
 }
 
 // ═══════════════════════════════════════════
-//  QUESTION BANK — 80 questions, 4 domains, 20 each
+//  QUESTION BANK — 93 questions, 4 domains, 20 each
 // ═══════════════════════════════════════════
 const DOMAINS = [
   {
@@ -567,6 +486,11 @@ const DOMAINS = [
       {id:'EQ13',type:'scale',text:'When I make a mistake, I can acknowledge it honestly without either excessive self-criticism or defensive justification.',reverse:false},
       {id:'EQ14',type:'scale',text:'I can accurately sense when someone needs practical help versus when they simply need to be heard.',reverse:false},
       {id:'EQ15',type:'scale',text:'My mood does not significantly affect the quality of my work or the way I treat others.',reverse:false},
+      {id:'EQ_FD1',type:'scale',reverse:true,fd:true,
+       text:'I rarely, if ever, feel genuinely envious, resentful, or petty toward others.',
+       scores:{1:5,2:4,3:3,4:1,5:0},
+       fd:true,
+       fd_note:'Claiming near-total absence of negative emotions indicates low self-awareness or social desirability bias. Genuine EQ includes accurate recognition of all emotional states, including difficult ones.'},
       {id:'EQ16',type:'mcq',text:'A peer you are competing with for a position receives the role instead of you. What is most emotionally intelligent?',
        opts:['Congratulate them genuinely and reflect on what you can develop','Be professionally polite but privately acknowledge the disappointment and move on','Show you are unaffected — emotions are a sign of weakness','Ask for detailed feedback from the decision-maker immediately'],
        scores:[5,4,1,2]},
@@ -591,8 +515,8 @@ const DOMAINS = [
       {id:'AQ4',type:'scale',text:'Stressful conditions tend to sharpen my focus rather than diminish it.',reverse:false},
       {id:'AQ5',type:'scale',text:'I take genuine ownership of bad outcomes I am part of — even when others were also responsible.',reverse:false},
       {id:'AQ6',type:'mcq',text:'You are given an extremely difficult task with inadequate resources and a tight deadline. You:',
-       opts:['Push back on the timeline — this sets you up to fail','Do what you can with what you have and report progress honestly','Ask which parts of the task can be deprioritised','Accept the task without comment and find a way'],
-       scores:[2,3,2,5]},
+       opts:['Push back on the timeline — this sets you up to fail','Clarify constraints with your superior, then commit fully and deliver maximum possible','Accept without comment and attempt everything regardless of outcome','Ask which parts of the task can be deprioritised'],
+       scores:[2,5,2,3]},
       {id:'AQ7',type:'scale',text:'I believe that most outcomes in my life are significantly within my control, regardless of circumstances.',reverse:false},
       {id:'AQ8',type:'scale',text:'I can function effectively in a state of significant physical or mental fatigue.',reverse:false},
       {id:'AQ9',type:'mcq',text:'Despite working extremely hard, you receive negative feedback three times in a row. You:',
@@ -605,6 +529,11 @@ const DOMAINS = [
        scores:[5,2,1,1]},
       {id:'AQ13',type:'scale',text:'When I fail, the recovery time — time before I am fully functional again — is short relative to most people I know.',reverse:false},
       {id:'AQ14',type:'scale',text:'I do not require external praise or recognition to maintain my effort and commitment.',reverse:false},
+      {id:'AQ_FD1',type:'scale',reverse:true,fd:true,
+       text:'I have never doubted myself in a situation where I had to lead others.',
+       scores:{1:5,2:4,3:3,4:1,5:0},
+       fd:true,
+       fd_note:'Complete absence of self-doubt under leadership pressure is a faking indicator. Genuine resilience involves managing doubt, not its absence.'},
       {id:'AQ15',type:'scale',text:'Obstacles make me more determined, not less.',reverse:false},
       {id:'AQ16',type:'mcq',text:'You are physically and mentally exhausted but the task is not yet complete. You:',
        opts:['Stop — rest is essential for performance quality','Push through and complete it despite the cost','Identify the minimum acceptable state and complete to that standard','Delegate what remains and recuperate'],
@@ -638,6 +567,11 @@ const DOMAINS = [
        opts:['Name yourself first','Name all three equally with accurate descriptions of each contribution','Say it was a team effort without naming anyone','Defer entirely — let others describe the contributions'],
        scores:[2,5,3,1]},
       {id:'SQ10',type:'scale',text:'I can tell when someone is performing social confidence versus genuinely feeling it.',reverse:false},
+      {id:'SQ_FD1',type:'scale',reverse:true,fd:true,
+       text:'I always instinctively know the right thing to say in social situations.',
+       scores:{1:5,2:4,3:3,4:1,5:0},
+       fd:true,
+       fd_note:'High social certainty is a faking indicator. Genuine social intelligence includes awareness of ambiguity and uncertainty in social situations.'},
       {id:'SQ11',type:'scale',text:'I have never deliberately undermined someone to make myself look better.',reverse:false},
       {id:'SQ12',type:'mcq',text:'You are in a group where one quiet member has a genuinely good idea but is unable to articulate it effectively. You:',
        opts:['Let them struggle — they need to develop their own voice','Help them develop the idea and ensure they get the credit for it','Take the idea and present it yourself — execution is what matters','Ask the group to give them more time'],
@@ -654,6 +588,45 @@ const DOMAINS = [
        opts:['Maintain professional distance','Get curious — seek to understand the context behind the behaviour before drawing conclusions','Raise it indirectly so they can adjust','Accept it without engaging — different people operate differently'],
        scores:[2,5,1,3]},
       {id:'SQ20',type:'scale',text:'In social situations I genuinely enjoy, I lose track of time — social energy does not drain me.',reverse:false},
+    ]
+  },
+  {
+    id:'VQ',
+    title:'Values Quotient (VQ)',
+    badge:'badge-vq',
+    color:'var(--vq)',
+    desc:'Measures ethical orientation, duty alignment, institutional values, and character under moral pressure. (10 questions)',
+    questions:[
+      {id:'VQ1',type:'mcq',
+       text:'You discover that a close friend has been dishonest in a way that materially harmed someone else. No one else knows. You:',
+       opts:['Say nothing — loyalty to a friend comes first','Confront privately and insist they make it right','Report it immediately regardless of the friendship','Confront privately, give them a chance to self-correct, then escalate if they do not'],
+       scores:[0,3,3,5]},
+      {id:'VQ2',type:'scale',
+       text:'I would take a significant personal cost — professional setback, loss of comfort, public criticism — to prevent an ethical compromise I was part of.'},
+      {id:'VQ3',type:'mcq',
+       text:'You are offered a significantly better role elsewhere. Your current organisation genuinely needs you and your departure would harm an ongoing mission. You:',
+       opts:['Accept — your family and future come first','Decline and stay until the mission is complete','Ask to defer until the mission is stable, then decide honestly','Accept, but stay through a thorough handover period'],
+       scores:[2,4,5,3]},
+      {id:'VQ4',type:'scale',
+       text:'I believe that how you do something matters as much as whether you succeed — the means are as important as the outcome.'},
+      {id:'VQ5',type:'mcq',
+       text:'Your superior gives a lawful instruction you believe is ethically questionable but not clearly wrong. You:',
+       opts:['Carry it out without comment','Carry it out but document your concern privately','State your concern clearly to your superior before carrying it out','Refuse until you understand the full reasoning'],
+       scores:[1,2,5,3]},
+      {id:'VQ6',type:'scale',
+       text:'When no one is watching and there is no consequence either way, I behave the same way I would if my actions were being observed.'},
+      {id:'VQ7',type:'mcq',
+       text:'You are part of a team that achieved something significant. The senior officer credits only themselves in the official report. You:',
+       opts:['Say nothing — challenging superiors creates problems','Raise it privately with the senior officer','Document the accurate account and raise it through appropriate channels','Accept it — institutional credit disputes are rarely worth the cost'],
+       scores:[0,3,5,2]},
+      {id:'VQ8',type:'scale',
+       text:'I would rather fail attempting the right thing than succeed by compromising my values.'},
+      {id:'VQ9',type:'mcq',
+       text:'You discover a shortcut that saves significant effort. The rules require the longer method. No harm would result from the shortcut. You:',
+       opts:['Use the shortcut — pragmatism over procedure','Follow the correct procedure and flag the inefficiency to improve the system','Use the shortcut once to test it','Follow the procedure without comment'],
+       scores:[1,5,2,3]},
+      {id:'VQ10',type:'scale',
+       text:'I feel genuine discomfort — not just intellectual disapproval — when I witness dishonesty or unfairness, even when it does not affect me directly.'},
     ]
   }
 ];
@@ -890,6 +863,27 @@ Low social intelligence at the SSB level does not mean you are cold or unfriendl
 The SSB will observe your social intelligence across every single interaction for five days. There is no stage of the assessment where it is not relevant. In the group tasks, in the meals, in the informal moments, in the conference — social intelligence or its absence is continuously visible.
 
 The only real development path is experiential: place yourself in sustained social situations significantly outside your comfort range, over months, with genuine engagement rather than polite endurance. The military — in its diversity of people, backgrounds, and circumstances — will demand this of you for your entire career. Begin building the capacity now.`
+    },
+    VQ:{
+      h:`Your values profile is strong — and I want to be direct about what this means in the Armed Forces context.
+
+The SSB selects for character before competence. An officer with strong skills and weak values is a liability. An officer with average skills and strong values is an asset. Your responses indicate your ethical orientation is genuine rather than performed. You take real costs for your principles. You hold the same standards privately that you hold publicly. You flag uncomfortable truths rather than avoid them.
+
+In a military career, this matters more than almost anything else. The defining moments are not the heroic visible ones — they are the small private ones. The decision made when no one is watching. The truth told when it is inconvenient. The shortcut not taken when no one would have known. Your profile suggests you make these decisions correctly, consistently.
+
+The SSB will test this. Your career will test it many more times. Maintain it.`,
+
+      m:`Your values profile is functional but inconsistent. There are areas where pragmatism or self-interest override ethical orientation in ways that will be visible in your SSB — particularly in SDT and the Personal Interview.
+
+You correctly identify the ethical choice but tend to qualify it with practical concerns — cost, consequence, relationships. This reflects real-world thinking. But the SSB assesses your orientation: when there is a conflict between what is right and what is convenient, which direction does your instinct pull?
+
+The development work here is not about learning the right answers. You already know them. It is about examining why you pull back from them in practice. The Armed Forces require moral orientation — a consistent directional pull toward the right choice under pressure. Your profile shows this is present but inconsistently operational.`,
+
+      w:`Your values profile shows significant gaps that will be visible in your SSB. I will be direct because it serves you better than reassurance.
+
+Your responses show a strong orientation toward pragmatism, self-interest, or loyalty to individuals over institutions. These are common human orientations. They are significant SSB negatives — not because the SSB expects moral perfection, but because the Armed Forces function on institutional trust. An officer who places personal loyalty or convenience above institutional values creates systemic risk.
+
+The effective route forward is not to memorise right answers — SSB assessors identify candidates who perform values rather than hold them. It is to genuinely examine your ethical reasoning, case by case. If you are preparing for an SSB board soon, I would strongly recommend Col Rao's mentorship programme for this dimension specifically.`
     }
   };
   const lvl=pct>=75?'h':pct>=52?'m':'w';
@@ -897,13 +891,28 @@ The only real development path is experiential: place yourself in sustained soci
 }
 
 function genReport(){
-  const iq=score('IQ'), eq=score('EQ'), aq=score('AQ'), sq=score('SQ');
-  const overall=Math.round((iq.pct+eq.pct+aq.pct+sq.pct)/4);
+  const iq=score('IQ'), eq=score('EQ'), aq=score('AQ'), sq=score('SQ'), vq=score('VQ');
+  const overall=Math.round((iq.pct+eq.pct+aq.pct+sq.pct+vq.pct)/5);
+
+  // FD validity check — flag if faking detection items score too low
+  // (high social desirability = reverse items answered 1-2 = stored as 4-5 = high average)
+  const fdItems=['EQ_FD1','SQ_FD1','AQ_FD1'];
+  let fdTotal=0, fdCount=0;
+  fdItems.forEach(function(id){
+    if(resp[id]!==undefined){ fdTotal+=resp[id]; fdCount++; }
+  });
+  const fdAvg = fdCount>0 ? fdTotal/fdCount : 3;
+  // fdAvg > 4.0 means candidate answered "strongly agree" to faking items
+  // which after reverse scoring means they claimed implausible perfection
+  const fdFlag = fdAvg >= 4.2; // flag if 2+ FD items answered at extreme social desirability
+
 
   let verdict,vclass;
-  if(overall>=72){verdict='Strong Intelligence Profile — Officer-Ready Foundations';vclass='flag-s';}
+  if(overall>=72){verdict='Strong Profile — Officer-Ready Foundations';vclass='flag-s';}
   else if(overall>=54){verdict='Developing Profile — Targeted Work Required';vclass='flag-m';}
   else{verdict='Foundational Gaps — Sustained Development Needed';vclass='flag-w';}
+  // Override verdict if FD flags indicate social desirability bias
+  const fdWarning = fdFlag ? '<div style="background:rgba(184,150,62,.12);border:1px solid rgba(184,150,62,.3);border-radius:4px;padding:.6rem .9rem;margin:.8rem 0;font-size:.85rem;color:var(--gold2)"><strong>Validity Note:</strong> Your responses to certain items suggest a pattern of social desirability — answering what you believe an interviewer wants to see rather than your genuine experience. This does not invalidate your results, but your scores on EQ and SQ in particular may be inflated. Genuine self-assessment produces more accurate — and more useful — results.</div>' : '';
 
   document.getElementById('testSections').classList.add('hidden');
   const rDiv=document.getElementById('report');
@@ -927,6 +936,7 @@ function genReport(){
         {id:'EQ',label:'Emotional Intelligence',s:eq,cls:'qs-eq'},
         {id:'AQ',label:'Adversity Quotient',s:aq,cls:'qs-aq'},
         {id:'SQ',label:'Social Intelligence',s:sq,cls:'qs-sq'},
+        {id:'VQ',label:'Values Quotient',s:vq,cls:'qs-vq'},
       ].map(({id,label,s,cls})=>{
         const [fc,fl]=flag(s.pct);
         return`<div class="qs-card ${cls}">
@@ -937,7 +947,8 @@ function genReport(){
         </div>`;
       }).join('')}
     </div>
-    ${['IQ','EQ','AQ','SQ'].map(id=>{
+    ${fdWarning}
+    ${['IQ','EQ','AQ','SQ','VQ'].map(id=>{
       const s=score(id);
       const d=DOMAINS.find(x=>x.id===id);
       return`<div class="rpt-sec">

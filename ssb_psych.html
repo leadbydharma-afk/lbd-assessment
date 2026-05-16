@@ -171,6 +171,7 @@ body{font-family:Crimson Pro,Georgia,serif;background:var(--cream);color:var(--i
   @media(max-width:520px){ #mayOfferStrip .strip-cd{display:none} #mayOfferStrip .strip-text{font-size:.78rem} }
 
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div class="hdr">
@@ -237,66 +238,7 @@ body{font-family:Crimson Pro,Georgia,serif;background:var(--cream);color:var(--i
   <div class="unlock-gate">
     <div class="ug-icon">&#128274;</div>
     <div class="ug-title">Enter Your Access Code</div>
-    <div class="ug-sub">Check your email for the code sent after payment. WhatsApp +91 98789 30879 if you need help.</div>
-    <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:.8rem">
-      <input class="inp" id="accessCodeInput" type="text" placeholder="Enter access code..."
-        style="max-width:260px;text-align:center;font-family:JetBrains Mono,monospace;letter-spacing:.15em;text-transform:uppercase"
-        onkeydown="if(event.key==='Enter') redeemCode()"/>
-      <button class="btn btn-primary" onclick="redeemCode()">Unlock &#8594;</button>
-    </div>
-    <div id="codeError" style="color:var(--red);font-family:JetBrains Mono,monospace;font-size:1.02rem;margin-top:.5rem;display:none">Invalid or already used code. Contact leadbydharma@gmail.com</div>
-    <div style="margin-top:.8rem"><button class="btn btn-outline" style="font-size:1.4rem;padding:.4rem 1rem" onclick="goStore()">&#8592; Back to store</button></div>
-  </div>
-</div>
-
-
-<div id="mainMenu" class="hidden">
-  <div style="background:rgba(26,92,46,.07);border:1px solid rgba(26,92,46,.2);border-radius:2px;padding:.6rem 1rem;font-family:JetBrains Mono,monospace;font-size:.88rem;color:var(--green);margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
-    <span id="unlockedLabel">&#10003; Sets unlocked</span>
-    <button onclick="goStore()" style="background:none;border:1px solid rgba(26,92,46,.3);color:var(--green);font-family:JetBrains Mono,monospace;font-size:1.05rem;padding:.15rem .5rem;border-radius:2px;cursor:pointer">Buy more sets</button>
-  </div>
-  <h2 style="font-family:Playfair Display,serif;font-size:1.4rem;color:var(--navy);margin:0 0 .4rem">Select Your Practice Test</h2>
-  <p style="font-size:1.02rem;color:var(--ash);margin-bottom:1rem;font-style:italic">Each test uses one set from your unlocked sets.</p>
-  <div id="setUsageInfo" style="font-size:.94rem;color:var(--ash);font-style:italic;margin-bottom:.8rem;padding:.5rem .7rem;background:var(--cream2);border-radius:2px"></div>
-  <div class="menu-grid">
-    <div class="menu-card" onclick="selectTest('SRT')">
-      <div class="mc-icon">&#9889;</div>
-      <div class="mc-title">SRT</div>
-      <div class="mc-desc">Situation Reaction Test<br>60 situations &middot; 30 min<br>React — don't deliberate</div>
-    </div>
-    <div class="menu-card" onclick="selectTest('WAT')">
-      <div class="mc-icon">&#128161;</div>
-      <div class="mc-title">WAT</div>
-      <div class="mc-desc">Word Association Test<br>60 words &middot; 15 min<br>First thought wins</div>
-    </div>
-    <div class="menu-card" onclick="selectTest('SDT')">
-      <div class="mc-icon">&#129391;</div>
-      <div class="mc-title">SDT</div>
-      <div class="mc-desc">Self Description Test<br>5 sections &middot; 15 min<br>Be ruthlessly honest</div>
-    </div>
-    <div class="menu-card" id="aiInterviewCard" onclick="openAIInterview()" style="display:none">
-      <div class="mc-icon">&#127908;</div>
-      <div class="mc-title">AI Interview</div>
-      <div class="mc-desc">Personal Interview Simulation<br>12 questions &middot; Col Rao AI<br>Scored report with feedback</div>
-    </div>
-  </div>
-</div>
-
-<div id="testArea" class="hidden"></div>
-<div id="reportArea" class="hidden"></div>
-
-<div class="ftr">
-  &copy; 2026 LEAD BY DHARMA &middot; leadbydharma.com &middot; Col Aniruddha Rao HR (Retd) &middot; Maratha Light Infantry<br>
-  <span style="font-size:1.02rem;opacity:.7">Educational practice tool only &middot; Not an official SSB test &middot; Not affiliated with SSB or MoD</span>
-</div>
-</div>
-
-<script>
-// =====================================================
-// PRICING & ACCESS CONTROL
-// =====================================================
-var PRICING = [
-  {sets:1, price:149, orig:149, save:0, pct:0, label:"Single Set", bestValue:false},
+    <div class="ug-sub">Check your email for the code sent after payment. WhatsApp +91 98789 30879 ,
   {sets:2, price:289, orig:298, save:9, pct:3, label:"Duo Pack", bestValue:false},
   {sets:3, price:399, orig:447, save:48, pct:11, label:"Triple Pack", bestValue:false},
   {sets:4, price:499, orig:596, save:97, pct:16, label:"Quad Pack", bestValue:false},
@@ -311,8 +253,6 @@ var PRICING = [
 // Example codes below — replace with your actual code list
 // Code format: LBD-XXXX-N (last digit = number of sets)
 var VALID_CODES = {
-  // OWNER MASTER CODE — full access, never expires, never used-up
-  "COLRAO-OWNER": {sets:7, used:false, owner:true, ai:true},
   // DEMO codes (always valid, set 1 only)
   "DEMO-FREE-1": {sets:1, used:false, demo:true},
   // Production codes — generate and manage these yourself

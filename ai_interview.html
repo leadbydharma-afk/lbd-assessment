@@ -188,6 +188,7 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
   @media(max-width:520px){ #mayOfferStrip .strip-cd{display:none} #mayOfferStrip .strip-text{font-size:.78rem} }
 
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div class="hdr">
@@ -694,217 +695,8 @@ document.addEventListener("DOMContentLoaded", function() {
 // aiUses tracks remaining interviews (default 3)
 // Persisted in localStorage but code is source of truth
 // =====================================================
-var AI_CODES = {
-  "COLRAO-OWNER": {uses:999, owner:true},
-  "DEMO-AI-1":    {uses:3, type:"standalone", demo:true},
-
-  // Standalone AI Interview (Rs.499)
-  "LBD-DSCX-AI": {uses:3, type:"standalone"},
-  "LBD-BBMN-AI": {uses:3, type:"standalone"},
-  "LBD-PLWW-AI": {uses:3, type:"standalone"},
-  "LBD-KJFG-AI": {uses:3, type:"standalone"},
-  "LBD-MQYH-AI": {uses:3, type:"standalone"},
-  "LBD-PNXW-AI": {uses:3, type:"standalone"},
-  "LBD-CSXY-AI": {uses:3, type:"standalone"},
-  "LBD-NBJG-AI": {uses:3, type:"standalone"},
-  "LBD-LGHB-AI": {uses:3, type:"standalone"},
-  "LBD-LZGZ-AI": {uses:3, type:"standalone"},
-  "LBD-LKVN-AI": {uses:3, type:"standalone"},
-  "LBD-QLVK-AI": {uses:3, type:"standalone"},
-  "LBD-RHVR-AI": {uses:3, type:"standalone"},
-  "LBD-GYBR-AI": {uses:3, type:"standalone"},
-  "LBD-JBHL-AI": {uses:3, type:"standalone"},
-  "LBD-LKJM-AI": {uses:3, type:"standalone"},
-  "LBD-FJYJ-AI": {uses:3, type:"standalone"},
-  "LBD-SJJB-AI": {uses:3, type:"standalone"},
-  "LBD-ZHNR-AI": {uses:3, type:"standalone"},
-  "LBD-FWBX-AI": {uses:3, type:"standalone"},
-  "LBD-GHGQ-AI": {uses:3, type:"standalone"},
-  "LBD-ZXWC-AI": {uses:3, type:"standalone"},
-  "LBD-PQVQ-AI": {uses:3, type:"standalone"},
-  "LBD-VNRW-AI": {uses:3, type:"standalone"},
-  "LBD-NPXW-AI": {uses:3, type:"standalone"},
-  "LBD-GPPJ-AI": {uses:3, type:"standalone"},
-  "LBD-FNKF-AI": {uses:3, type:"standalone"},
-  "LBD-PFVR-AI": {uses:3, type:"standalone"},
-  "LBD-JLBV-AI": {uses:3, type:"standalone"},
-  "LBD-WQKD-AI": {uses:3, type:"standalone"},
-  "LBD-PVLQ-AI": {uses:3, type:"standalone"},
-  "LBD-WBNK-AI": {uses:3, type:"standalone"},
-  "LBD-WXYZ-AI": {uses:3, type:"standalone"},
-  "LBD-JXYK-AI": {uses:3, type:"standalone"},
-  "LBD-TGGH-AI": {uses:3, type:"standalone"},
-  "LBD-PKXP-AI": {uses:3, type:"standalone"},
-  "LBD-SGFX-AI": {uses:3, type:"standalone"},
-  "LBD-DFWK-AI": {uses:3, type:"standalone"},
-  "LBD-XQFX-AI": {uses:3, type:"standalone"},
-  "LBD-JWLZ-AI": {uses:3, type:"standalone"},
-  "LBD-ZDFN-AI": {uses:3, type:"standalone"},
-  "LBD-KRQX-AI": {uses:3, type:"standalone"},
-  "LBD-YLYC-AI": {uses:3, type:"standalone"},
-  "LBD-QTBD-AI": {uses:3, type:"standalone"},
-  "LBD-HSRY-AI": {uses:3, type:"standalone"},
-  "LBD-JJXQ-AI": {uses:3, type:"standalone"},
-  "LBD-FWHZ-AI": {uses:3, type:"standalone"},
-  "LBD-LCCP-AI": {uses:3, type:"standalone"},
-  "LBD-YWYB-AI": {uses:3, type:"standalone"},
-  "LBD-CVHH-AI": {uses:3, type:"standalone"},
-  "LBD-SCVY-AI": {uses:3, type:"standalone"},
-  "LBD-HCHF-AI": {uses:3, type:"standalone"},
-  "LBD-LWRP-AI": {uses:3, type:"standalone"},
-  "LBD-HYKC-AI": {uses:3, type:"standalone"},
-  "LBD-JMDR-AI": {uses:3, type:"standalone"},
-  "LBD-PMWJ-AI": {uses:3, type:"standalone"},
-  "LBD-WHCQ-AI": {uses:3, type:"standalone"},
-  "LBD-ZPFL-AI": {uses:3, type:"standalone"},
-  "LBD-BWMQ-AI": {uses:3, type:"standalone"},
-  "LBD-TCGN-AI": {uses:3, type:"standalone"},
-  "LBD-KMBH-AI": {uses:3, type:"standalone"},
-  "LBD-CTLB-AI": {uses:3, type:"standalone"},
-  "LBD-DTLR-AI": {uses:3, type:"standalone"},
-  "LBD-MRHW-AI": {uses:3, type:"standalone"},
-  "LBD-LJBT-AI": {uses:3, type:"standalone"},
-  "LBD-CLBN-AI": {uses:3, type:"standalone"},
-  "LBD-CNPQ-AI": {uses:3, type:"standalone"},
-  "LBD-BCWD-AI": {uses:3, type:"standalone"},
-  "LBD-KKSZ-AI": {uses:3, type:"standalone"},
-  "LBD-XPXW-AI": {uses:3, type:"standalone"},
-  "LBD-TNXR-AI": {uses:3, type:"standalone"},
-  "LBD-GXCW-AI": {uses:3, type:"standalone"},
-  "LBD-LDRN-AI": {uses:3, type:"standalone"},
-  "LBD-DSQQ-AI": {uses:3, type:"standalone"},
-  "LBD-JTYQ-AI": {uses:3, type:"standalone"},
-  "LBD-VSHR-AI": {uses:3, type:"standalone"},
-  "LBD-WQQF-AI": {uses:3, type:"standalone"},
-  "LBD-JGZR-AI": {uses:3, type:"standalone"},
-  "LBD-CVDM-AI": {uses:3, type:"standalone"},
-  "LBD-DYBG-AI": {uses:3, type:"standalone"},
-  "LBD-WMPN-AI": {uses:3, type:"standalone"},
-  "LBD-MCQF-AI": {uses:3, type:"standalone"},
-  "LBD-ZSFW-AI": {uses:3, type:"standalone"},
-  "LBD-NDJN-AI": {uses:3, type:"standalone"},
-  "LBD-NBVX-AI": {uses:3, type:"standalone"},
-  "LBD-SHBJ-AI": {uses:3, type:"standalone"},
-  "LBD-FLNS-AI": {uses:3, type:"standalone"},
-  "LBD-HTPV-AI": {uses:3, type:"standalone"},
-  "LBD-DQCC-AI": {uses:3, type:"standalone"},
-  "LBD-MBQP-AI": {uses:3, type:"standalone"},
-  "LBD-SLCB-AI": {uses:3, type:"standalone"},
-  "LBD-PPCV-AI": {uses:3, type:"standalone"},
-  "LBD-ZHLW-AI": {uses:3, type:"standalone"},
-  "LBD-ZVZB-AI": {uses:3, type:"standalone"},
-  "LBD-SDKN-AI": {uses:3, type:"standalone"},
-  "LBD-LYXR-AI": {uses:3, type:"standalone"},
-  "LBD-QKCK-AI": {uses:3, type:"standalone"},
-  "LBD-LSVY-AI": {uses:3, type:"standalone"},
-  "LBD-LPJW-AI": {uses:3, type:"standalone"},
-  "LBD-GNNS-AI": {uses:3, type:"standalone"},
-
-  // Readiness Pack codes also work here (added via SSB file)
-  // RP codes: LBD-XXXX-RP — add those here too with uses:3, type:"readiness"
-
-  // AI Special Access — 1 Session any difficulty (Rs.99 May offer)
-  "LBD-NSFY-SPA": {uses:1, type:"special"},
-  "LBD-MMFF-SPA": {uses:1, type:"special"},
-  "LBD-WWLT-SPA": {uses:1, type:"special"},
-  "LBD-CVHM-SPA": {uses:1, type:"special"},
-  "LBD-PTLD-SPA": {uses:1, type:"special"},
-  "LBD-QLDK-SPA": {uses:1, type:"special"},
-  "LBD-PZBK-SPA": {uses:1, type:"special"},
-  "LBD-LLYT-SPA": {uses:1, type:"special"},
-  "LBD-DFYZ-SPA": {uses:1, type:"special"},
-  "LBD-LTLL-SPA": {uses:1, type:"special"},
-  "LBD-XCRX-SPA": {uses:1, type:"special"},
-  "LBD-HWHW-SPA": {uses:1, type:"special"},
-  "LBD-MMSW-SPA": {uses:1, type:"special"},
-  "LBD-HNJN-SPA": {uses:1, type:"special"},
-  "LBD-QWGV-SPA": {uses:1, type:"special"},
-  "LBD-YMQZ-SPA": {uses:1, type:"special"},
-  "LBD-RCSV-SPA": {uses:1, type:"special"},
-  "LBD-VQRH-SPA": {uses:1, type:"special"},
-  "LBD-WLCD-SPA": {uses:1, type:"special"},
-  "LBD-NJTL-SPA": {uses:1, type:"special"},
-  "LBD-QQTD-SPA": {uses:1, type:"special"},
-  "LBD-RHZQ-SPA": {uses:1, type:"special"},
-  "LBD-SBCW-SPA": {uses:1, type:"special"},
-  "LBD-XXRK-SPA": {uses:1, type:"special"},
-  "LBD-CXRT-SPA": {uses:1, type:"special"},
-  "LBD-XPRM-SPA": {uses:1, type:"special"},
-  "LBD-DBGR-SPA": {uses:1, type:"special"},
-  "LBD-TRYT-SPA": {uses:1, type:"special"},
-  "LBD-LMSJ-SPA": {uses:1, type:"special"},
-  "LBD-MCPB-SPA": {uses:1, type:"special"},
-  "LBD-QKHJ-SPA": {uses:1, type:"special"},
-  "LBD-YHLG-SPA": {uses:1, type:"special"},
-  "LBD-MVHW-SPA": {uses:1, type:"special"},
-  "LBD-MKFC-SPA": {uses:1, type:"special"},
-  "LBD-WXHQ-SPA": {uses:1, type:"special"},
-  "LBD-RLWP-SPA": {uses:1, type:"special"},
-  "LBD-BGKJ-SPA": {uses:1, type:"special"},
-  "LBD-JHFZ-SPA": {uses:1, type:"special"},
-  "LBD-RBHK-SPA": {uses:1, type:"special"},
-  "LBD-JQXW-SPA": {uses:1, type:"special"},
-  "LBD-FLBM-SPA": {uses:1, type:"special"},
-  "LBD-TQPT-SPA": {uses:1, type:"special"},
-  "LBD-HMGD-SPA": {uses:1, type:"special"},
-  "LBD-BSSG-SPA": {uses:1, type:"special"},
-  "LBD-SNZT-SPA": {uses:1, type:"special"},
-  "LBD-VDBV-SPA": {uses:1, type:"special"},
-  "LBD-FQZY-SPA": {uses:1, type:"special"},
-  "LBD-LXXX-SPA": {uses:1, type:"special"},
-  "LBD-LGGQ-SPA": {uses:1, type:"special"},
-  "LBD-NHTS-SPA": {uses:1, type:"special"},
-  "LBD-VBFR-SPA": {uses:1, type:"special"},
-  "LBD-PZNC-SPA": {uses:1, type:"special"},
-  "LBD-BCJB-SPA": {uses:1, type:"special"},
-  "LBD-TSGS-SPA": {uses:1, type:"special"},
-  "LBD-NRHN-SPA": {uses:1, type:"special"},
-  "LBD-TNJR-SPA": {uses:1, type:"special"},
-  "LBD-DQDJ-SPA": {uses:1, type:"special"},
-  "LBD-JBRP-SPA": {uses:1, type:"special"},
-  "LBD-DJBM-SPA": {uses:1, type:"special"},
-  "LBD-TLDY-SPA": {uses:1, type:"special"},
-  "LBD-QSZK-SPA": {uses:1, type:"special"},
-  "LBD-YQGJ-SPA": {uses:1, type:"special"},
-  "LBD-VKNS-SPA": {uses:1, type:"special"},
-  "LBD-VZZQ-SPA": {uses:1, type:"special"},
-  "LBD-ZQJB-SPA": {uses:1, type:"special"},
-  "LBD-CQPX-SPA": {uses:1, type:"special"},
-  "LBD-WVHF-SPA": {uses:1, type:"special"},
-  "LBD-KFDV-SPA": {uses:1, type:"special"},
-  "LBD-DFHW-SPA": {uses:1, type:"special"},
-  "LBD-GGYQ-SPA": {uses:1, type:"special"},
-  "LBD-RJCZ-SPA": {uses:1, type:"special"},
-  "LBD-LRJX-SPA": {uses:1, type:"special"},
-  "LBD-VGGR-SPA": {uses:1, type:"special"},
-  "LBD-KPXJ-SPA": {uses:1, type:"special"},
-  "LBD-MJZC-SPA": {uses:1, type:"special"},
-  "LBD-ZTBS-SPA": {uses:1, type:"special"},
-  "LBD-GCLM-SPA": {uses:1, type:"special"},
-  "LBD-DMJV-SPA": {uses:1, type:"special"},
-  "LBD-XDQD-SPA": {uses:1, type:"special"},
-  "LBD-BHRX-SPA": {uses:1, type:"special"},
-  "LBD-CCRG-SPA": {uses:1, type:"special"},
-  "LBD-KZDK-SPA": {uses:1, type:"special"},
-  "LBD-RLKV-SPA": {uses:1, type:"special"},
-  "LBD-KTMF-SPA": {uses:1, type:"special"},
-  "LBD-ZMYJ-SPA": {uses:1, type:"special"},
-  "LBD-LNVK-SPA": {uses:1, type:"special"},
-  "LBD-KCJJ-SPA": {uses:1, type:"special"},
-  "LBD-MLGG-SPA": {uses:1, type:"special"},
-  "LBD-FHGC-SPA": {uses:1, type:"special"},
-  "LBD-GKHV-SPA": {uses:1, type:"special"},
-  "LBD-YVMX-SPA": {uses:1, type:"special"},
-  "LBD-TXJV-SPA": {uses:1, type:"special"},
-  "LBD-PLND-SPA": {uses:1, type:"special"},
-  "LBD-KFYX-SPA": {uses:1, type:"special"},
-  "LBD-WTBC-SPA": {uses:1, type:"special"},
-  "LBD-GMHL-SPA": {uses:1, type:"special"},
-  "LBD-ZGXK-SPA": {uses:1, type:"special"},
-  "LBD-HWFL-SPA": {uses:1, type:"special"},
-  "LBD-HQYG-SPA": {uses:1, type:"special"},
-  "LBD-JGBB-SPA": {uses:1, type:"special"},
-};;
+// AI_CODES removed — validation via Supabase
+;;
 
 var AI_USAGE_KEY   = 'lbd_ai_usage_v2';  // versioned to avoid old data
 var currentAICode  = null;
@@ -932,19 +724,50 @@ function saveCodeUsage(code, uses) {
   } catch(e) {}
 }
 
-function redeemAICode(code) {
+
+// ── Supabase — secure code validation ────────────────────────
+const supabaseUrl = 'https://cyguqfqmnjtjoztcjres.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Z3VxZnFtbmp0am96dGNqcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTcwMzEsImV4cCI6MjA5Mzc5MzAzMX0.sCi_iXTN18gVjXIQPqewpAjVRmM2gSgMKJpYsV1m7QM';
+const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+async function redeemAICode(code) {
   code = code.trim().toUpperCase();
-  if (!AI_CODES[code]) return { ok: false, msg: 'Code not recognised. Check your email for the correct code.' };
-  // Promo 5-day expiry check
-  if (PROMO_ACTIVE) {
-    markPromoFirstUse(code);
-    if (isPromoExpired(code)) {
+
+  // Demo — local
+  if (code === 'DEMO-AI-1') {
+    return { ok: true, uses: 3, type: 'standalone' };
+  }
+
+  // Promo expiry check (client-side, no Supabase needed)
+  if (typeof PROMO_ACTIVE !== 'undefined' && PROMO_ACTIVE) {
+    if (typeof markPromoFirstUse === 'function') markPromoFirstUse(code);
+    if (typeof isPromoExpired === 'function' && isPromoExpired(code)) {
       return { ok: false, msg: 'Your 2-day promotional access has expired. Purchase a new pack to continue.' };
     }
   }
-  var uses = getCodeUsage(code);
-  if (uses <= 0) return { ok: false, msg: 'All interview attempts for this code have been used.' };
-  return { ok: true, uses: uses };
+
+  // Validate via Supabase
+  const { data, error } = await _supabase.rpc('verify_access_code', { input_code: code });
+
+  if (error) {
+    return { ok: false, msg: 'System error. Please try again or contact leadbydharma@gmail.com' };
+  }
+
+  const result = data && data[0];
+  if (!result || !result.is_valid) {
+    return { ok: false, msg: 'Code not recognised, expired, or already used. Check your email or contact leadbydharma@gmail.com' };
+  }
+
+  // Determine uses from product
+  var product = result.target_product || '';
+  var uses = 3; // default standalone
+  var type = 'standalone';
+  if (product === 'OWNER')             { uses = 999; type = 'owner'; }
+  else if (product === 'AI Special Access') { uses = 1; type = 'special'; }
+  else if (product === 'Readiness Pack')    { uses = 3; type = 'readiness'; }
+  // AI Interview (standalone): uses stays at 3 (default)
+
+  return { ok: true, uses: uses, type: type };
 }
 
 function decrementAIUses(code) {
@@ -977,7 +800,7 @@ function renderCodeGate() {
     + '</div>';
 }
 
-function submitAICode() {
+async function submitAICode() {
   var code = (document.getElementById('aiCodeInput').value || '').trim().toUpperCase();
   var errEl = document.getElementById('aiCodeErr');
   if (!code) { 
@@ -985,7 +808,7 @@ function submitAICode() {
     errEl.textContent = 'Please enter your access code.'; 
     return; 
   }
-  var result = redeemAICode(code);
+  var result = await redeemAICode(code);
   if (!result.ok) {
     errEl.style.display = 'block';
     errEl.textContent = result.msg;
