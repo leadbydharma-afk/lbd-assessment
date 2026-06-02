@@ -481,8 +481,8 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 async function redeemCode() {
-  var enteredCode = document.getElementById('codeInput').value.trim().toUpperCase();
-  var errEl = document.querySelector('.error-msg') || document.getElementById('codeErr');
+  var enteredCode = document.getElementById('accessCodeInput').value.trim().toUpperCase();
+  var errEl = document.querySelector('.error-msg') || document.getElementById('codeError');
   if (errEl) errEl.style.display = 'none';
   if (!enteredCode) return;
 
