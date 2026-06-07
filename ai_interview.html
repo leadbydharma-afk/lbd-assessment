@@ -790,6 +790,7 @@ function renderCodeGate() {
     + '<input id="aiCodeInput" class="inp" type="text" placeholder="e.g. LBD-XXXX-7" '
     + 'style="text-transform:uppercase;letter-spacing:.1em;font-family:JetBrains Mono,monospace" '
     + 'onkeydown="if(event.keyCode===13) submitAICode()" />'
+    + '<div id="aiErr" style="color:#ff6b6b;font-size:.85rem;display:none;margin-top:.4rem"></div>'
     + '</div>'
     + '<div id="aiCodeErr" style="display:none;color:var(--red);font-size:1.4rem;font-style:italic;margin-bottom:.6rem"></div>'
     + '<button onclick="submitAICode()" class="btn btn-primary" style="width:100%">Unlock Interview &rarr;</button>'

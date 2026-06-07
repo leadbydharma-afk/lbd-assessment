@@ -543,8 +543,8 @@ async function redeemCode() {
   document.getElementById('setUsageInfo').textContent =
     sets + ' set' + (sets > 1 ? 's' : '') + ' available. Each complete session (SRT + WAT + SDT) uses one set.';
 
-  // Promo expiry check for special access codes
-  if (window.PROMO_ACTIVE && typeof markPromoFirstUse === 'function') {
+  // Promo expiry check for special access codes (skip for OWNER)
+  if (product !== 'OWNER' && window.PROMO_ACTIVE && typeof markPromoFirstUse === 'function') {
     markPromoFirstUse(enteredCode);
     if (typeof isPromoExpired === 'function' && isPromoExpired(enteredCode)) {
       showError('Your 2-day promotional access has expired. Purchase a set at normal pricing below.');
