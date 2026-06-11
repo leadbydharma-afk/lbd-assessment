@@ -702,6 +702,9 @@ body::before {
   .free-strip-inner { flex-direction: column; text-align: center; }
   .free-text { text-align: center; }
 }
+@media (max-width: 760px) {
+  .flagship-grid { grid-template-columns: 1fr !important; }
+}
 @media (max-width: 600px) {
   .masthead h1 { font-size: 2rem; }
   .comparison-wrap { overflow-x: auto; }
@@ -907,7 +910,7 @@ body::before {
   <div class="regiment">Maratha Light Infantry &nbsp;·&nbsp; Line of Control &nbsp;·&nbsp; 22 Years</div>
   <div class="masthead-kicker">Col Aniruddha Rao HR (Retd.) presents</div>
   <h1>Lead By <em>Dharma</em></h1>
-  <p class="masthead-sub">Selection-based mentorship for Indian Armed Forces aspirants. Choose the preparation that matches where you are.</p>
+  <p class="masthead-sub">The SSB does not select the most prepared candidate. It selects the most real one.<br>We help you become that.</p>
   <div class="masthead-sig">IMA · Dehradun · Leadership Mentor</div>
 </div>
 
@@ -925,11 +928,48 @@ body::before {
   </div>
 </div>
 
+<!-- FLAGSHIP PRODUCTS — AI INTERVIEW + OPI SIDE BY SIDE -->
+<div style="background:var(--navy);padding:3.5rem 2rem;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 50%,rgba(184,150,62,.07) 0%,transparent 70%);pointer-events:none"></div>
+  <div style="max-width:900px;margin:0 auto;position:relative">
+    <div style="text-align:center;margin-bottom:2.5rem">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;color:var(--gold);text-transform:uppercase;margin-bottom:.6rem">Our Flagship Products</div>
+      <h2 style="font-family:'Cinzel',serif;font-size:1.6rem;color:var(--cream);font-weight:400;letter-spacing:.08em">What Does Not Exist Anywhere Else</h2>
+      <p style="font-size:1.05rem;color:rgba(245,240,228,.6);margin-top:.6rem;font-style:italic">Two instruments built by someone with decades of experience and expertise in mentoring transformational leadership.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+
+      <!-- AI INTERVIEW CARD -->
+      <div style="background:rgba(245,240,228,.05);border:1px solid rgba(184,150,62,.25);border-radius:4px;padding:2rem;display:flex;flex-direction:column">
+        <div style="font-size:2rem;margin-bottom:.8rem">&#127908;</div>
+        <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);letter-spacing:.08em;margin-bottom:.4rem">AI Personal Interview</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.15em;color:rgba(184,150,62,.6);text-transform:uppercase;margin-bottom:1rem">Simulation &nbsp;·&nbsp; Rs.498</div>
+        <p style="font-size:1rem;color:rgba(245,240,228,.75);line-height:1.8;flex:1">12 questions. The Col Rao AI persona probes your background, your achievements, your motivations — the way a trained interviewing officer does. Three difficulty levels. Scored report. This format does not exist on any other SSB preparation platform in India.</p>
+        <a href="ai_interview.html?unlock=true" style="display:inline-block;margin-top:1.4rem;font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.12em;color:var(--navy);background:var(--gold);padding:.65rem 1.4rem;text-decoration:none;border-radius:2px;text-align:center">Begin AI Interview &rarr;</a>
+        <a href="https://rzp.io/rzp/AukND0g" target="_blank" style="display:inline-block;margin-top:.6rem;font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.1em;color:rgba(184,150,62,.6);text-align:center;text-decoration:none">Pay Rs.498 for 3 sessions</a>
+      </div>
+
+      <!-- OPI CARD -->
+      <div style="background:rgba(245,240,228,.05);border:1px solid rgba(184,150,62,.25);border-radius:4px;padding:2rem;display:flex;flex-direction:column">
+        <div style="font-size:2rem;margin-bottom:.8rem">&#129504;</div>
+        <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);letter-spacing:.08em;margin-bottom:.4rem">Officer Potential Index</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.15em;color:rgba(184,150,62,.6);text-transform:uppercase;margin-bottom:.3rem">The Five Dimensions &nbsp;·&nbsp; Rs.199</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:rgba(184,150,62,.4);margin-bottom:1rem">IQ &nbsp;·&nbsp; EQ &nbsp;·&nbsp; AQ &nbsp;·&nbsp; SQ &nbsp;·&nbsp; VQ</div>
+        <p style="font-size:1rem;color:rgba(245,240,228,.75);line-height:1.8;flex:1">93 questions across five dimensions — the only pre-CSSS assessment that includes a Values Quotient. Narrative feedback authored by someone with deep experience and expertise in mentoring transformational leadership. Not a score. A mirror. The only five-dimension OLQ-aligned instrument available to SSB aspirants in India.</p>
+        <a href="iq_eq_aq_sq.html?unlock=true" style="display:inline-block;margin-top:1.4rem;font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.12em;color:var(--navy);background:var(--gold);padding:.65rem 1.4rem;text-decoration:none;border-radius:2px;text-align:center">Begin OPI Assessment &rarr;</a>
+        <a href="https://rzp.io/rzp/godzswYk" target="_blank" style="display:inline-block;margin-top:.6rem;font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.1em;color:rgba(184,150,62,.6);text-align:center;text-decoration:none">Pay Rs.199 for full assessment</a>
+      </div>
+
+    </div>
+    <p style="text-align:center;margin-top:2rem;font-size:.9rem;color:rgba(245,240,228,.35);font-style:italic;font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.08em">Access codes delivered by email within minutes of payment &nbsp;·&nbsp; Works on any device &nbsp;·&nbsp; 72-hour access window</p>
+  </div>
+</div>
+
 <!-- PACKAGES HEADING -->
 <div class="section-title">
   <div class="st-rule"></div>
-  <h2>Choose Your Preparation</h2>
-  <p>Three packages. Each built for a specific stage of your journey. Each designed to show you something the SSB will already see.</p>
+  <h2>Choose Your Path</h2>
+  <p>Two packages and a mentorship programme. Each built for a specific stage of your journey.</p>
   <div style="margin-top:1.2rem;padding:1rem 1.5rem;background:var(--white);border:1px solid var(--rule);border-radius:2px;display:inline-block">
     <span style="font-family:'JetBrains Mono',monospace;font-size:1.06rem;color:var(--ash);letter-spacing:.1em">INDIVIDUAL SETS ALSO AVAILABLE &nbsp;&mdash;&nbsp;</span>
     <a href="ssb_psych_paid.html"
@@ -962,8 +1002,8 @@ body::before {
       <div class="pkg-product">
         <div class="pp-icon">&#129504;</div>
         <div class="pp-text">
-          <div class="pp-name">IQ · EQ · AQ · SQ Assessment</div>
-          <div class="pp-desc">80 questions across four dimensions. Full report with OLQ mapping and SSB-stage analysis. The psychological picture of yourself the board already sees. <em>Also available standalone at <a href="iq_eq_aq_sq.html" style="color:var(--gold)">Rs.199</a>.</em></div>
+          <div class="pp-name">OPI — Officer Potential Index</div>
+          <div class="pp-desc">93 questions across five dimensions — IQ, EQ, AQ, SQ, VQ. Full OLQ mapping and SSB-stage analysis. The psychological picture of yourself the board already sees. <em>Also available standalone at <a href="iq_eq_aq_sq.html" style="color:var(--gold)">Rs.199</a>.</em></div>
         </div>
       </div>
       <div class="pkg-product">
@@ -980,56 +1020,13 @@ body::before {
     </div>
     <div class="pkg-footer">
       <a href="https://rzp.io/rzp/KlwSeSGD" target="_blank" class="btn-pkg btn-pkg-outline">Pay &amp; Get Clarity Pack &rarr;</a>
-      <div class="pkg-footer-note">IQ/EQ/AQ/SQ · SSB Suite Sets 1–3 &nbsp;·&nbsp; Access codes by email after payment</div>
+      <div class="pkg-footer-note">OPI Assessment · SSB Suite Sets 1–3 &nbsp;·&nbsp; Access codes by email after payment</div>
       <div style="text-align:center;margin-top:.6rem"><a href="ssb_psych_paid.html?unlock=true" style="font-family:JetBrains Mono,monospace;font-size:1.05rem;color:var(--ash);text-decoration:none;border-bottom:1px solid rgba(26,58,92,.12)">Already paid? Enter your code &rarr;</a></div>
     </div>
   </div>
 
-  <!-- PACKAGE 2 — READINESS PACK (FLAGSHIP) -->
-  <div class="pkg flagship">
-    <div class="pkg-crown"></div>
-    <div class="flagship-badge">Most Complete</div>
-    <div class="pkg-head">
-      <div class="pkg-num">Package II</div>
-      <div class="pkg-name">The Readiness Pack</div>
-      <div class="pkg-tagline">The complete pre-board simulation — psychology and interview</div>
-      <div class="pkg-price-block">
-        <div class="pkg-price"><sup>&#8377;</sup>999</div>
-        <div>
-          <div class="pkg-orig">&#8377;1,128 separately</div>
-          <div class="pkg-save">Save &#8377;129</div>
-        </div>
-      </div>
-    </div>
-    <div class="pkg-body">
-      <div class="pkg-includes-label">Includes</div>
-      <div class="pkg-product">
-        <div class="pp-icon">&#9889;</div>
-        <div class="pp-text">
-          <div class="pp-name">SSB Psychology Suite — Complete Pack</div>
-          <div class="pp-desc">All 7 sets of SRT, WAT, and SDT. 420 situations. 420 words. 35 SDT attempts. Every set timed. Every report with per-response coaching. The equivalent of seven complete Day 2 rehearsals.</div>
-        </div>
-      </div>
-      <div class="pkg-product">
-        <div class="pp-icon">&#127908;</div>
-        <div class="pp-text">
-          <div class="pp-name">AI Personal Interview Simulation</div>
-          <div class="pp-desc">12 questions. Col Rao AI persona. Your background, your achievements, your reasons — probed specifically. Three difficulty modes including Stress Interview. Scored report with question-by-question feedback.</div>
-        </div>
-      </div>
-      <div class="pkg-outcome">
-        <strong>What you will know after this</strong>
-        How you perform under sustained psychological pressure across multiple sessions. Whether your Personal Interview holds up under demanding questioning. Exactly which answers reveal the gaps the IO will press on. One week before your board, you will have already been through it.
-      </div>
-    </div>
-    <div class="pkg-footer">
-      <a href="https://rzp.io/rzp/mlJJu4V0" target="_blank" class="btn-pkg btn-pkg-gold">Pay &amp; Get Readiness Pack &rarr;</a>
-      <div class="pkg-footer-note">SSB Complete Pack (7 sets) · AI Interview &nbsp;·&nbsp; Access codes by email after payment</div>
-      <div style="text-align:center;margin-top:.6rem"><a href="ssb_psych_paid.html?unlock=true" style="font-family:JetBrains Mono,monospace;font-size:1.05rem;color:var(--ash);text-decoration:none;border-bottom:1px solid rgba(26,58,92,.12)">Already paid? Enter your code &rarr;</a></div>>
-    </div>
-  </div>
 
-  <!-- PACKAGE 3 — TRANSFORMATION PROGRAMME -->
+    <!-- PACKAGE 3 — TRANSFORMATION PROGRAMME -->
   <div class="pkg">
     <div class="pkg-crown"></div>
     <div class="pkg-head">
@@ -1087,7 +1084,7 @@ body::before {
       <tr>
         <th></th>
         <th class="ct-head">Clarity Pack<br><span style="font-size:.74rem;opacity:.6;font-family:'JetBrains Mono',monospace">&#8377;549</span></th>
-        <th class="ct-head">Readiness Pack<br><span style="font-size:.74rem;opacity:.6;font-family:'JetBrains Mono',monospace">&#8377;999</span></th>
+        
         <th class="ct-head">Transformation<br><span style="font-size:.74rem;opacity:.6;font-family:'JetBrains Mono',monospace">Application</span></th>
       </tr>
     </thead>
@@ -1095,61 +1092,61 @@ body::before {
       <tr>
         <td>Leadership Assessment (75 Q)</td>
         <td class="yes">&#10003;</td>
-        <td class="yes flagship-col">&#10003;</td>
+        
         <td class="yes">&#10003;</td>
       </tr>
       <tr>
-        <td>IQ · EQ · AQ · SQ Assessment (80 Q)</td>
+        <td>OPI — Officer Potential Index (5 dimensions, 93 Q)</td>
         <td class="yes">&#10003;</td>
-        <td class="yes flagship-col">&#10003;</td>
+        
         <td class="yes">&#10003;</td>
       </tr>
       <tr>
         <td>SSB Psychology — SRT (60 situations/set)</td>
         <td class="pkg-col">3 Sets</td>
-        <td class="pkg-col flagship-col">All 7 Sets</td>
+        
         <td class="pkg-col">All 7 Sets</td>
       </tr>
       <tr>
         <td>SSB Psychology — WAT (60 words/set)</td>
         <td class="pkg-col">3 Sets</td>
-        <td class="pkg-col flagship-col">All 7 Sets</td>
+        
         <td class="pkg-col">All 7 Sets</td>
       </tr>
       <tr>
         <td>SSB Psychology — SDT (5 sections/set)</td>
         <td class="pkg-col">3 Sets</td>
-        <td class="pkg-col flagship-col">All 7 Sets</td>
+        
         <td class="pkg-col">All 7 Sets</td>
       </tr>
       <tr>
         <td>Per-response coaching in all reports</td>
         <td class="yes">&#10003;</td>
-        <td class="yes flagship-col">&#10003;</td>
+        
         <td class="yes">&#10003;</td>
       </tr>
       <tr>
         <td>AI Personal Interview Simulation</td>
         <td class="no">&mdash;</td>
-        <td class="yes flagship-col">&#10003;</td>
+        
         <td class="yes">&#10003;</td>
       </tr>
       <tr>
         <td>Scored interview report + Q-by-Q feedback</td>
         <td class="no">&mdash;</td>
-        <td class="yes flagship-col">&#10003;</td>
+        
         <td class="yes">&#10003;</td>
       </tr>
       <tr>
         <td>3–6 month personal mentorship with Col Rao</td>
         <td class="no">&mdash;</td>
-        <td class="no flagship-col">&mdash;</td>
+        
         <td class="yes">&#10003;</td>
       </tr>
       <tr>
         <td>Direct access to Col Rao personally</td>
         <td class="no">&mdash;</td>
-        <td class="no flagship-col">&mdash;</td>
+        
         <td class="yes">&#10003;</td>
       </tr>
     </tbody>
@@ -1162,20 +1159,29 @@ body::before {
   <p class="philosophy-cite">Colonel Aniruddha Rao HR (Retd.) &nbsp;·&nbsp; Maratha Light Infantry &nbsp;·&nbsp; Lead By Dharma</p>
 </div>
 
-<!-- STANDALONE AI INTERVIEW STRIP -->
+<!-- AI PERSONAL INTERVIEW SIMULATION STRIP -->
 <div style="background:var(--navy2);border-top:1px solid rgba(184,150,62,.15);border-bottom:1px solid rgba(184,150,62,.15);padding:1.2rem 2rem;text-align:center;position:relative">
   <div style="max-width:760px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap">
     <div style="flex:1;text-align:left">
-      <span style="font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.15em;color:var(--gold);text-transform:uppercase">For Readiness Pack holders</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.15em;color:var(--gold);text-transform:uppercase">Used your AI Interview sessions?</span>
       <p style="font-size:1rem;color:rgba(245,240,228,.8);margin-top:.25rem;font-style:italic">Used all 3 AI Interview sessions? Top up with 3 more.</p>
     </div>
     <div style="display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap">
       <div style="text-align:right">
-        <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:var(--white)">&#8377;499</div>
+        <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:var(--white)">&#8377;498</div>
         <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:rgba(245,240,228,.4)">3 sessions · Same scored report</div>
       </div>
       <a href="https://rzp.io/rzp/AukND0g" target="_blank" style="font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.15em;color:var(--gold);border:1px solid rgba(184,150,62,.5);padding:.55rem 1.4rem;background:transparent;text-decoration:none;white-space:nowrap;transition:all .25s">Buy 3 More Sessions &rarr;</a>
     </div>
+  </div>
+</div>
+
+
+<!-- HONEST DISCLAIMER -->
+<div style="background:var(--white);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:2.2rem 2rem;text-align:center">
+  <div style="max-width:720px;margin:0 auto">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:.8rem">A Note on These Assessments</div>
+    <p style="font-size:1.05rem;color:var(--ash);line-height:1.9;font-style:italic">The Officer Potential Index and Leadership Assessment are expert-authored developmental tools built on the Officer-Like Quality framework used by the Indian Armed Forces. They are not clinically validated psychometric instruments — they have not undergone formal norming, reliability testing, or predictive validity studies. What they offer is something different: domain-specific assessment built by someone who administered this process, with feedback written to be genuinely useful rather than generically reassuring. Use them as a developmental mirror, not a final verdict.</p>
   </div>
 </div>
 
