@@ -480,6 +480,17 @@ const supabaseUrl = 'https://cyguqfqmnjtjoztcjres.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Z3VxZnFtbmp0am96dGNqcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTcwMzEsImV4cCI6MjA5Mzc5MzAzMX0.sCi_iXTN18gVjXIQPqewpAjVRmM2gSgMKJpYsV1m7QM';
 const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
+
+function showError(msg) {
+  var errEl = document.getElementById('codeError') ||
+              document.querySelector('.error-msg');
+  if (errEl) {
+    errEl.textContent = msg;
+    errEl.style.display = 'block';
+  } else {
+    alert(msg);
+  }
+}
 async function redeemCode() {
   var enteredCode = document.getElementById('accessCodeInput').value.trim().toUpperCase();
   var errEl = document.querySelector('.error-msg') || document.getElementById('codeError');
