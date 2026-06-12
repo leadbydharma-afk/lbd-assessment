@@ -1237,7 +1237,7 @@ function generateSampleReport() {
     const dims2 = computeScores();
     const reportDate = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
     const body = [
-      'LEAD BY DHARMA — Sample Leadership Assessment',
+      'LEAD BY DHARMA — SAMPLE Assessment Report (15 of 75 Questions)',
       'Candidate: ' + candidateName,
       'Date: ' + reportDate,
       '',
@@ -1731,6 +1731,62 @@ function openFullReportWindow(reportHTML, name) {
     rd.scrollIntoView({behavior:'smooth'});
     showGateMsg('✓ Report loaded below. Use Ctrl+P / Cmd+P to print or save.', '#4caf50');
   }
+
+
+  // Send plain text summary to customer's email
+  var fullEmailAddr = pendingEmailAddr;
+  if (fullEmailAddr && fullEmailAddr.indexOf('@') > 0 && typeof emailjs !== 'undefined') {
+    var fsc = computeScores();
+    var rdt2 = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
+    var dlist = [
+      { label:'Domain I   — Intellectual Qualities', pct: fsc.D1.pct },
+      { label:'Domain II  — Social Effectiveness  ', pct: fsc.D2.pct },
+      { label:'Domain III — Dynamism and Drive     ', pct: fsc.D3.pct },
+      { label:'Domain IV  — Character and Integrity', pct: fsc.D4.pct }
+    ];
+    dlist.sort(function(a,b){ return b.pct - a.pct; });
+    var overallAvg = (fsc.D1.pct + fsc.D2.pct + fsc.D3.pct + fsc.D4.pct) / 4;
+    var vline = overallAvg >= 70
+      ? 'Overall Profile: STRONG — well-developed officer-like qualities.'
+      : overallAvg >= 55
+      ? 'Overall Profile: DEVELOPING — solid foundation with specific areas to build.'
+      : 'Overall Profile: FOUNDATION — clear development priorities identified.';
+    var d5line = fsc.D5.pct >= 62
+      ? 'Derailer Risk: Low — no significant patterns detected.'
+      : fsc.D5.pct >= 40
+      ? 'Derailer Risk: Moderate — one or more derailer patterns present.'
+      : 'Derailer Risk: Elevated — derailer patterns present. Development advised.';
+    var sb = [
+      'LEAD BY DHARMA — Full Leadership Assessment',
+      'Text Summary | Candidate: ' + name + ' | Date: ' + rdt2,
+      '',
+      vline,
+      '',
+      'DIMENSION SCORES',
+      dlist[0].label + ': ' + dlist[0].pct + '%  STRONGEST',
+      dlist[1].label + ': ' + dlist[1].pct + '%',
+      dlist[2].label + ': ' + dlist[2].pct + '%',
+      dlist[3].label + ': ' + dlist[3].pct + '%  PRIMARY DEVELOPMENT AREA',
+      '',
+      d5line,
+      '',
+      'Full visual report was displayed on your screen.',
+      'If saved as PDF — your complete analysis is there.',
+      'If window closed before saving — retake at leadbydharma.com.',
+      '',
+      'Colonel Aniruddha Rao HR (Retd.) | Lead By Dharma',
+      'leadbydharma@gmail.com | +91 98789 30879',
+      '"The SSB does not select the most prepared. It selects the most real."'
+    ].join('\n');
+    emailjs.send('service_t7ozvf3','template_lkhepyo',{
+      to_email: fullEmailAddr,
+      candidate_name: name,
+      report_html: sb,
+      report_date: rdt2,
+      reply_to: 'leadbydharma@gmail.com'
+    }).then(function(){ console.log('Full report summary sent to ' + fullEmailAddr); })
+      .catch(function(e){ console.log('Full report email error:',e); });
+  }
 }
 function showFullReportDirectly(){
   var gate=document.getElementById('payGate');
@@ -1836,9 +1892,10 @@ function buildSummaryReport(d1obj, d2obj, d3obj, d4obj, candidateName, verdictCl
     + '<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:#b8963e;letter-spacing:.18em;margin-bottom:.7rem">WHAT THE FULL 75-QUESTION ASSESSMENT REVEALS THAT THIS SAMPLE CANNOT</div>'
     + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem .8rem;margin-bottom:1rem">' + lockedItems + '</div>'
     + '<div style="text-align:center;margin-top:.8rem">'
-    + '<div style="font-family:JetBrains Mono,monospace;font-size:.65rem;letter-spacing:.15em;color:rgba(245,240,228,.4);margin-bottom:.6rem">This sample used 15 of 75 questions. The remaining 60 complete the picture.</div>'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:.82rem;letter-spacing:.1em;color:rgba(245,240,228,.6);margin-bottom:.8rem">This sample used 15 of 75 questions. The remaining 60 complete the picture.</div>'
     + '<a href="' + RAZORPAY_REPORT_LINK + '" target="_blank" style="display:inline-block;background:#b8963e;color:#0d1f35;font-family:Georgia,serif;font-size:.95rem;font-weight:700;padding:.7rem 2rem;text-decoration:none;border-radius:3px;letter-spacing:.03em">Get the Full Assessment \u2192 Rs.99</a>'
-    + '<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;letter-spacing:.1em;color:rgba(245,240,228,.35);margin-top:.5rem">Complete 75 questions \u00b7 All 5 domains \u00b7 Col Rao\u2019s personal note \u00b7 Delivered by email</div>'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:.8rem;letter-spacing:.07em;color:rgba(245,240,228,.55);margin-top:.7rem;line-height:1.7">Complete 75 questions \u00b7 Full report opens on screen \u00b7 Save or print as PDF \u00b7 Text summary sent to your email</div>'
+    + '<div style="background:rgba(184,150,62,.1);border:1px solid rgba(184,150,62,.35);border-radius:3px;padding:.65rem 1rem;margin-top:.8rem;font-size:.82rem;color:#f0ca7a;line-height:1.65;text-align:left"><strong>&#9888; Allow pop-ups before paying.</strong> The full report opens in a new browser window. If pop-ups are blocked, the window will not open — only the email text summary will be accessible. To allow: look for the pop-up blocked icon in your browser address bar and select Allow.</div>'
     + '</div>'
     + '</div>';
 }
