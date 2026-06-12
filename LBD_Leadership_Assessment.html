@@ -1094,6 +1094,8 @@ function renderSection(idx) {
   wrap.innerHTML = html;
   window.scrollTo({top: 0, behavior:'smooth'});
   updateProgress();
+  // Re-check section complete state after render (handles returning via Previous)
+  checkSectionComplete();
 }
 
 function goSection(idx) {
@@ -1124,10 +1126,14 @@ function recordSJT(qid, score, el) {
 
 function checkSectionComplete() {
   const sec = SECTIONS[currentSection];
-  const unanswered = sec.questions.filter(q => responses[q.id] === undefined).length;
+  // Use same filter as renderSection — respect FREE_MODE
+  const questionsToCheck = (typeof FREE_MODE !== 'undefined' && FREE_MODE)
+    ? sec.questions.filter(q => FREE_QUESTIONS.includes(q.id))
+    : sec.questions;
+  const unanswered = questionsToCheck.filter(q => responses[q.id] === undefined).length;
   const wrap = document.getElementById('assessmentSections');
-  const navInfo = wrap.querySelector('.nav-info');
-  if (navInfo) navInfo.textContent = unanswered === 0 ? '✓ All questions answered' : `${unanswered} remaining in this section`;
+  const navInfo = wrap ? wrap.querySelector('.nav-info') : null;
+  if (navInfo) navInfo.textContent = unanswered === 0 ? '\u2713 All questions answered' : `${unanswered} remaining in this section`;
   const submitBtn = document.getElementById('submitBtn');
   if (submitBtn) submitBtn.disabled = unanswered > 0;
 }
@@ -1146,13 +1152,20 @@ function computeScores() {
   const sectionMap = {'S1':'D1','S2':'D2','S3':'D3','S4':'D4','S5':'D5'};
   SECTIONS.forEach(sec => {
     const dim = sectionMap[sec.id];
+    // Only count questions that were actually answered
+    // In FREE_MODE only 3 of 15 per section are shown and answered
     sec.questions.forEach(q => {
-      const val = responses[q.id] || 3;
-      dims[dim].total += val;
-      dims[dim].count++;
+      if (responses[q.id] !== undefined) {
+        dims[dim].total += responses[q.id];
+        dims[dim].count++;
+      }
     });
   });
-  Object.values(dims).forEach(d => { d.avg = d.total / d.count; d.pct = Math.round((d.avg / 5) * 100); });
+  // If no responses in a dimension, default avg to 3 (neutral)
+  Object.values(dims).forEach(d => {
+    d.avg = d.count > 0 ? d.total / d.count : 3;
+    d.pct = Math.round((d.avg / 5) * 100);
+  });
   return dims;
 }
 
