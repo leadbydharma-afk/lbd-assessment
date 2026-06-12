@@ -705,11 +705,15 @@
 
 <div class="container">
 
+<!-- SAMPLE TAGLINE BAR -->
+<div style="background:rgba(184,150,62,.12);border-bottom:1px solid rgba(184,150,62,.25);padding:.6rem 1.5rem;text-align:center">
+  <span style="font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.2em;color:#b8963e;text-transform:uppercase">Sample Assessment &nbsp;&middot;&nbsp; 15 Questions &nbsp;&middot;&nbsp; 5 Minutes &nbsp;&middot;&nbsp; Free &nbsp;&middot;&nbsp; Full Assessment Rs.99</span>
+</div>
 <!-- ══════════════════════════════════════ INTRO PAGE ══ -->
 <div class="intro-page" id="introPage">
   <div class="disclaimer">
     <strong>Before you begin — read this carefully.</strong><br>
-    This assessment is not a test you can pass by choosing the 'right' answer. It is a personality and leadership potential evaluation designed to reveal patterns in how you think, feel, and make decisions under pressure. The report it generates will be honest — including about the parts of your personality that work against leadership. Answer every question as you genuinely are, not as you think an officer should be. An experienced psychologist or assessor will see through performance in five days of SSB. This instrument is designed to see through it in 75 questions. <em>If you are going to cheat this assessment, you are already demonstrating one of the qualities that disqualifies an officer candidate.</em>
+    This assessment is not a test you can pass by choosing the 'right' answer. It is a personality and leadership potential evaluation designed to reveal patterns in how you think, feel, and make decisions under pressure. The report it generates will be honest — including about the parts of your personality that work against leadership. Answer every question as you genuinely are, not as you think an officer should be. An experienced psychologist or assessor will see through performance in five days of SSB. This 15-question sample is designed to give you a directional reading. The full 75-question assessment goes deeper. <em>If you are going to cheat this assessment, you are already demonstrating one of the qualities that disqualifies an officer candidate.</em>
     <br><br>
     <strong>Note:</strong> This is an educational tool for self-awareness and development. It is not a clinical assessment, does not constitute professional advice, and carries no guarantee of any selection outcome. Full legal terms appear below.
   </div>
@@ -724,7 +728,7 @@
     <p><strong>No SSB Affiliation.</strong> This assessment is an independent educational tool created by Lead By Dharma. It is not affiliated with, endorsed by, or connected to the Services Selection Board (SSB), the Ministry of Defence, the Defence Institute of Psychological Research (DIPR), or any branch of the Indian Armed Forces.</p>
     <p><strong>Data Privacy.</strong> All responses are processed locally in your browser. No personally identifiable information, assessment responses, or scores are transmitted to or stored on any server unless you voluntarily provide your email address for report delivery. Lead By Dharma does not sell, share, or monetise any personal data submitted through this instrument.</p>
     <p><strong>Limitation of Liability.</strong> Lead By Dharma, its founder, affiliates, and representatives shall not be liable for any direct, indirect, incidental, or consequential loss or damage arising from reliance on the results of this assessment, including but not limited to decisions made regarding career, education, or personal development. Use of this assessment constitutes acceptance of these terms.</p>
-    <p style="margin-top:0.6rem;font-style:italic;color:#6a5a40;">By clicking "Begin Assessment" below, you confirm that you have read, understood, and accepted these terms. If you do not accept these terms, do not proceed.</p>
+    <p style="margin-top:0.6rem;font-style:italic;color:#6a5a40;">By clicking "Begin 15-Question Sample" below, you confirm that you have read, understood, and accepted these terms. If you do not accept these terms, do not proceed.</p>
   </div>
 
   <div class="intro-box">
@@ -750,7 +754,10 @@
   <div style="margin:1.5rem 0;">
     <label style="font-family:'Playfair Display';font-size:1.1rem;color:var(--navy);font-weight:600;display:block;margin-bottom:0.5rem;">Your Name (for the report)</label>
     <input class="name-input" id="candidateName" type="text" placeholder="Enter your full name..." />
-    <div style="font-size:1.4rem;color:var(--ash);font-style:italic;">This is used only for personalising your report. It is not stored anywhere.</div>
+    <div style="margin-top:.8rem">
+      <input class="name-input" id="candidateEmail" type="email" placeholder="Enter your email (for full report delivery)..." style="margin-top:0" />
+      <div style="font-size:1.4rem;color:var(--ash);font-style:italic;margin-top:.3rem">Your name and email are used only to personalise and deliver your report. They are not stored or shared.</div>
+    </div>
   </div>
 
   <div style="text-align:right;margin-top:1.5rem;">
@@ -957,7 +964,12 @@ const SECTIONS = [
         ]},
     ]
   }
-];
+]
+
+// ── FREE ASSESSMENT: 15 analytically selected questions ─────
+const FREE_MODE = true;
+const FREE_QUESTIONS = ['S1Q2', 'S1Q5', 'S1Q8', 'S2Q1', 'S2Q3', 'S2Q6', 'S3Q3', 'S3Q5', 'S3Q6', 'S4Q1', 'S4Q2', 'S4Q5', 'S5Q4', 'S5Q6', 'S5Q1'];
+;
 
 // ════════════════════════════════════════════════════
 //  STATE
@@ -967,6 +979,7 @@ let currentSection = 0;
 let candidateName = '';
 
 function totalQuestions() {
+  if (typeof FREE_MODE !== 'undefined' && FREE_MODE) return FREE_QUESTIONS.length;
   return SECTIONS.reduce((n, s) => n + s.questions.length, 0);
 }
 function answeredCount() {
@@ -983,6 +996,13 @@ function updateProgress() {
 // ════════════════════════════════════════════════════
 function startAssessment() {
   candidateName = document.getElementById('candidateName').value.trim() || 'Candidate';
+  var emailEl = document.getElementById('candidateEmail');
+  if (emailEl) {
+    var emailVal = emailEl.value.trim();
+    if (emailVal && emailVal.indexOf('@') > 0) {
+      pendingEmailAddr = emailVal;
+    }
+  }
   document.getElementById('introPage').classList.add('hidden');
   document.getElementById('assessmentSections').style.display = 'block';
   renderSection(0);
@@ -994,15 +1014,21 @@ function renderSection(idx) {
   const wrap = document.getElementById('assessmentSections');
   let html = `
     <div class="section-header">
-      <div class="section-number">SECTION ${idx+1} / ${SECTIONS.length}</div>
+      <div class="section-number">${(typeof FREE_MODE !== 'undefined' && FREE_MODE) ? 'SAMPLE ASSESSMENT' : 'SECTION ' + (idx+1) + ' / ' + SECTIONS.length}</div>
       <div class="section-title-block">
         <h2>${sec.title}</h2>
         <p>${sec.desc}</p>
       </div>
     </div>`;
 
-  sec.questions.forEach((q, qi) => {
-    const globalNum = SECTIONS.slice(0, idx).reduce((n, s) => n + s.questions.length, 0) + qi + 1;
+  // In free mode, show only the 15 selected questions
+  const questionsToShow = (typeof FREE_MODE !== 'undefined' && FREE_MODE)
+    ? sec.questions.filter(q => FREE_QUESTIONS.includes(q.id))
+    : sec.questions;
+  questionsToShow.forEach((q, qi) => {
+    const globalNum = (typeof FREE_MODE !== 'undefined' && FREE_MODE)
+      ? FREE_QUESTIONS.indexOf(q.id) + 1
+      : SECTIONS.slice(0, idx).reduce((n, s) => n + s.questions.length, 0) + qi + 1;
     const answered = responses[q.id] !== undefined;
     if (q.type === 'scale') {
       html += `<div class="q-card ${answered ? 'answered' : ''}" id="card-${q.id}">
@@ -1536,6 +1562,56 @@ function confirmPaymentAndSend(){
   sendFullReportByEmail(email,pendingCandidateName,pendingFullReportHTML);
 }
 
+
+
+function payAndOpenReport() {
+  // Open Razorpay payment in a new tab
+  window.open(RAZORPAY_REPORT_LINK, '_blank');
+  // Change button to "I have paid — Open My Report"
+  var btn = document.querySelector('.gate-pay-btn');
+  if (btn) {
+    btn.textContent = 'I have paid — Open My Report →';
+    btn.style.background = '#4caf50';
+    btn.onclick = function() { openFullReportWindow(pendingFullReportHTML, pendingCandidateName); };
+  }
+}
+
+function openFullReportWindow(reportHTML, name) {
+  // Remove the payment gate
+  var gate = document.getElementById('payGate');
+  if (gate) gate.remove();
+
+  // Build a complete HTML document for the new window
+  var fullDoc = '<!DOCTYPE html><html lang="en"><head>'
+    + '<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+    + '<title>Lead By Dharma — Leadership Assessment Report — ' + name + '</title>'
+    + '<style>'
+    + 'body{margin:0;padding:1.5rem;background:#0d1f35;font-family:Georgia,serif;color:#f5f0e4}'
+    + '.print-bar{background:rgba(184,150,62,.12);border:1px solid rgba(184,150,62,.3);border-radius:4px;padding:.8rem 1.2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:1.5rem}'
+    + '.print-bar p{margin:0;font-size:.9rem;color:rgba(245,240,228,.6);font-style:italic}'
+    + '.print-btn{background:#b8963e;color:#0d1f35;font-family:Georgia,serif;font-weight:700;font-size:.9rem;padding:.5rem 1.4rem;border:none;border-radius:3px;cursor:pointer}'
+    + '@media print{.print-bar{display:none}body{background:#fff;color:#000}}'
+    + '</style></head><body>'
+    + '<div class="print-bar">'
+    + '<p>Lead By Dharma · Leadership Assessment Report · ' + name + '</p>'
+    + '<button class="print-btn" onclick="window.print()">Save / Print Report →</button>'
+    + '</div>'
+    + reportHTML
+    + '</body></html>';
+
+  var win = window.open('', '_blank', 'width=900,height=800');
+  if (win) {
+    win.document.write(fullDoc);
+    win.document.close();
+    showGateMsg('✓ Your full report is open in a new window. Use the Save/Print button to keep a copy.', '#4caf50');
+  } else {
+    // Popup blocked — show inline instead
+    var rd = document.getElementById('report');
+    rd.innerHTML = reportHTML;
+    rd.scrollIntoView({behavior:'smooth'});
+    showGateMsg('✓ Report loaded below. Use Ctrl+P / Cmd+P to print or save.', '#4caf50');
+  }
+}
 function showFullReportDirectly(){
   var gate=document.getElementById('payGate');
   if(gate) gate.remove();
@@ -1551,44 +1627,94 @@ function showFullReportDirectly(){
 
 
 function buildSummaryReport(d1obj, d2obj, d3obj, d4obj, candidateName, verdictClass, verdictTitle, verdictText, derailerRisk) {
+  var d1pct = typeof d1obj==='object' ? d1obj.pct : Math.round((d1obj/5)*100);
+  var d2pct = typeof d2obj==='object' ? d2obj.pct : Math.round((d2obj/5)*100);
+  var d3pct = typeof d3obj==='object' ? d3obj.pct : Math.round((d3obj/5)*100);
+  var d4pct = typeof d4obj==='object' ? d4obj.pct : Math.round((d4obj/5)*100);
+  var d5pct = typeof derailerRisk==='object' ? derailerRisk.pct : Math.round(((typeof derailerRisk==='number'?derailerRisk:3)/5)*100);
+
   var dimList = [
-    { label:'Intellectual Qualities', avg: typeof d1obj==='object' ? d1obj.avg : d1obj },
-    { label:'Social Effectiveness',   avg: typeof d2obj==='object' ? d2obj.avg : d2obj },
-    { label:'Dynamism & Drive',       avg: typeof d3obj==='object' ? d3obj.avg : d3obj },
-    { label:'Character & Integrity',  avg: typeof d4obj==='object' ? d4obj.avg : d4obj }
+    { label:'Intellectual Qualities', pct:d1pct },
+    { label:'Social Effectiveness',   pct:d2pct },
+    { label:'Dynamism & Drive',       pct:d3pct },
+    { label:'Character & Integrity',  pct:d4pct },
   ];
-  dimList.sort(function(a,b){ return b.avg - a.avg; });
+  dimList.sort(function(a,b){ return b.pct - a.pct; });
   var top1    = dimList[0];
   var bottom1 = dimList[dimList.length - 1];
-  var shortVerdict = verdictText.length > 180 ? verdictText.substring(0,180) + '\u2026' : verdictText;
+
+  var strengthInsight = {
+    'Intellectual Qualities': 'Your responses show that your mind functions at its best under constraint — not despite pressure, but because of it. This is the quality that separates quick thinkers from deep thinkers. The full assessment shows what this means at every stage of SSB.',
+    'Social Effectiveness': 'Your responses reveal a particular quality that most candidates lack — you do not just function in groups, you shape them. The full assessment shows how this manifests across the three social OLQs and what the GTO will observe in your first group task.',
+    'Dynamism & Drive': 'The pattern in your responses points to something specific: your drive does not depend on external validation to sustain itself. This is rarer than it sounds. The full assessment maps where this quality is robust and where it has a specific vulnerability.',
+    'Character & Integrity': 'Your responses show a consistency that the SSB psychologist is specifically trained to find — behaviour that does not shift based on who is watching. The full assessment analyses the exact questions where this pattern appeared and what it reveals about your actual values.'
+  };
+  var developInsight = {
+    'Intellectual Qualities': 'Your responses suggest a pattern the SSB frequently catches: strong general ability that becomes less precise under high-pressure, novel conditions. The full assessment identifies the specific OLQ sub-dimension where this shows most clearly.',
+    'Social Effectiveness': 'There is a gap between your social confidence in familiar environments and how you function with genuinely unfamiliar people. The full assessment names the specific OLQ this affects and shows what the GTO will see.',
+    'Dynamism & Drive': 'Your responses reveal something specific: your drive is real, but there is a particular condition under which it becomes inconsistent. The full assessment identifies exactly what that condition is — and why it matters to the SSB more than the overall score.',
+    'Character & Integrity': 'Your responses show strong ethical instincts that occasionally yield to situational pressure. The full assessment shows where exactly this appeared, which specific OLQ it affects, and what the PI interviewing officer is trained to surface.'
+  };
+
+  var derailerInsight;
+  if (d5pct >= 62) {
+    derailerInsight = 'Your derailer scan shows a clean profile. But the full assessment reveals something important: which of the 8 derailer dimensions came closest to the threshold — because that is the one the SSB five-day format is most likely to surface under cumulative stress.';
+  } else if (d5pct >= 40) {
+    derailerInsight = 'Your derailer scan has identified a moderate risk signal. The full assessment names the specific derailer dimension and explains precisely how it manifests under SSB conditions — day by day, not as an abstraction.';
+  } else {
+    derailerInsight = 'Your derailer scan has found a significant pattern. This is not a character verdict — it is a development signal. The full assessment explains exactly what the SSB psychologist is trained to see in this dimension and what genuine development looks like.';
+  }
+
+  var shortVerdict = verdictText.length > 200 ? verdictText.substring(0,200) + '\u2026' : verdictText;
+  var d5color = d5pct >= 62 ? '#4caf50' : d5pct >= 40 ? '#b8963e' : '#8b1a1a';
+
+  var lockedItems = [
+    'Per-question pattern analysis across all 75 responses',
+    'Which specific OLQ sub-dimension to develop first',
+    'Derailer risk by dimension \u2014 all 8 named and ranked',
+    'SSB-stage implications for every score',
+    'The single question where your character showed most clearly',
+    'Col Rao\u2019s personal note for your specific profile'
+  ].map(function(t){ return '<div style="font-size:.84rem;color:rgba(245,240,228,.7);display:flex;gap:.4rem"><span style="color:#b8963e">\u2192</span><span>' + t + '</span></div>'; }).join('');
 
   return '<div class="report-cover">'
-    + '<div class="header-label" style="margin-bottom:.5rem">FREE SUMMARY REPORT</div>'
+    + '<div class="header-label" style="margin-bottom:.5rem">15-QUESTION SAMPLE REPORT</div>'
     + '<h2>Officer &amp; Leadership Potential</h2>'
     + '<div class="report-name">' + candidateName + '</div>'
     + '<div class="report-date">LEAD BY DHARMA \u00b7 '
     + new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'}).toUpperCase()
-    + '</div></div>'
+    + ' \u00b7 15 OF 75 QUESTIONS</div></div>'
     + '<div class="verdict-box ' + verdictClass + '">'
-    + '<div class="verdict-label">Overall Verdict</div>'
+    + '<div class="verdict-label">Sample Profile \u2014 Based on 15 Questions</div>'
     + '<div class="verdict-title">' + verdictTitle + '</div>'
     + '<div class="verdict-text">' + shortVerdict + '</div>'
     + '</div>'
     + '<div class="rpt-section">'
-    + '<div style="font-family:JetBrains Mono,monospace;font-size:.65rem;letter-spacing:.2em;color:#b8963e;margin-bottom:.5rem">YOUR STRONGEST DIMENSION</div>'
-    + '<div style="background:rgba(26,74,46,.08);border-left:3px solid #4caf50;padding:.6rem .9rem;border-radius:0 4px 4px 0;font-size:.95rem">'
-    + '\u2713 <strong>' + top1.label + '</strong> \u2014 This is your relative strength in the profile.'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:.65rem;letter-spacing:.2em;color:#b8963e;margin-bottom:.5rem">YOUR STRONGEST SIGNAL IN THIS SAMPLE</div>'
+    + '<div style="background:rgba(26,74,46,.08);border-left:3px solid #4caf50;padding:.8rem 1rem;border-radius:0 4px 4px 0">'
+    + '<div style="font-size:1rem;font-weight:700;color:#1a4a2e;margin-bottom:.4rem">\u2713 ' + top1.label + '</div>'
+    + '<div style="font-size:.92rem;color:rgba(245,240,228,.75);line-height:1.7">' + (strengthInsight[top1.label]||'') + '</div>'
     + '</div></div>'
     + '<div class="rpt-section">'
-    + '<div style="font-family:JetBrains Mono,monospace;font-size:.65rem;letter-spacing:.2em;color:#b8963e;margin-bottom:.5rem">PRIMARY AREA FOR DEVELOPMENT</div>'
-    + '<div style="background:rgba(184,150,62,.06);border-left:3px solid rgba(184,150,62,.5);padding:.6rem .9rem;border-radius:0 4px 4px 0;font-size:.95rem">'
-    + '\u2192 <strong>' + bottom1.label + '</strong> \u2014 This dimension has the most room for growth.'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:.65rem;letter-spacing:.2em;color:#b8963e;margin-bottom:.5rem">PRIMARY DEVELOPMENT SIGNAL IN THIS SAMPLE</div>'
+    + '<div style="background:rgba(184,150,62,.06);border-left:3px solid rgba(184,150,62,.5);padding:.8rem 1rem;border-radius:0 4px 4px 0">'
+    + '<div style="font-size:1rem;font-weight:700;color:#d4ac5a;margin-bottom:.4rem">\u2192 ' + bottom1.label + '</div>'
+    + '<div style="font-size:.92rem;color:rgba(245,240,228,.75);line-height:1.7">' + (developInsight[bottom1.label]||'') + '</div>'
     + '</div></div>'
-    + '<div class="rpt-section" style="background:rgba(0,0,0,.06);border:1px dashed rgba(184,150,62,.35);border-radius:6px;padding:.9rem 1rem;text-align:center;margin-top:1rem">'
-    + '<div style="font-family:JetBrains Mono,monospace;font-size:.6rem;color:#b8963e;letter-spacing:.15em;margin-bottom:.35rem">\uD83D\uDD12 UNLOCKED IN FULL REPORT</div>'
-    + '<div style="color:rgba(245,240,228,.55);font-size:.86rem;font-style:italic;line-height:1.6">'
-    + 'Derailer risk profile \u00b7 All 5 dimension scores \u00b7 Per-question pattern analysis \u00b7 SSB-stage implications \u00b7 Col Rao\u2019s personal note'
-    + '</div></div>';
+    + '<div class="rpt-section">'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:.65rem;letter-spacing:.2em;color:#b8963e;margin-bottom:.5rem">DERAILER PROFILE \u2014 PRELIMINARY READING</div>'
+    + '<div style="background:rgba(0,0,0,.12);border-left:3px solid ' + d5color + ';padding:.8rem 1rem;border-radius:0 4px 4px 0">'
+    + '<div style="font-size:.92rem;color:rgba(245,240,228,.75);line-height:1.7">' + derailerInsight + '</div>'
+    + '</div></div>'
+    + '<div class="rpt-section" style="background:linear-gradient(135deg,rgba(13,31,53,.95),rgba(26,50,80,.9));border:1px solid rgba(184,150,62,.4);border-radius:6px;padding:1.4rem 1.2rem;margin-top:1.2rem">'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:#b8963e;letter-spacing:.18em;margin-bottom:.7rem">WHAT THE FULL 75-QUESTION ASSESSMENT REVEALS THAT THIS SAMPLE CANNOT</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem .8rem;margin-bottom:1rem">' + lockedItems + '</div>'
+    + '<div style="text-align:center;margin-top:.8rem">'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:.65rem;letter-spacing:.15em;color:rgba(245,240,228,.4);margin-bottom:.6rem">This sample used 15 of 75 questions. The remaining 60 complete the picture.</div>'
+    + '<a href="' + RAZORPAY_REPORT_LINK + '" target="_blank" style="display:inline-block;background:#b8963e;color:#0d1f35;font-family:Georgia,serif;font-size:.95rem;font-weight:700;padding:.7rem 2rem;text-decoration:none;border-radius:3px;letter-spacing:.03em">Get the Full Assessment \u2192 Rs.99</a>'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;letter-spacing:.1em;color:rgba(245,240,228,.35);margin-top:.5rem">Complete 75 questions \u00b7 All 5 domains \u00b7 Col Rao\u2019s personal note \u00b7 Delivered by email</div>'
+    + '</div>'
+    + '</div>';
 }
 
 
@@ -1596,42 +1722,40 @@ function showPaymentGate(fullReportHTML, candidateName) {
   pendingFullReportHTML = fullReportHTML;
   pendingCandidateName  = candidateName;
 
+  // If returned from Razorpay payment — show full report immediately
   if (window._returnedFromPayment) {
-    var html = '<div class="report-gate" id="payGate" style="background:rgba(26,74,46,.15);border-color:rgba(26,74,46,.4)">'
-      + '<div class="gate-title" style="color:#4caf50">\u2713 Payment Received</div>'
-      + '<div class="gate-sub">Enter your email and we will send your complete detailed report immediately.</div>'
-      + '<div class="gate-email-row">'
-      + '<input class="gate-email-input" type="email" id="gateEmail" placeholder="Your email address" />'
-      + '<button class="gate-pay-btn" style="background:#4caf50;color:#fff" onclick="confirmPaymentAndSend()">Send My Report \u2192</button>'
-      + '</div><div class="gate-err" id="gateErr"></div>'
-      + '<div class="gate-success" id="gateSuccess"></div>'
-      + '<div class="gate-note">Report emailed within 60 seconds &middot; leadbydharma.com</div>'
-      + '</div>';
-    document.getElementById('report').insertAdjacentHTML('beforeend', html);
+    openFullReportWindow(fullReportHTML, candidateName);
+    // Send email via Edge Function (triggered by Razorpay webhook — no action needed here)
+    showGateMsg('\u2713 Payment received. Your full report is open in a new window. Check your email for a summary.', '#4caf50');
     return;
   }
 
-  var html = '<div class="report-gate" id="payGate">'
-    + '<div class="gate-title">Unlock Your Complete Report</div>'
-    + '<div class="gate-sub">Your summary is above. The full report includes all dimension scores,<br>per-question pattern analysis, SSB-stage implications, and Col Rao\u2019s personal note.</div>'
-    + '<div class="gate-price"><sup>\u20b9</sup>99</div>'
-    + '<div class="gate-features">'
-    + '<div class="gate-feature">All 5 dimension scores with percentage breakdown</div>'
-    + '<div class="gate-feature">Per-question pattern analysis across all 75 questions</div>'
-    + '<div class="gate-feature">SSB-stage implications for each dimension</div>'
-    + '<div class="gate-feature">Derailer risk deep-dive with specific patterns</div>'
-    + '<div class="gate-feature">Col Rao\u2019s personal assessment note</div>'
-    + '<div class="gate-feature">Mentorship bridge \u2014 what to work on before your board</div>'
+  // Build the upsell panel — shown after 15Q sample report
+  var emailNote = pendingEmailAddr
+    ? '<div style="font-size:.82rem;color:rgba(245,240,228,.5);font-style:italic;margin-top:.4rem">Report summary will be sent to: ' + pendingEmailAddr + '</div>'
+    : '<div style="font-size:.82rem;color:rgba(245,240,228,.5);font-style:italic;margin-top:.4rem">Enter your email at the start to receive a summary by email.</div>';
+
+  var html = '<div class="report-gate" id="payGate" style="background:rgba(13,31,53,.97);border:1px solid rgba(184,150,62,.35);border-radius:6px;padding:1.6rem 1.4rem;margin-top:1.4rem;text-align:center">'
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:.65rem;letter-spacing:.2em;color:#b8963e;margin-bottom:.5rem">WHAT COMES NEXT</div>'
+    + '<div style="font-size:1.25rem;color:#f5f0e4;font-weight:700;margin-bottom:.5rem">The Full 75-Question Assessment</div>'
+    + '<div style="font-size:.95rem;color:rgba(245,240,228,.65);line-height:1.75;margin-bottom:1rem">'
+    + 'The sample you just completed used 15 of 75 questions — one from each of the key OLQ sub-dimensions. '
+    + 'The full assessment covers all 15 sub-dimensions across all 5 domains, '
+    + 'with per-question pattern analysis, derailer risk by dimension, '
+    + 'SSB-stage implications, and Col Rao\u2019s personal note for your specific profile.'
     + '</div>'
-    + '<div class="gate-email-row">'
-    + '<input class="gate-email-input" type="email" id="gateEmail" placeholder="Your email address" />'
-    + '<button class="gate-pay-btn" onclick="initiatePayment()">Pay \u20b999 \u2192</button>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem .6rem;margin-bottom:1.1rem;text-align:left">'
+    + ['All 15 OLQ sub-dimensions scored','Derailer risk by dimension (all 8)','Per-question pattern analysis','SSB-stage implications for every score','The question where your character showed most','Col Rao\u2019s personal note for your profile']
+      .map(function(t){ return '<div style="font-size:.84rem;color:rgba(245,240,228,.7);display:flex;gap:.35rem"><span style="color:#b8963e">\u2192</span><span>'+t+'</span></div>'; }).join('')
     + '</div>'
-    + '<div class="gate-err" id="gateErr"></div>'
-    + '<div class="gate-success" id="gateSuccess"></div>'
-    + '<div class="gate-note">Full report emailed within 60 seconds of payment &middot; leadbydharma.com</div>'
+    + '<button onclick="payAndOpenReport()" class="gate-pay-btn" style="background:#b8963e;color:#0d1f35;font-family:Georgia,serif;font-size:1.05rem;font-weight:700;padding:.75rem 2.2rem;border:none;border-radius:3px;cursor:pointer;letter-spacing:.03em;display:inline-block">Pay Rs.99 \u2014 Get Full Report \u2192</button>'
+    + emailNote
+    + '<div style="font-family:JetBrains Mono,monospace;font-size:.6rem;letter-spacing:.1em;color:rgba(245,240,228,.25);margin-top:.6rem">Report opens in new window \u00b7 Email summary sent automatically \u00b7 Save or print anytime</div>'
     + '</div>';
-  document.getElementById('report').insertAdjacentHTML('beforeend', html);
+
+  var rd = document.getElementById('report');
+  rd.insertAdjacentHTML('beforeend', html);
+  document.getElementById('payGate').scrollIntoView({behavior:'smooth'});
 }
 
 function sendFullReportByEmail(email, name, reportHTML) {
