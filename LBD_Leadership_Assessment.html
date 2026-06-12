@@ -718,7 +718,12 @@
 </div>
 <!-- ══════════════════════════════════════ INTRO PAGE ══ -->
 <div class="intro-page" id="introPage">
-  <div class="disclaimer">
+  <div id="fullModeUnlockedBanner" style="display:none;background:linear-gradient(135deg,rgba(26,74,46,.9),rgba(13,31,53,.95));border:1px solid rgba(76,175,80,.4);border-radius:5px;padding:1rem 1.3rem;margin-bottom:1.2rem;text-align:center">
+  <div style="font-size:1.15rem;font-weight:700;color:#4caf50;margin-bottom:.3rem">&#10003; Payment Confirmed — Full Assessment Unlocked</div>
+  <div style="font-size:.95rem;color:rgba(245,240,228,.75)">You now have access to the complete 75-question assessment. Enter your name below and begin.</div>
+</div>
+<script>if(window._fullModeUnlocked){document.getElementById('fullModeUnlockedBanner').style.display='block';}</script>
+<div class="disclaimer">
     <strong>Before you begin — read this carefully.</strong><br>
     This assessment is not a test you can pass by choosing the 'right' answer. It is a personality and leadership potential evaluation designed to reveal patterns in how you think, feel, and make decisions under pressure. The report it generates will be honest — including about the parts of your personality that work against leadership. Answer every question as you genuinely are, not as you think an officer should be. An experienced psychologist or assessor will see through performance in five days of SSB. This 15-question sample is designed to give you a directional reading. The full 75-question assessment goes deeper. <em>If you are going to cheat this assessment, you are already demonstrating one of the qualities that disqualifies an officer candidate.</em>
     <br><br>
@@ -974,7 +979,7 @@ const SECTIONS = [
 ]
 
 // ── FREE ASSESSMENT: 15 analytically selected questions ─────
-const FREE_MODE = true;
+let FREE_MODE = true; // overridden to false when ?unlock=true is present
 const FREE_QUESTIONS = ['S1Q2', 'S1Q5', 'S1Q8', 'S2Q1', 'S2Q3', 'S2Q6', 'S3Q3', 'S3Q5', 'S3Q6', 'S4Q1', 'S4Q2', 'S4Q5', 'S5Q4', 'S5Q6', 'S5Q1'];
 ;
 
@@ -1009,6 +1014,10 @@ function startAssessment() {
     if (emailVal && emailVal.indexOf('@') > 0) {
       pendingEmailAddr = emailVal;
     }
+  }
+  // If full mode unlocked via payment, set FREE_MODE = false
+  if (window._fullModeUnlocked) {
+    FREE_MODE = false;
   }
   document.getElementById('introPage').classList.add('hidden');
   document.getElementById('assessmentSections').style.display = 'block';
@@ -1221,6 +1230,40 @@ function generateSampleReport() {
       setTimeout(() => b.style.width = w, 50);
     });
   }, 100);
+
+  // Send brief email if candidate provided email address
+  const sampleEmail = pendingEmailAddr;
+  if (sampleEmail && sampleEmail.indexOf('@') > 0 && typeof emailjs !== 'undefined') {
+    const dims2 = computeScores();
+    const reportDate = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
+    const body = [
+      'LEAD BY DHARMA — Sample Leadership Assessment',
+      'Candidate: ' + candidateName,
+      'Date: ' + reportDate,
+      '',
+      'DIRECTIONAL SCORES — 15 of 75 questions',
+      'Domain I   — Intellectual Qualities : ' + dims2.D1.pct + '%',
+      'Domain II  — Social Effectiveness   : ' + dims2.D2.pct + '%',
+      'Domain III — Dynamism and Drive      : ' + dims2.D3.pct + '%',
+      'Domain IV  — Character and Integrity : ' + dims2.D4.pct + '%',
+      'Domain V   — Derailer Risk (sample)  : ' + dims2.D5.pct + '%',
+      '',
+      'These are directional signals from 15 questions.',
+      'Full 75-question assessment: leadbydharma.com (Rs.99)',
+      '',
+      'Colonel Aniruddha Rao HR (Retd.) — Lead By Dharma',
+      'leadbydharma@gmail.com | +91 98789 30879',
+      '"The SSB does not select the most prepared candidate. It selects the most real one."'
+    ].join('\n');
+    emailjs.send('service_t7ozvf3', 'template_lkhepyo', {
+      to_email: sampleEmail,
+      candidate_name: candidateName,
+      report_html: body,
+      report_date: reportDate,
+      reply_to: 'leadbydharma@gmail.com'
+    }).then(function(){ console.log('Sample email sent to ' + sampleEmail); })
+      .catch(function(e){ console.log('Sample email error:', e); });
+  }
 }
 function generateReport() {
   // ── FREE MODE: show sample report ─────────────────────────
@@ -1700,6 +1743,12 @@ function showFullReportDirectly(){
 (function(){
   var p=new URLSearchParams(window.location.search);
   if(p.get('paid')==='true') window._returnedFromPayment=true;
+  // When returning from payment, unlock the full 75Q assessment
+  if(p.get('unlock')==='true' || p.get('paid')==='true') {
+    FREE_MODE = false;
+    // Show a welcome banner telling them full assessment is unlocked
+    window._fullModeUnlocked = true;
+  }
 })();
 
 
