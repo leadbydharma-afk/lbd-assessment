@@ -1080,13 +1080,14 @@ function renderSection(idx) {
     }
   });
 
-  const unanswered = sec.questions.filter(q => responses[q.id] === undefined).length;
+  const unanswered = questionsToShow.filter(q => responses[q.id] === undefined).length;
+  const btnLabel = (typeof FREE_MODE !== 'undefined' && FREE_MODE) ? 'See My Sample Report →' : 'Generate My Report →';
   html += `<div class="nav-wrap">
     ${idx > 0 ? `<button class="btn btn-outline" onclick="goSection(${idx-1})">← Previous</button>` : `<span></span>`}
     <div class="nav-info">${unanswered === 0 ? '✓ All questions answered' : `${unanswered} remaining in this section`}</div>
     ${idx < SECTIONS.length - 1
       ? `<button class="btn btn-primary" onclick="goSection(${idx+1})">Next Section →</button>`
-      : `<button class="btn btn-primary" id="submitBtn" onclick="generateReport()" ${unanswered > 0 ? 'disabled' : ''}>Generate My Report →</button>`
+      : `<button class="btn btn-primary" id="submitBtn" onclick="generateReport()" ${unanswered > 0 ? 'disabled' : ''}>${btnLabel}</button>`
     }
   </div>`;
 
@@ -1158,7 +1159,63 @@ function computeScores() {
 // ════════════════════════════════════════════════════
 //  REPORT GENERATOR
 // ════════════════════════════════════════════════════
+
+function generateSampleReport() {
+  const dims = computeScores();
+  document.getElementById('assessmentSections').style.display = 'none';
+
+  const d1 = dims.D1, d2 = dims.D2, d3 = dims.D3, d4 = dims.D4, d5 = dims.D5;
+  // With only 3 questions per domain, scores are directional not precise
+  // Use the same verdict logic but note it is sample-based
+  const overallRaw = [d1.avg, d2.avg, d3.avg, d4.avg].reduce((a,b) => a+b, 0) / 4;
+  const derailerRiskScore = 5 - d5.avg;
+  const effD5 = derailerRiskScore > 3.2 ? -0.8 : derailerRiskScore > 2.0 ? -0.3 : 0;
+  const adj = overallRaw + effD5;
+
+  let verdictClass, verdictTitle, verdictText;
+  if (adj >= 4.0) {
+    verdictClass = 'verdict-strong';
+    verdictTitle = 'Strong Signal Detected';
+    verdictText = 'Your responses across these 15 questions show patterns consistent with strong officer potential. The directional signals are clear. What the full assessment reveals is the texture beneath these signals — where exactly they are robust and where they have a specific condition attached.';
+  } else if (adj >= 3.0) {
+    verdictClass = 'verdict-developing';
+    verdictTitle = 'Developing Signal Detected';
+    verdictText = 'Your responses show a profile that is developing. Some dimensions are strong; others show patterns the SSB selection process is specifically designed to surface. The full assessment maps each dimension precisely and tells you which one to work on first.';
+  } else {
+    verdictClass = 'verdict-foundation';
+    verdictTitle = 'Foundation Signals Detected';
+    verdictText = 'Your responses point to a specific set of patterns that will require development before SSB. This is not a verdict — it is a diagnostic. The full assessment shows you exactly where those patterns live and what genuine development looks like.';
+  }
+
+  // Build the sample report HTML using buildSummaryReport
+  const sampleHTML = buildSummaryReport(d1, d2, d3, d4, candidateName, verdictClass, verdictTitle, verdictText, d5);
+
+  // Display the sample report
+  const rd = document.getElementById('report');
+  rd.innerHTML = sampleHTML;
+  rd.style.display = 'block';
+
+  // Progress bar
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('progressPct').textContent = '100%';
+
+  window.scrollTo({top: 0, behavior:'smooth'});
+
+  // Animate bars
+  setTimeout(() => {
+    document.querySelectorAll('.dim-bar-fill').forEach(b => {
+      const w = b.style.width; b.style.width = '0%';
+      setTimeout(() => b.style.width = w, 50);
+    });
+  }, 100);
+}
 function generateReport() {
+  // ── FREE MODE: show sample report ─────────────────────────
+  if (typeof FREE_MODE !== 'undefined' && FREE_MODE) {
+    generateSampleReport();
+    return;
+  }
+  // ── FULL MODE ─────────────────────────────────────────────
   const dims = computeScores();
   document.getElementById('assessmentSections').style.display = 'none';
 
