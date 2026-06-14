@@ -590,8 +590,8 @@ function startInterview() {
   var selectedDiff = document.getElementById('cDiff').value || 'standard';
 
   // ── Code-based usage check ──────────────────────────────
-  var codedUses = currentAICode ? getCodeUsage(currentAICode) : 0;
-  var isOwner = currentAICode && AI_CODES[currentAICode] && AI_CODES[currentAICode].owner;
+  var isOwner = (currentAIType === 'owner');
+  var codedUses = isOwner ? 999 : (currentAICode ? getCodeUsage(currentAICode) : 0);
   if (!isOwner && codedUses <= 0) {
     alert('You have used all your interview sessions. Your reports are permanently saved on this page. Contact leadbydharma@gmail.com if you need additional sessions.');
     return;
@@ -702,6 +702,7 @@ document.addEventListener("DOMContentLoaded", function() {
 var AI_USAGE_KEY   = 'lbd_ai_usage_v2';  // versioned to avoid old data
 var currentAICode  = null;
 var aiUsesRemaining = 0;
+var currentAIType  = null;
 
 // ── Code gate functions ──────────────────────────────────
 function getCodeUsage(code) {
@@ -712,8 +713,8 @@ function getCodeUsage(code) {
     var data = raw ? JSON.parse(raw) : {};
     if (data[code] !== undefined) return data[code];
   } catch(e) {}
-  // Not in cache — use value from AI_CODES definition
-  return AI_CODES[code] ? AI_CODES[code].uses : 0;
+  // Not in cache — use remaining from aiUsesRemaining
+  return aiUsesRemaining || 0;
 }
 
 function saveCodeUsage(code, uses) {
@@ -772,7 +773,7 @@ async function redeemAICode(code) {
 }
 
 function decrementAIUses(code) {
-  if (AI_CODES[code] && AI_CODES[code].owner) return;  // owner never decrements
+  if (currentAIType === 'owner') return;  // owner never decrements
   var uses = getCodeUsage(code);
   if (uses > 0) saveCodeUsage(code, uses - 1);
 }
@@ -818,6 +819,7 @@ async function submitAICode() {
   }
   // Valid code — unlock the interview
   currentAICode = code;
+  currentAIType  = result.type || 'standalone';
   aiUsesRemaining = result.uses;
   document.getElementById('aiCodeGate').classList.add('hidden');
   document.getElementById('setupPage').classList.remove('hidden');
@@ -827,9 +829,9 @@ async function submitAICode() {
 function renderUsageDisplay() {
   var container = document.getElementById('usageContainer');
   if (!container) return;
-  var isOwner = currentAICode && AI_CODES[currentAICode] && AI_CODES[currentAICode].owner;
+  var isOwner = currentAICode && (currentAIType === 'owner');
   var uses = currentAICode ? getCodeUsage(currentAICode) : 0;
-  var codeType = currentAICode && AI_CODES[currentAICode] ? (AI_CODES[currentAICode].type || '') : '';
+  var codeType = currentAIType || '';
   var typeLabel = codeType === 'standalone' ? ' &nbsp;·&nbsp; Standalone Pack' : (codeType === 'readiness' ? ' &nbsp;·&nbsp; Readiness Pack' : '');
   var html = '<div class="usage-bar">'
     + '<div class="usage-title">AI Interview Usage'
@@ -837,7 +839,7 @@ function renderUsageDisplay() {
                : ' &nbsp;·&nbsp; ' + uses + ' session' + (uses !== 1 ? 's' : '') + ' remaining' + typeLabel)
     + '</div>';
   if (!isOwner) {
-    var used = (currentAICode && AI_CODES[currentAICode] ? AI_CODES[currentAICode].uses : 3) - uses;
+    var used = 3 - uses;
     var diffs = ['Standard', 'Demanding', 'Stress'];
     html += '<div class="usage-slots">';
     for (var i = 0; i < 3; i++) {
