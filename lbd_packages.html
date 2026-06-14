@@ -78,8 +78,8 @@ body::before {
 
 .regiment {
   font-family: 'JetBrains Mono', monospace;
-  font-size: .74rem;
-  letter-spacing: .35em;
+  font-size: .88rem;
+  letter-spacing: .3em;
   color: var(--gold2);
   text-transform: uppercase;
   margin-bottom: 1.2rem;
@@ -99,8 +99,8 @@ body::before {
 
 .masthead-kicker {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 1.05rem;
-  letter-spacing: .25em;
+  font-size: 1.2rem;
+  letter-spacing: .22em;
   color: rgba(245,240,228,.4);
   text-transform: uppercase;
   margin-bottom: .8rem;
@@ -123,7 +123,7 @@ body::before {
 }
 
 .masthead-sub {
-  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+  font-size: clamp(1.4rem, 2.5vw, 1.7rem);
   color: rgba(245,240,228,.65);
   font-style: italic;
   font-weight: 300;
@@ -142,23 +142,7 @@ body::before {
   position: relative;
 }
 
-/* ── INTRO BAR ── */
-.intro-bar {
-  background: var(--parchment);
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-  padding: 2.2rem 2rem;
-  text-align: center;
-}
-.intro-bar p {
-  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-  color: var(--navy);
-  max-width: 680px;
-  margin: 0 auto;
-  line-height: 1.8;
-  font-weight: 400;
-}
-.intro-bar strong { color: var(--navy); font-weight: 600; }
+
 
 /* ── FREE OFFER STRIP ── */
 .free-strip {
@@ -205,7 +189,7 @@ body::before {
 .free-text strong { color: var(--gold2); font-style: normal; }
 .btn-ghost {
   font-family: 'Cinzel', serif;
-  font-size: 1.02rem;
+  font-size: 1.16rem;
   letter-spacing: .15em;
   color: var(--gold);
   border: 1px solid rgba(184,150,62,.5);
@@ -235,14 +219,14 @@ body::before {
 }
 .section-title h2 {
   font-family: 'Cinzel', serif;
-  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
   font-weight: 400;
   color: var(--navy);
   letter-spacing: .1em;
   margin-bottom: .5rem;
 }
 .section-title p {
-  font-size: 1.25rem;
+  font-size: 1.45rem;
   color: var(--ash);
   font-style: italic;
   max-width: 560px;
@@ -327,7 +311,7 @@ body::before {
 
 .pkg-name {
   font-family: 'Cinzel', serif;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 600;
   color: var(--navy);
   letter-spacing: .06em;
@@ -351,7 +335,7 @@ body::before {
 }
 .pkg-price {
   font-family: 'Cinzel', serif;
-  font-size: 2.2rem;
+  font-size: 2.5rem;
   font-weight: 600;
   color: var(--navy);
   line-height: 1;
@@ -370,7 +354,7 @@ body::before {
 }
 .pkg-save {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 1.06rem;
+  font-size: 1.2rem;
   color: var(--green);
   background: rgba(26,74,46,.08);
   padding: .15rem .45rem;
@@ -419,13 +403,13 @@ body::before {
 }
 .pp-text {}
 .pp-name {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 600;
   color: var(--navy);
   margin-bottom: .1rem;
 }
 .pp-desc {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   color: var(--ash);
   font-style: italic;
   line-height: 1.5;
@@ -892,9 +876,9 @@ body::before {
   }
   #mayOfferStrip.strip-visible { display: flex !important; }
   #mayOfferStrip .strip-left { display:flex; align-items:center; gap:.7rem; flex-wrap:wrap; }
-  #mayOfferStrip .strip-badge { font-family:JetBrains Mono,monospace; font-size:.58rem; letter-spacing:.18em; color:#f0ca7a; white-space:nowrap; }
+  #mayOfferStrip .strip-badge { font-family:JetBrains Mono,monospace; font-size:.72rem; letter-spacing:.18em; color:#f0ca7a; white-space:nowrap; }
   #mayOfferStrip .strip-text { font-family:Georgia,serif; font-size:.88rem; color:rgba(245,240,228,.85); }
-  #mayOfferStrip .strip-cd { font-family:JetBrains Mono,monospace; font-size:.68rem; color:rgba(240,202,122,.7); white-space:nowrap; }
+  #mayOfferStrip .strip-cd { font-family:JetBrains Mono,monospace; font-size:.82rem; color:rgba(240,202,122,.7); white-space:nowrap; }
   #mayOfferStrip .strip-btn { font-family:Georgia,serif; font-size:.82rem; font-weight:500; color:#0D1F35; background:#B8963E; border:none; border-radius:3px; padding:.4rem 1.1rem; cursor:pointer; white-space:nowrap; text-decoration:none; display:inline-block; transition:background .2s; flex-shrink:0; }
   #mayOfferStrip .strip-btn:hover { background:#D4AC5A; }
   #mayOfferStrip .strip-close { background:none; border:none; color:rgba(245,240,228,.4); cursor:pointer; font-size:1.1rem; padding:0 .25rem; line-height:1; flex-shrink:0; }
@@ -915,10 +899,6 @@ body::before {
   <div class="masthead-sig">IMA · Dehradun · Leadership Mentor</div>
 </div>
 
-<!-- INTRO BAR -->
-<div class="intro-bar">
-  <p>The SSB does not select the most prepared candidate. It selects the most real one. Every product on this page is designed to help you understand who you actually are — not to help you perform a version of yourself for five days.</p>
-</div>
 
 <!-- FREE OFFER STRIP -->
 <div class="free-strip">
@@ -1409,22 +1389,6 @@ async function handleSubmit(e) {
 </script>
 
 
-<script>
-(function(){
-  var now=new Date(), isPromo=(now.getFullYear()===2026 && now.getMonth()===4);
-  if(!isPromo) return;
-  // Add promo price note to each package card
-  document.querySelectorAll('.package-price, .pack-price, .price-display, [class*="price"]').forEach(function(el){
-    if(el.querySelector('.promo-alt')) return;
-    var note=document.createElement('div');
-    note.className='promo-alt';
-    note.style.cssText='font-family:JetBrains Mono,monospace;font-size:.65rem;'
-      +'color:#f0ca7a;margin-top:.2rem;letter-spacing:.05em;font-weight:600';
-    note.textContent='or ₹99 for 5-day access this May';
-    el.appendChild(note);
-  });
-})();
-</script>
 
 
 
@@ -1432,43 +1396,8 @@ async function handleSubmit(e) {
 
 
 
-<!-- ═══ MAY OFFER STRIP ═══ -->
-<div id="lbdMayStrip" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:99999;font-family:Georgia,serif"></div>
-<script>
-function lbdCloseStrip(){ document.getElementById('lbdMayStrip').style.display='none'; }
-(function(){
-  var d=new Date();
-  if(!(d.getFullYear()===2026 && d.getMonth()===4)) return;
-  var strip=document.getElementById('lbdMayStrip');
-  if(!strip) return;
-  strip.innerHTML=''
-    +'<div style="background:linear-gradient(90deg,#6B1A1A 0%,#0D1F35 55%);border-top:2px solid #B8963E;padding:.7rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap">'
-    +'<div style="display:flex;align-items:center;gap:.8rem;flex-wrap:wrap">'
-    +'<div style="background:#B8963E;color:#0D1F35;font-family:JetBrains Mono,monospace;font-size:.65rem;font-weight:700;letter-spacing:.18em;padding:.25rem .7rem;border-radius:2px;white-space:nowrap">&#9733; MAY 2026</div>'
-    +'<div style="color:#fff;font-size:1rem">'
-    +'<span style="color:#f0ca7a;font-size:1.15rem;font-weight:700">MAY MONTH OFFER</span>'
-    +' &mdash; Any SSB Set or AI Interview at '
-    +'<span style="color:#f0ca7a;font-size:1.2rem;font-weight:700">Rs.99</span>'
-    +'</div>'
-    +'<div id="lbdStripCd" style="font-family:JetBrains Mono,monospace;font-size:.7rem;color:rgba(240,202,122,.75);white-space:nowrap"></div>'
-    +'</div>'
-    +'<div style="display:flex;align-items:center;gap:.6rem;flex-shrink:0">'
-    +'<a href="https://leadbydharma-afk.github.io/lbd-assessment/special_access.html" target="_blank" style="background:#B8963E;color:#0D1F35;font-family:Georgia,serif;font-size:.92rem;font-weight:600;padding:.5rem 1.4rem;border-radius:3px;text-decoration:none;white-space:nowrap;display:inline-block">Explore Offer &#8594;</a>'
-    +'<button onclick="lbdCloseStrip()" style="background:none;border:none;color:rgba(245,240,228,.5);font-size:1.3rem;cursor:pointer;padding:0 .25rem;line-height:1">&#215;</button>'
-    +'</div>'
-    +'</div>';
-  strip.style.display='block';
-  document.body.style.paddingBottom='58px';
-  function tick(){
-    var end=new Date('2026-06-01T00:00:00+05:30'),diff=end-new Date();
-    if(diff<=0){strip.style.display='none';return;}
-    var dd=Math.floor(diff/86400000),hh=Math.floor(diff%86400000/3600000),mm=Math.floor(diff%3600000/60000),ss=Math.floor(diff%60000/1000);
-    var el=document.getElementById('lbdStripCd');
-    if(el) el.textContent=dd+'d '+hh+'h '+mm+'m '+ss+'s remaining';
-  }
-  tick(); setInterval(tick,1000);
-})();
-</script>
+
+
 <!-- ═══ END MAY OFFER STRIP ═══ -->
 
 </body>
