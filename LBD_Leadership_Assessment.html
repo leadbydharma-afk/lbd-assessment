@@ -1687,11 +1687,104 @@ function initiatePayment(){
   }
   document.getElementById('gateErr').style.display='none';
   pendingEmailAddr=email;
+
+  // Generate a one-time session token and store it
+  // This token is required when "I have paid" is clicked
+  // It proves the payment flow was initiated in THIS session
+  var token = Math.random().toString(36).substr(2,9) + Date.now().toString(36);
+  try { sessionStorage.setItem('lbd_pay_token', token);
+        sessionStorage.setItem('lbd_pay_email', email);
+        sessionStorage.setItem('lbd_pay_time', Date.now().toString()); }
+  catch(e){}
+
+  // Build the Razorpay URL with redirect back to this page with paid=true AND the token
+  var returnUrl = window.location.href.split('?')[0] + '?paid=true&t=' + token;
+  // Open Razorpay — Razorpay will redirect to returnUrl after payment
+  // Store return URL so Razorpay payment link can use it
+  try { sessionStorage.setItem('lbd_return_url', returnUrl); } catch(e){}
+
   window.open(RAZORPAY_REPORT_LINK,'_blank');
+
   var btn=document.querySelector('.gate-pay-btn');
-  if(btn){btn.textContent='I have paid — Send Report';btn.onclick=confirmPaymentAndSend;btn.style.background='#4caf50';btn.style.color='#fff';}
+  if(btn){
+    btn.textContent='I have paid — Verify & Send Report';
+    btn.onclick=confirmPaymentAndSend;
+    btn.style.background='#4caf50';
+    btn.style.color='#fff';
+  }
   var note=document.querySelector('.gate-note');
-  if(note) note.textContent='After completing payment, click the button above.';
+  if(note) note.textContent='Complete payment in the new tab, then click the button above.';
+}
+
+function showTimedMessage(headline, detail, color, countdown) {
+  // Remove any existing message box
+  var existing = document.getElementById('lbdPayMsg');
+  if(existing) existing.remove();
+
+  // Create the message box
+  var box = document.createElement('div');
+  box.id = 'lbdPayMsg';
+  box.style.cssText = [
+    'background:#0d1f35',
+    'border:1.5px solid ' + color,
+    'border-radius:6px',
+    'padding:1rem 1.2rem',
+    'margin:0.8rem 0',
+    'text-align:center',
+    'font-family:Georgia,serif',
+  ].join(';');
+
+  var h = document.createElement('div');
+  h.style.cssText = 'font-size:1rem;font-weight:700;color:' + color + ';margin-bottom:0.4rem';
+  h.textContent = headline;
+
+  var d = document.createElement('div');
+  d.style.cssText = 'font-size:0.88rem;color:rgba(245,240,228,0.75);line-height:1.55';
+  d.textContent = detail;
+
+  box.appendChild(h);
+  box.appendChild(d);
+
+  // Countdown timer if needed
+  if(countdown > 0){
+    var timer = document.createElement('div');
+    timer.style.cssText = 'font-family:monospace;font-size:1.4rem;font-weight:700;color:' + color + ';margin-top:0.6rem';
+    timer.id = 'lbdCountdown';
+    box.appendChild(timer);
+
+    var remaining = countdown;
+    function tick(){
+      if(!document.getElementById('lbdCountdown')) return;
+      document.getElementById('lbdCountdown').textContent = remaining + 's';
+      if(remaining <= 0){
+        // Replace countdown with ready message
+        document.getElementById('lbdCountdown').textContent = '';
+        h.textContent = '✓  Payment window should be complete';
+        d.textContent = 'If you have finished paying, click “I have paid — Verify & Send Report” now.';
+        h.style.color = '#4caf50';
+        box.style.borderColor = '#4caf50';
+        return;
+      }
+      remaining--;
+      setTimeout(tick, 1000);
+    }
+    tick();
+  }
+
+  // Insert the box into the gate — before the error div or after the email row
+  var gate = document.getElementById('payGate');
+  var errDiv = document.getElementById('gateErr');
+  if(gate && errDiv){
+    gate.insertBefore(box, errDiv);
+  } else if(gate){
+    gate.appendChild(box);
+  } else {
+    // Fallback — show in gateErr
+    var e = document.getElementById('gateErr');
+    if(e){ e.style.color=color; e.style.display='block'; e.textContent=headline+' '+detail; }
+  }
+  // Scroll it into view
+  box.scrollIntoView({behavior:'smooth', block:'center'});
 }
 
 function confirmPaymentAndSend(){
@@ -1702,8 +1795,72 @@ function confirmPaymentAndSend(){
     e.textContent='Please enter your email address.';return;
   }
   pendingEmailAddr=email;
+
+  // SECURITY CHECK 1: Verify session token exists and matches
+  var storedToken='', storedEmail='', storedTime=0;
+  try {
+    storedToken = sessionStorage.getItem('lbd_pay_token')||'';
+    storedEmail = sessionStorage.getItem('lbd_pay_email')||'';
+    storedTime  = parseInt(sessionStorage.getItem('lbd_pay_time')||'0');
+  } catch(e){}
+
+  // Token must exist (payment flow was started in this session)
+  if(!storedToken){
+    showTimedMessage(
+      '⚠️  Please click “Pay” first',
+      'To receive your report, click the Pay button to complete payment. Once payment is done, click “I have paid” to receive your report.',
+      '#ff8080',
+      0
+    );
+    return;
+  }
+
+  // Token must not be older than 30 minutes (prevents stale session reuse)
+  var AGE_LIMIT = 30 * 60 * 1000;
+  if(Date.now() - storedTime > AGE_LIMIT){
+    try{ sessionStorage.removeItem('lbd_pay_token');
+         sessionStorage.removeItem('lbd_pay_email');
+         sessionStorage.removeItem('lbd_pay_time'); }catch(e){}
+    showTimedMessage(
+      '⌛  Your session has expired',
+      'More than 30 minutes have passed since you initiated payment. Please click Pay again to restart. If you have already paid, write to leadbydharma@gmail.com with your payment details and we will send your report immediately.',
+      '#ff8080',
+      0
+    );
+    return;
+  }
+
+  // SECURITY CHECK 2: Verify email matches the session
+  if(storedEmail && storedEmail.toLowerCase() !== email.toLowerCase()){
+    showTimedMessage(
+      '⚠️  Email address does not match',
+      'Please enter the same email address you used when you clicked Pay (' + storedEmail + '). Your report will be sent to that address.',
+      '#ffa94d',
+      0
+    );
+    return;
+  }
+
+  // SECURITY CHECK 3: Verify minimum time has passed (payment takes at least 15 seconds)
+  var MIN_PAYMENT_TIME = 15 * 1000;
+  if(Date.now() - storedTime < MIN_PAYMENT_TIME){
+    var remaining = Math.ceil((MIN_PAYMENT_TIME - (Date.now() - storedTime)) / 1000);
+    showTimedMessage(
+      '⏳  Payment in progress — please complete it in the tab that just opened.',
+      'Your report will be sent as soon as payment is confirmed. This usually takes 30–60 seconds.',
+      '#ffa94d',
+      remaining
+    );
+    return;
+  }
+
+  // All checks passed — clear the token (single use) and send report
+  try{ sessionStorage.removeItem('lbd_pay_token');
+       sessionStorage.removeItem('lbd_pay_email');
+       sessionStorage.removeItem('lbd_pay_time'); }catch(e){}
+
   var btn=document.querySelector('.gate-pay-btn');
-  if(btn){btn.disabled=true;btn.textContent='Sending…';}
+  if(btn){btn.disabled=true;btn.textContent='Verifying & Sending…';}
   sendFullReportByEmail(email,pendingCandidateName,pendingFullReportHTML);
 }
 
