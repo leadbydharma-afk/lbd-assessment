@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lead By Dharma — Report Recovery</title>
+<style>
+  :root{--navy:#0d2137;--gold:#b8963e;--cream:#f5f0e4;--ash:#6b7280}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--navy);font-family:Georgia,serif;color:var(--cream);
+    min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+  .card{background:rgba(255,255,255,0.04);border:1px solid rgba(184,150,62,0.25);
+    border-radius:8px;max-width:560px;width:100%;padding:2.5rem}
+  .brand{font-family:'Courier New',monospace;font-size:0.7rem;letter-spacing:3px;
+    color:var(--gold);text-transform:uppercase;margin-bottom:0.6rem}
+  h1{font-size:1.5rem;color:var(--cream);margin-bottom:0.5rem;line-height:1.3}
+  .sub{font-size:0.9rem;color:rgba(245,240,228,0.6);margin-bottom:2rem;line-height:1.6}
+  label{display:block;font-size:0.82rem;color:var(--gold);letter-spacing:0.05em;
+    text-transform:uppercase;margin-bottom:0.4rem;margin-top:1.2rem}
+  input,textarea{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(184,150,62,0.3);
+    border-radius:4px;padding:0.7rem 0.9rem;color:var(--cream);font-family:Georgia,serif;
+    font-size:0.95rem;outline:none}
+  input:focus,textarea:focus{border-color:var(--gold)}
+  textarea{resize:vertical;min-height:80px}
+  .btn{display:block;width:100%;margin-top:1.5rem;background:var(--gold);color:var(--navy);
+    border:none;padding:0.85rem;font-family:Georgia,serif;font-size:1rem;font-weight:700;
+    border-radius:4px;cursor:pointer;letter-spacing:0.03em}
+  .btn:hover{background:#c9a84c}
+  .note{margin-top:1.2rem;font-size:0.82rem;color:rgba(245,240,228,0.45);
+    line-height:1.6;text-align:center}
+  .success{display:none;background:rgba(26,71,49,0.4);border:1px solid rgba(76,175,80,0.4);
+    border-radius:6px;padding:1.2rem;margin-top:1.2rem;text-align:center;
+    color:#81c784;font-size:0.95rem;line-height:1.6}
+  .error{display:none;background:rgba(123,29,29,0.3);border:1px solid rgba(255,100,100,0.3);
+    border-radius:6px;padding:1rem;margin-top:1rem;color:#ff8080;font-size:0.88rem}
+  hr{border:none;border-top:1px solid rgba(184,150,62,0.2);margin:1.8rem 0}
+  .quote{font-size:0.85rem;color:rgba(184,150,62,0.6);font-style:italic;
+    text-align:center;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="brand">Lead By Dharma</div>
+  <h1>Report Recovery</h1>
+  <p class="sub">If you completed payment but did not receive your Leadership Assessment report,
+  please fill in the details below. Col Rao will personally verify your payment and 
+  send your report within a few hours.</p>
+
+  <form id="recoveryForm" onsubmit="submitRecovery(event)">
+    <label>Your Full Name</label>
+    <input type="text" id="rName" placeholder="As entered during payment" required>
+
+    <label>Email Address Used for Payment</label>
+    <input type="email" id="rEmail" placeholder="Your Razorpay payment email" required>
+
+    <label>Payment Date (approximate)</label>
+    <input type="text" id="rDate" placeholder="e.g. 15 July 2026">
+
+    <label>Payment ID (optional — from your Razorpay receipt)</label>
+    <input type="text" id="rPayId" placeholder="e.g. pay_TE00sEtzeIHEun">
+
+    <label>Any additional details</label>
+    <textarea id="rNotes" placeholder="e.g. I paid at 11pm, received no email..."></textarea>
+
+    <button type="submit" class="btn">Submit Recovery Request &rarr;</button>
+  </form>
+
+  <div class="success" id="successMsg">
+    <strong>&#10003; Request received.</strong><br>
+    Col Rao will verify your payment and send your report to the email address above
+    within a few hours. If you do not hear back within 24 hours, 
+    please WhatsApp +91 98789 30879 directly.
+  </div>
+
+  <div class="error" id="errorMsg"></div>
+
+  <hr>
+  <p class="note">
+    You can also email directly:<br>
+    <strong style="color:var(--gold)">leadbydharma@gmail.com</strong><br>
+    or WhatsApp <strong style="color:var(--gold)">+91 98789 30879</strong>
+  </p>
+  <hr>
+  <p class="quote">"The SSB does not select the most prepared candidate.<br>It selects the most real one."</p>
+</div>
+
+<script>
+function submitRecovery(e){
+  e.preventDefault();
+  var name    = document.getElementById('rName').value.trim();
+  var email   = document.getElementById('rEmail').value.trim();
+  var date    = document.getElementById('rDate').value.trim();
+  var payId   = document.getElementById('rPayId').value.trim();
+  var notes   = document.getElementById('rNotes').value.trim();
+
+  if(!name || !email){
+    var err = document.getElementById('errorMsg');
+    err.style.display='block';
+    err.textContent='Please enter your name and email address.';
+    return;
+  }
+
+  // Send via EmailJS — same service ID used in Leadership Assessment
+  if(typeof emailjs === 'undefined'){
+    // EmailJS not loaded — show manual contact instructions
+    document.getElementById('recoveryForm').style.display='none';
+    var s = document.getElementById('successMsg');
+    s.style.display='block';
+    s.innerHTML='<strong>Please contact us directly:</strong><br>'
+      +'Email <strong>leadbydharma@gmail.com</strong> with:<br>'
+      +'Name: '+name+'<br>Email: '+email
+      +(payId?'<br>Payment ID: '+payId:'')
+      +'<br><br>Col Rao will respond personally within a few hours.';
+    return;
+  }
+
+  var btn = document.querySelector('.btn');
+  btn.textContent='Sending…';
+  btn.disabled=true;
+
+  emailjs.send(
+    'service_t7ozvf3',
+    'template_lkhepyo',
+    {
+      to_email:       'leadbydharma@gmail.com',
+      candidate_name: 'RECOVERY REQUEST — ' + name,
+      report_html:    'Name: '+name+'\nEmail: '+email+'\nDate: '+date
+                     +'\nPayment ID: '+payId+'\nNotes: '+notes,
+      report_date:    new Date().toLocaleDateString('en-IN'),
+      reply_to:       email
+    }
+  ).then(function(){
+    document.getElementById('recoveryForm').style.display='none';
+    document.getElementById('successMsg').style.display='block';
+  }, function(err){
+    var errDiv = document.getElementById('errorMsg');
+    errDiv.style.display='block';
+    errDiv.textContent='Could not send automatically. Please email leadbydharma@gmail.com directly with your payment details.';
+    btn.textContent='Submit Recovery Request →';
+    btn.disabled=false;
+  });
+}
+</script>
+
+<!-- EmailJS — same as Leadership Assessment -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  (function(){
+    try{ emailjs.init({publicKey:'YOUR_EMAILJS_PUBLIC_KEY'}); }
+    catch(e){ console.log('EmailJS init:', e); }
+  })();
+</script>
+</body>
+</html>
