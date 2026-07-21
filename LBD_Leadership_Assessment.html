@@ -1796,6 +1796,22 @@ function confirmPaymentAndSend(){
   }
   pendingEmailAddr=email;
 
+  // ── Owner bypass ───────────────────────────────────────
+  // Enter owner passphrase as email to skip all payment checks
+  // Report is sent to leadbydharma@gmail.com for testing and demos
+  if(email.toLowerCase() === 'lbd@panchajanya2026'){
+    pendingEmailAddr = 'leadbydharma@gmail.com';
+    var obtn = document.querySelector('.gate-pay-btn');
+    if(obtn){obtn.disabled=true;obtn.textContent='Generating Owner Report…';}
+    sendFullReportByEmail(
+      'leadbydharma@gmail.com',
+      'Col Rao (Owner Test)',
+      pendingFullReportHTML
+    );
+    return;
+  }
+  // ── End owner bypass ─────────────────────────────────────
+
   // SECURITY CHECK 1: Verify session token exists and matches
   var storedToken='', storedEmail='', storedTime=0;
   try {
