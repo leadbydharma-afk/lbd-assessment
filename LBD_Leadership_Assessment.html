@@ -654,30 +654,6 @@
   .gate-success{font-size:.9rem;color:#4caf50;margin-top:.6rem}
   .gate-note{font-size:.76rem;color:rgba(245,240,228,.35);margin-top:.5rem;font-style:italic}
   @media(max-width:480px){.gate-email-row{flex-direction:column}.gate-pay-btn{width:100%}}
-  /* MAY OFFER STRIP */
-  #mayOfferStrip {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    z-index: 9999;
-    background: linear-gradient(90deg, #6B1A1A 0%, #0D1F35 60%);
-    border-top: 1px solid rgba(240,202,122,.4);
-    padding: .55rem 1.2rem;
-    display: none;
-    align-items: center;
-    justify-content: space-between;
-    gap: .8rem;
-    flex-wrap: wrap;
-  }
-  #mayOfferStrip.strip-visible { display: flex !important; }
-  #mayOfferStrip .strip-left { display:flex; align-items:center; gap:.7rem; flex-wrap:wrap; }
-  #mayOfferStrip .strip-badge { font-family:JetBrains Mono,monospace; font-size:.58rem; letter-spacing:.18em; color:#f0ca7a; white-space:nowrap; }
-  #mayOfferStrip .strip-text { font-family:Georgia,serif; font-size:.88rem; color:rgba(245,240,228,.85); }
-  #mayOfferStrip .strip-cd { font-family:JetBrains Mono,monospace; font-size:.68rem; color:rgba(240,202,122,.7); white-space:nowrap; }
-  #mayOfferStrip .strip-btn { font-family:Georgia,serif; font-size:.82rem; font-weight:500; color:#0D1F35; background:#B8963E; border:none; border-radius:3px; padding:.4rem 1.1rem; cursor:pointer; white-space:nowrap; text-decoration:none; display:inline-block; transition:background .2s; flex-shrink:0; }
-  #mayOfferStrip .strip-btn:hover { background:#D4AC5A; }
-  #mayOfferStrip .strip-close { background:none; border:none; color:rgba(245,240,228,.4); cursor:pointer; font-size:1.1rem; padding:0 .25rem; line-height:1; flex-shrink:0; }
-  #mayOfferStrip .strip-close:hover { color:rgba(245,240,228,.8); }
-  @media(max-width:520px){ #mayOfferStrip .strip-cd{display:none} #mayOfferStrip .strip-text{font-size:.78rem} }
 
 </style>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -740,7 +716,7 @@
     <p><strong>No SSB Affiliation.</strong> This assessment is an independent educational tool created by Lead By Dharma. It is not affiliated with, endorsed by, or connected to the Services Selection Board (SSB), the Ministry of Defence, the Defence Institute of Psychological Research (DIPR), or any branch of the Indian Armed Forces.</p>
     <p><strong>Data Privacy.</strong> All responses are processed locally in your browser. No personally identifiable information, assessment responses, or scores are transmitted to or stored on any server unless you voluntarily provide your email address for report delivery. Lead By Dharma does not sell, share, or monetise any personal data submitted through this instrument.</p>
     <p><strong>Limitation of Liability.</strong> Lead By Dharma, its founder, affiliates, and representatives shall not be liable for any direct, indirect, incidental, or consequential loss or damage arising from reliance on the results of this assessment, including but not limited to decisions made regarding career, education, or personal development. Use of this assessment constitutes acceptance of these terms.</p>
-    <p style="margin-top:0.6rem;font-style:italic;color:#6a5a40;">By clicking "Begin 15-Question Sample" below, you confirm that you have read, understood, and accepted these terms. If you do not accept these terms, do not proceed.</p>
+    <p style="margin-top:0.6rem;font-style:italic;color:#6a5a40;">By clicking "Begin Assessment" below, you confirm that you have read, understood, and accepted these terms. If you do not accept these terms, do not proceed.</p>
   </div>
 
   <div class="intro-box">
@@ -1609,13 +1585,13 @@ If that description resonates with you — if you are willing to do that work �
           <div style="font-size:.7rem;letter-spacing:.15em;color:var(--gold);font-family:'JetBrains Mono',monospace;margin-bottom:.3rem">STEP 2</div>
           <div style="font-size:1.05rem;font-family:'Cinzel',serif;color:var(--navy);margin-bottom:.3rem">OPI Assessment</div>
           <div style="font-size:.88rem;color:var(--ash);line-height:1.6;margin-bottom:.6rem">93 questions across IQ &middot; EQ &middot; AQ &middot; SQ &middot; VQ &mdash; Rs.199</div>
-          <a href="iq_eq_aq_sq.html?unlock=true" style="display:inline-block;background:var(--gold);color:var(--navy);font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;padding:.35rem .9rem;text-decoration:none;border-radius:2px">Begin &rarr;</a>
+          <a href="iq_eq_aq_sq.html" style="display:inline-block;background:var(--gold);color:var(--navy);font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;padding:.35rem .9rem;text-decoration:none;border-radius:2px">Begin &rarr;</a>
         </div>
         <div style="border:1px solid rgba(184,150,62,.25);border-radius:3px;padding:.9rem .8rem;text-align:center">
           <div style="font-size:.7rem;letter-spacing:.15em;color:var(--gold);font-family:'JetBrains Mono',monospace;margin-bottom:.3rem">STEP 3</div>
           <div style="font-size:1.05rem;font-family:'Cinzel',serif;color:var(--navy);margin-bottom:.3rem">AI Interview</div>
           <div style="font-size:.88rem;color:var(--ash);line-height:1.6;margin-bottom:.6rem">12 questions &middot; Col Rao AI persona &middot; 3 difficulty levels &mdash; Rs.498</div>
-          <a href="ai_interview.html?unlock=true" style="display:inline-block;background:var(--gold);color:var(--navy);font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;padding:.35rem .9rem;text-decoration:none;border-radius:2px">Begin &rarr;</a>
+          <a href="ai_interview.html" style="display:inline-block;background:var(--gold);color:var(--navy);font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;padding:.35rem .9rem;text-decoration:none;border-radius:2px">Begin &rarr;</a>
         </div>
       </div>
     </div>
@@ -2068,26 +2044,26 @@ function buildSummaryReport(d1obj, d2obj, d3obj, d4obj, candidateName, verdictCl
     + '<div class="verdict-box ' + verdictClass + '">'
     + '<div class="verdict-label">Sample Profile \u2014 Based on 15 Questions</div>'
     + '<div class="verdict-title">' + verdictTitle + '</div>'
-    + '<div class="verdict-text">' + shortVerdict + '</div>'
+    + '<div class="verdict-summary">' + shortVerdict + '</div>'
     + '</div>'
-    + '<div class="rpt-section">'
+    + '<div class="report-section">'
     + '<div style="font-family:JetBrains Mono,monospace;font-size:.65rem;letter-spacing:.2em;color:#b8963e;margin-bottom:.5rem">YOUR STRONGEST SIGNAL IN THIS SAMPLE</div>'
     + '<div style="background:rgba(26,74,46,.08);border-left:3px solid #4caf50;padding:.8rem 1rem;border-radius:0 4px 4px 0">'
     + '<div style="font-size:1rem;font-weight:700;color:#1a4a2e;margin-bottom:.4rem">\u2713 ' + top1.label + '</div>'
     + '<div style="font-size:.92rem;color:rgba(245,240,228,.75);line-height:1.7">' + (strengthInsight[top1.label]||'') + '</div>'
     + '</div></div>'
-    + '<div class="rpt-section">'
+    + '<div class="report-section">'
     + '<div style="font-family:JetBrains Mono,monospace;font-size:.65rem;letter-spacing:.2em;color:#b8963e;margin-bottom:.5rem">PRIMARY DEVELOPMENT SIGNAL IN THIS SAMPLE</div>'
     + '<div style="background:rgba(184,150,62,.06);border-left:3px solid rgba(184,150,62,.5);padding:.8rem 1rem;border-radius:0 4px 4px 0">'
     + '<div style="font-size:1rem;font-weight:700;color:#d4ac5a;margin-bottom:.4rem">\u2192 ' + bottom1.label + '</div>'
     + '<div style="font-size:.92rem;color:rgba(245,240,228,.75);line-height:1.7">' + (developInsight[bottom1.label]||'') + '</div>'
     + '</div></div>'
-    + '<div class="rpt-section">'
+    + '<div class="report-section">'
     + '<div style="font-family:JetBrains Mono,monospace;font-size:.65rem;letter-spacing:.2em;color:#b8963e;margin-bottom:.5rem">DERAILER PROFILE \u2014 PRELIMINARY READING</div>'
     + '<div style="background:rgba(0,0,0,.12);border-left:3px solid ' + d5color + ';padding:.8rem 1rem;border-radius:0 4px 4px 0">'
     + '<div style="font-size:.92rem;color:rgba(245,240,228,.75);line-height:1.7">' + derailerInsight + '</div>'
     + '</div></div>'
-    + '<div class="rpt-section" style="background:linear-gradient(135deg,rgba(13,31,53,.95),rgba(26,50,80,.9));border:1px solid rgba(184,150,62,.4);border-radius:6px;padding:1.4rem 1.2rem;margin-top:1.2rem">'
+    + '<div class="report-section" style="background:linear-gradient(135deg,rgba(13,31,53,.95),rgba(26,50,80,.9));border:1px solid rgba(184,150,62,.4);border-radius:6px;padding:1.4rem 1.2rem;margin-top:1.2rem">'
     + '<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:#b8963e;letter-spacing:.18em;margin-bottom:.7rem">WHAT THE FULL 75-QUESTION ASSESSMENT REVEALS THAT THIS SAMPLE CANNOT</div>'
     + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem .8rem;margin-bottom:1rem">' + lockedItems + '</div>'
     + '<div style="text-align:center;margin-top:.8rem">'
@@ -2110,13 +2086,13 @@ function buildSummaryReport(d1obj, d2obj, d3obj, d4obj, candidateName, verdictCl
     + '<div style="font-family:JetBrains Mono,monospace;font-size:.6rem;letter-spacing:.12em;color:rgba(184,150,62,.5);margin-bottom:.3rem">AI SIMULATION</div>'
     + '<div style="font-family:Georgia,serif;font-size:.95rem;color:#f0ca7a;margin-bottom:.25rem">AI Interview</div>'
     + '<div style="font-size:.82rem;color:rgba(245,240,228,.5);line-height:1.5;margin-bottom:.55rem">12 questions · Col Rao AI persona · Scored report</div>'
-    + '<a href="ai_interview.html?unlock=true" style="display:inline-block;font-family:JetBrains Mono,monospace;font-size:.65rem;color:#b8963e;text-decoration:none;border:1px solid rgba(184,150,62,.3);padding:.25rem .7rem;border-radius:2px">Rs.498 →</a>'
+    + '<a href="ai_interview.html" style="display:inline-block;font-family:JetBrains Mono,monospace;font-size:.65rem;color:#b8963e;text-decoration:none;border:1px solid rgba(184,150,62,.3);padding:.25rem .7rem;border-radius:2px">Rs.498 →</a>'
     + '</div>'
     + '<div style="background:rgba(245,240,228,.04);border:1px solid rgba(184,150,62,.2);border-radius:3px;padding:.7rem .65rem;text-align:center">'
     + '<div style="font-family:JetBrains Mono,monospace;font-size:.6rem;letter-spacing:.12em;color:rgba(184,150,62,.5);margin-bottom:.3rem">FIVE DIMENSIONS</div>'
     + '<div style="font-family:Georgia,serif;font-size:.95rem;color:#f0ca7a;margin-bottom:.25rem">OPI Assessment</div>'
     + '<div style="font-size:.82rem;color:rgba(245,240,228,.5);line-height:1.5;margin-bottom:.55rem">93 questions · IQ · EQ · AQ · SQ · VQ with OLQ mapping</div>'
-    + '<a href="iq_eq_aq_sq.html?unlock=true" style="display:inline-block;font-family:JetBrains Mono,monospace;font-size:.65rem;color:#b8963e;text-decoration:none;border:1px solid rgba(184,150,62,.3);padding:.25rem .7rem;border-radius:2px">Rs.199 →</a>'
+    + '<a href="iq_eq_aq_sq.html" style="display:inline-block;font-family:JetBrains Mono,monospace;font-size:.65rem;color:#b8963e;text-decoration:none;border:1px solid rgba(184,150,62,.3);padding:.25rem .7rem;border-radius:2px">Rs.199 →</a>'
     + '</div>'
     + '</div>'
     + '</div>';
@@ -2316,7 +2292,7 @@ function checkForSavedReport() {
     + '<div style="font-size:.95rem;color:#0d1f35;margin-bottom:.15rem"><strong>' + saved.name + '</strong> — report from ' + savedDate + '</div>'
     + '<div style="font-size:.82rem;color:#7a6e63;margin-bottom:.7rem">' + saved.email + '</div>'
     + '<button onclick="retrieveSavedReport()" style="background:#0d1f35;color:#f0ca7a;border:none;padding:.55rem 1.3rem;border-radius:4px;font-family:Georgia,serif;font-size:.9rem;cursor:pointer;margin-right:.5rem">View My Report →</button>'
-    + '<button onclick="hideBanner() style="background:transparent;color:#7a6e63;border:1px solid #ccc;padding:.5rem 1rem;border-radius:4px;font-family:Georgia,serif;font-size:.85rem;cursor:pointer">Take New Assessment</button>';
+    + '<button onclick="hideBanner()" style="background:transparent;color:#7a6e63;border:1px solid #ccc;padding:.5rem 1rem;border-radius:4px;font-family:Georgia,serif;font-size:.85rem;cursor:pointer">Take New Assessment</button>';
 
   // Insert at top of intro page content
   var firstChild = intro.firstElementChild;
@@ -2361,50 +2337,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 </script>
-
-
-
-
-
-
-<!-- ═══ MAY OFFER STRIP ═══ -->
-<div id="lbdMayStrip" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:99999;font-family:Georgia,serif"></div>
-<script>
-function lbdCloseStrip(){ document.getElementById('lbdMayStrip').style.display='none'; }
-(function(){
-  var d=new Date();
-  if(!(d.getFullYear()===2026 && d.getMonth()===4)) return;
-  var strip=document.getElementById('lbdMayStrip');
-  if(!strip) return;
-  strip.innerHTML=''
-    +'<div style="background:linear-gradient(90deg,#6B1A1A 0%,#0D1F35 55%);border-top:2px solid #B8963E;padding:.7rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap">'
-    +'<div style="display:flex;align-items:center;gap:.8rem;flex-wrap:wrap">'
-    +'<div style="background:#B8963E;color:#0D1F35;font-family:JetBrains Mono,monospace;font-size:.65rem;font-weight:700;letter-spacing:.18em;padding:.25rem .7rem;border-radius:2px;white-space:nowrap">&#9733; MAY 2026</div>'
-    +'<div style="color:#fff;font-size:1rem">'
-    +'<span style="color:#f0ca7a;font-size:1.15rem;font-weight:700">MAY MONTH OFFER</span>'
-    +' &mdash; Any SSB Set or AI Interview at '
-    +'<span style="color:#f0ca7a;font-size:1.2rem;font-weight:700">Rs.99</span>'
-    +'</div>'
-    +'<div id="lbdStripCd" style="font-family:JetBrains Mono,monospace;font-size:.7rem;color:rgba(240,202,122,.75);white-space:nowrap"></div>'
-    +'</div>'
-    +'<div style="display:flex;align-items:center;gap:.6rem;flex-shrink:0">'
-    +'<a href="https://leadbydharma-afk.github.io/lbd-assessment/special_access.html" target="_blank" style="background:#B8963E;color:#0D1F35;font-family:Georgia,serif;font-size:.92rem;font-weight:600;padding:.5rem 1.4rem;border-radius:3px;text-decoration:none;white-space:nowrap;display:inline-block">Explore Offer &#8594;</a>'
-    +'<button onclick="lbdCloseStrip()" style="background:none;border:none;color:rgba(245,240,228,.5);font-size:1.3rem;cursor:pointer;padding:0 .25rem;line-height:1">&#215;</button>'
-    +'</div>'
-    +'</div>';
-  strip.style.display='block';
-  document.body.style.paddingBottom='58px';
-  function tick(){
-    var end=new Date('2026-06-01T00:00:00+05:30'),diff=end-new Date();
-    if(diff<=0){strip.style.display='none';return;}
-    var dd=Math.floor(diff/86400000),hh=Math.floor(diff%86400000/3600000),mm=Math.floor(diff%3600000/60000),ss=Math.floor(diff%60000/1000);
-    var el=document.getElementById('lbdStripCd');
-    if(el) el.textContent=dd+'d '+hh+'h '+mm+'m '+ss+'s remaining';
-  }
-  tick(); setInterval(tick,1000);
-})();
-</script>
-<!-- ═══ END MAY OFFER STRIP ═══ -->
 
 </body>
 </html>
