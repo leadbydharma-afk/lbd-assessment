@@ -63,6 +63,7 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 .badge-eq{background:var(--eq)}
 .badge-aq{background:var(--aq)}
 .badge-sq{background:var(--sq)}
+.badge-vq{background:var(--vq)}
 .sec-hdr h2{font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:.2rem}
 .sec-hdr p{font-size:1.12rem;color:var(--ash);font-style:italic}
 /* QUESTION CARD */
@@ -104,16 +105,19 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 .qs-eq{background:rgba(92,26,58,.08);border:1.5px solid var(--eq)}
 .qs-aq{background:rgba(26,92,58,.08);border:1.5px solid var(--aq)}
 .qs-sq{background:rgba(58,26,92,.08);border:1.5px solid var(--sq)}
+.qs-vq{background:rgba(92,64,51,.08);border:1.5px solid var(--vq)}
 .qs-card .qs-lbl{font-family:'JetBrains Mono',monospace;font-size:1.05rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:.4rem}
 .qs-iq .qs-lbl{color:var(--iq)}
 .qs-eq .qs-lbl{color:var(--eq)}
 .qs-aq .qs-lbl{color:var(--aq)}
 .qs-sq .qs-lbl{color:var(--sq)}
+.qs-vq .qs-lbl{color:var(--vq)}
 .qs-score{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;line-height:1}
 .qs-iq .qs-score{color:var(--iq)}
 .qs-eq .qs-score{color:var(--eq)}
 .qs-aq .qs-score{color:var(--aq)}
 .qs-sq .qs-score{color:var(--sq)}
+.qs-vq .qs-score{color:var(--vq)}
 .qs-max{font-family:'JetBrains Mono',monospace;font-size:1.06rem;color:var(--ash)}
 .qs-bar-track{height:6px;background:rgba(0,0,0,.08);border-radius:3px;margin:.6rem 0 .3rem;overflow:hidden}
 .qs-bar-fill{height:100%;border-radius:3px;transition:width 1s ease .3s}
@@ -121,6 +125,7 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 .qs-eq .qs-bar-fill{background:var(--eq)}
 .qs-aq .qs-bar-fill{background:var(--aq)}
 .qs-sq .qs-bar-fill{background:var(--sq)}
+.qs-vq .qs-bar-fill{background:var(--vq)}
 .qs-flag{font-family:'JetBrains Mono',monospace;font-size:.74rem;padding:.12rem .4rem;border-radius:20px;display:inline-block;margin-top:.2rem}
 .flag-s{background:rgba(26,92,46,.1);color:var(--green)}
 .flag-m{background:rgba(139,92,0,.1);color:var(--amber)}
@@ -172,35 +177,6 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
     color:var(--ash);cursor:pointer;margin-left:.4rem;transition:all .15s}
   .demo-link button:hover{border-color:var(--navy);color:var(--navy)}
 
-
-  .promo-store-box{border:1.5px solid rgba(240,202,122,.4)!important;
-    background:rgba(107,26,26,.04)}
-
-  /* MAY OFFER STRIP */
-  #mayOfferStrip {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    z-index: 9999;
-    background: linear-gradient(90deg, #6B1A1A 0%, #0D1F35 60%);
-    border-top: 1px solid rgba(240,202,122,.4);
-    padding: .55rem 1.2rem;
-    display: none;
-    align-items: center;
-    justify-content: space-between;
-    gap: .8rem;
-    flex-wrap: wrap;
-  }
-  #mayOfferStrip.strip-visible { display: flex !important; }
-  #mayOfferStrip .strip-left { display:flex; align-items:center; gap:.7rem; flex-wrap:wrap; }
-  #mayOfferStrip .strip-badge { font-family:JetBrains Mono,monospace; font-size:.58rem; letter-spacing:.18em; color:#f0ca7a; white-space:nowrap; }
-  #mayOfferStrip .strip-text { font-family:Georgia,serif; font-size:.88rem; color:rgba(245,240,228,.85); }
-  #mayOfferStrip .strip-cd { font-family:JetBrains Mono,monospace; font-size:.68rem; color:rgba(240,202,122,.7); white-space:nowrap; }
-  #mayOfferStrip .strip-btn { font-family:Georgia,serif; font-size:.82rem; font-weight:500; color:#0D1F35; background:#B8963E; border:none; border-radius:3px; padding:.4rem 1.1rem; cursor:pointer; white-space:nowrap; text-decoration:none; display:inline-block; transition:background .2s; flex-shrink:0; }
-  #mayOfferStrip .strip-btn:hover { background:#D4AC5A; }
-  #mayOfferStrip .strip-close { background:none; border:none; color:rgba(245,240,228,.4); cursor:pointer; font-size:1.1rem; padding:0 .25rem; line-height:1; flex-shrink:0; }
-  #mayOfferStrip .strip-close:hover { color:rgba(245,240,228,.8); }
-  @media(max-width:520px){ #mayOfferStrip .strip-cd{display:none} #mayOfferStrip .strip-text{font-size:.78rem} }
-
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -208,10 +184,10 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 <div class="hdr">
   <div class="hdr-lbl">Lead By Dharma — Intelligence Assessment</div>
   <h1>Know Your <span>Officer Potential Index</span></h1>
-  <div class="hdr-sub">The Five Dimensions — The Five Dimensions · VQ</div>
+  <div class="hdr-sub">The Five Dimensions of Officer Potential</div>
   <div class="hdr-meta">
     <span><b>93</b> Questions</span>
-    <span><b>4</b> Dimensions</span>
+    <span><b>5</b> Dimensions</span>
     <span><b>~30 min</b></span>
     <span>Col Aniruddha Rao HR (Retd)</span>
   </div>
@@ -300,52 +276,6 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-// MAY 2026 PROMOTIONAL OFFER — Rs.99, 2-Day Access
-// Auto-reverts June 1 2026. Manual revert: set PROMO_ACTIVE=false
-// ═══════════════════════════════════════════════════════════
-var PROMO_ACTIVE = (function(){
-  var d=new Date(); return d.getFullYear()===2026 && d.getMonth()===4;
-})(); // getMonth() 4 = May
-var PROMO_PRICE=99, PROMO_DAYS=2;
-var PROMO_RZP='https://rzp.io/rzp/PROMO99MAY';
-
-function buildPromoCountdown(){
-  var end=new Date('2026-06-01T00:00:00+05:30'),diff=end-new Date();
-  if(diff<=0) return '';
-  var d=Math.floor(diff/86400000),h=Math.floor(diff%86400000/3600000),m=Math.floor(diff%3600000/60000);
-  return '<span style="font-family:JetBrains Mono,monospace;font-size:.68rem;color:#f0ca7a">'+d+'d '+h+'h '+m+'m remaining · Ends May 31</span>';
-}
-
-function buildPromoBanner(prod){
-  if(!PROMO_ACTIVE) return '';
-  return '<div style="background:linear-gradient(135deg,#6B1A1A,#0D1F35);border:1.5px solid rgba(240,202,122,.4);border-radius:6px;padding:.85rem 1.1rem;margin-bottom:1.1rem;text-align:center">'
-    +'<div style="font-family:JetBrains Mono,monospace;font-size:.58rem;letter-spacing:.2em;color:#f0ca7a;margin-bottom:.25rem">MAY 2026 PROMOTIONAL OFFER</div>'
-    +'<div style="font-family:Georgia,serif;font-size:1.05rem;color:#fff;margin-bottom:.15rem">'+prod+' — Rs.99 for 5-Day Access</div>'
-    +'<div style="font-size:.82rem;color:rgba(245,240,228,.6);font-style:italic;margin-bottom:.3rem">Full access for 2 days from first use · Normal pricing resumes June 1</div>'
-    +buildPromoCountdown()
-    +'</div>';
-}
-
-function isPromoExpired(code){
-  try{
-    var k='lbd_px_'+code,s=localStorage.getItem(k);
-    if(!s) return false;
-    return (new Date()-new Date(s))/86400000>PROMO_DAYS;
-  }catch(e){return false;}
-}
-function markPromoFirstUse(code){
-  try{ var k='lbd_px_'+code; if(!localStorage.getItem(k)) localStorage.setItem(k,new Date().toISOString()); }catch(e){}
-}
-function promoDaysLeft(code){
-  try{
-    var k='lbd_px_'+code,s=localStorage.getItem(k);
-    if(!s) return 5;
-    return Math.max(0,Math.ceil(5-(new Date()-new Date(s))/86400000));
-  }catch(e){return 5;}
-}
-
-
 // =====================================================
 // IQ PAYMENT GATE
 // =====================================================
@@ -420,7 +350,7 @@ function launchIQDemo() {
 }
 
 // ═══════════════════════════════════════════
-//  QUESTION BANK — 93 questions, 4 domains, 20 each
+//  QUESTION BANK — 93 questions, 5 domains
 // ═══════════════════════════════════════════
 const DOMAINS = [
   {
@@ -480,7 +410,7 @@ const DOMAINS = [
   {
     id:'EQ', label:'Emotional Intelligence (EQ)',
     badge:'badge-eq', color:'var(--eq)',
-    desc:'Measures self-awareness, empathy, emotional regulation, and social reading. (20 questions)',
+    desc:'Measures self-awareness, empathy, emotional regulation, and social reading. (21 questions)',
     questions:[
       {id:'EQ1',type:'scale',text:'I can accurately name the specific emotion I am feeling at any given moment — not just "good" or "bad".',reverse:false},
       {id:'EQ2',type:'scale',text:'When I am angry or upset, I can pause before responding and choose my words deliberately.',reverse:false},
@@ -522,7 +452,7 @@ const DOMAINS = [
   {
     id:'AQ', label:'Adversity Quotient (AQ)',
     badge:'badge-aq', color:'var(--aq)',
-    desc:'Measures resilience under pressure, ownership of outcomes, persistence, and control orientation. (20 questions)',
+    desc:'Measures resilience under pressure, ownership of outcomes, persistence, and control orientation. (21 questions)',
     questions:[
       {id:'AQ1',type:'scale',text:'When a plan fails, my first instinct is to analyse what I could have done differently — not to identify who else contributed to the failure.',reverse:false},
       {id:'AQ2',type:'scale',text:'I have continued pursuing a difficult goal after a significant setback without being told to.',reverse:false},
@@ -566,7 +496,7 @@ const DOMAINS = [
   {
     id:'SQ', label:'Social Intelligence (SQ)',
     badge:'badge-sq', color:'var(--sq)',
-    desc:'Measures group reading, influence without authority, social adaptability, and cooperation. (20 questions)',
+    desc:'Measures group reading, influence without authority, social adaptability, and cooperation. (21 questions)',
     questions:[
       {id:'SQ1',type:'scale',text:'I can quickly read the social dynamics of a group I have just joined — who holds real influence, where the tensions are, what is unsaid.',reverse:false},
       {id:'SQ2',type:'scale',text:'I can change the direction of a group conversation without appearing to do so.',reverse:false},
@@ -609,7 +539,7 @@ const DOMAINS = [
   },
   {
     id:'VQ',
-    title:'Values Quotient (VQ)',
+    label:'Values Quotient (VQ)',
     badge:'badge-vq',
     color:'var(--vq)',
     desc:'Measures ethical orientation, duty alignment, institutional values, and character under moral pressure. (10 questions)',
@@ -938,7 +868,7 @@ function genReport(){
   rDiv.innerHTML=`
     <div class="rpt-cover">
       <div class="hdr-lbl" style="margin-bottom:.4rem">OFFICER POTENTIAL INDEX — OPI</div>
-      <h2>IQ · EQ · AQ · SQ</h2>
+      <h2>IQ · EQ · AQ · SQ · VQ</h2>
       <div class="rpt-name">${name}</div>
       <div class="rpt-date">LEAD BY DHARMA · ${new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'}).toUpperCase()}</div>
     </div>
@@ -975,24 +905,25 @@ function genReport(){
     }).join('')}
     <div class="rpt-sec">
       <h3>What This Means for Your SSB Preparation</h3>
-      <p>The four dimensions of this profile map directly onto the SSB's four OLQ factor clusters. Cognitive Intelligence (IQ) underpins Factor I — Planning and Organising. Emotional Intelligence (EQ) and Social Intelligence (SQ) together constitute Factor II and Factor III — Social Adjustment and Social Effectiveness. Adversity Quotient (AQ) is the foundation of Factor IV — Dynamism.</p>
-      <p>A candidate who is strong across all four dimensions will produce a consistent, authentic profile across all five days of SSB — in the psychology tests, in GTO tasks, and in the personal interview. A candidate who is strong in one dimension but weak in another will show inconsistency that trained assessors will detect.</p>
+      <p>The five dimensions of this profile map directly onto the SSB's OLQ factor clusters. Cognitive Intelligence (IQ) underpins Factor I — Planning and Organising. Emotional Intelligence (EQ) and Social Intelligence (SQ) together constitute Factor II and Factor III — Social Adjustment and Social Effectiveness. Adversity Quotient (AQ) is the foundation of Factor IV — Dynamism. Values Quotient (VQ) underpins character and integrity, which the SSB weighs above all else.</p>
+      <p>A candidate who is strong across all five dimensions will produce a consistent, authentic profile across all five days of SSB — in the psychology tests, in GTO tasks, and in the personal interview. A candidate who is strong in one dimension but weak in another will show inconsistency that trained assessors will detect.</p>
       <div class="highlight">"The SSB does not select the most intelligent candidate or the most resilient one. It selects the one who is most authentically and consistently ready to lead." — Col Aniruddha Rao HR (Retd)</div>
-      <p>For structured mentorship that develops all four dimensions over 3+ months: <strong>leadbydharma.com</strong></p>
+      <p>For structured mentorship that develops all five dimensions over 3+ months: <strong>leadbydharma.com</strong></p>
     </div>
 
     <div class="rpt-sec">
       <h3>What Your Profile Means for SSB</h3>
-      <p>The four dimensions measured here map directly onto the SSB's four OLQ Factor clusters, which govern assessment across every stage of the five-day process.</p>
+      <p>The five dimensions measured here map directly onto the SSB's OLQ Factor clusters, which govern assessment across every stage of the five-day process.</p>
       <p><strong>IQ → Factor I: Planning &amp; Organising.</strong> Feeds directly into OIR performance at Stage 1 screening, the Group Planning Exercise in GTO Days 3-4, and the intellectual quality of your Personal Interview. If this is your weakest dimension, Stage 1 is your primary risk.</p>
       <p><strong>EQ → Factors II &amp; III: Social Adjustment &amp; Social Effectiveness.</strong> The single most continuously observable quality across all five days. Shapes your TAT and SRT psychology responses on Day 2, your GTO group behaviour on Days 3-4, and the emotional honesty of your Personal Interview on Days 4-5. Cannot be performed consistently across five days &mdash; SSB psychologists are trained to detect sustained performance.</p>
       <p><strong>AQ → Factor IV: Dynamism.</strong> The quality that separates a Day 1 impression from a Day 4-5 assessment. High AQ candidates maintain performance quality as the five days accumulate. Low AQ candidates decline visibly. The Conference, where all three assessors compare independent observations, captures this trajectory precisely.</p>
       <p><strong>SQ → Factor III: Social Effectiveness (Group Leadership dimension).</strong> Directly assessed in Group Discussion, Group Planning Exercise, Progressive Group Task, Half Group Task, and Final Group Task across GTO Days 3-4. The GTO observes 8-10 candidates simultaneously. The candidate with high SQ is the one who serves the group's success. That candidate is visible to a trained observer. Always.</p>
+      <p><strong>VQ → Character and Integrity, weighed above all else.</strong> Shows most clearly in the SDT and in the Personal Interview, when the IO probes for the consistency between what you say and how you have actually acted under moral pressure.</p>
     </div>
     <div class="rpt-sec" style="border:2px solid var(--gold);background:rgba(201,168,76,.04)">
       <h3>A Personal Note from Col Rao</h3>
       <p>I built this assessment because I believe India's best young people deserve to understand themselves honestly before they stand before a board. Not to perform better. To be more real.</p>
-      <p>If your profile is strong across all four dimensions: you have the foundations. The next step is structured mentorship that stress-tests those qualities under conditions this instrument cannot simulate. The Lead By Dharma programme is designed for exactly this stage. Apply at leadbydharma.com.</p>
+      <p>If your profile is strong across all five dimensions: you have the foundations. The next step is structured mentorship that stress-tests those qualities under conditions this instrument cannot simulate. The Lead By Dharma programme is designed for exactly this stage. Apply at leadbydharma.com.</p>
       <p>If your profile shows meaningful gaps: they are bridgeable, but not through preparation in the conventional sense. They require genuine personal development over six to twelve months. This is the work the programme is built to support &mdash; not coaching, not mock tests, but honest and sustained character development with structured feedback.</p>
       <p>If your profile shows significant gaps: read the analysis above carefully. The most important thing you can do is not register for an SSB coaching programme. It is to begin the foundational work described in this report. When you are ready for mentorship, apply. I will tell you honestly where you stand.</p>
       <div style="background:var(--cream);border-left:3px solid var(--gold);padding:.7rem 1rem;margin-top:1rem;border-radius:0 2px 2px 0">
@@ -1044,53 +975,7 @@ function genReport(){
   }
 })();
 
-
-
 </script>
-
-
-
-
-
-
-<!-- ═══ MAY OFFER STRIP ═══ -->
-<div id="lbdMayStrip" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:99999;font-family:Georgia,serif"></div>
-<script>
-function lbdCloseStrip(){ document.getElementById('lbdMayStrip').style.display='none'; }
-(function(){
-  var d=new Date();
-  if(!(d.getFullYear()===2026 && d.getMonth()===4)) return;
-  var strip=document.getElementById('lbdMayStrip');
-  if(!strip) return;
-  strip.innerHTML=''
-    +'<div style="background:linear-gradient(90deg,#6B1A1A 0%,#0D1F35 55%);border-top:2px solid #B8963E;padding:.7rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap">'
-    +'<div style="display:flex;align-items:center;gap:.8rem;flex-wrap:wrap">'
-    +'<div style="background:#B8963E;color:#0D1F35;font-family:JetBrains Mono,monospace;font-size:.65rem;font-weight:700;letter-spacing:.18em;padding:.25rem .7rem;border-radius:2px;white-space:nowrap">&#9733; MAY 2026</div>'
-    +'<div style="color:#fff;font-size:1rem">'
-    +'<span style="color:#f0ca7a;font-size:1.15rem;font-weight:700">MAY MONTH OFFER</span>'
-    +' &mdash; Any SSB Set or AI Interview at '
-    +'<span style="color:#f0ca7a;font-size:1.2rem;font-weight:700">Rs.99</span>'
-    +'</div>'
-    +'<div id="lbdStripCd" style="font-family:JetBrains Mono,monospace;font-size:.7rem;color:rgba(240,202,122,.75);white-space:nowrap"></div>'
-    +'</div>'
-    +'<div style="display:flex;align-items:center;gap:.6rem;flex-shrink:0">'
-    +'<a href="https://leadbydharma-afk.github.io/lbd-assessment/special_access.html" target="_blank" style="background:#B8963E;color:#0D1F35;font-family:Georgia,serif;font-size:.92rem;font-weight:600;padding:.5rem 1.4rem;border-radius:3px;text-decoration:none;white-space:nowrap;display:inline-block">Explore Offer &#8594;</a>'
-    +'<button onclick="lbdCloseStrip()" style="background:none;border:none;color:rgba(245,240,228,.5);font-size:1.3rem;cursor:pointer;padding:0 .25rem;line-height:1">&#215;</button>'
-    +'</div>'
-    +'</div>';
-  strip.style.display='block';
-  document.body.style.paddingBottom='58px';
-  function tick(){
-    var end=new Date('2026-06-01T00:00:00+05:30'),diff=end-new Date();
-    if(diff<=0){strip.style.display='none';return;}
-    var dd=Math.floor(diff/86400000),hh=Math.floor(diff%86400000/3600000),mm=Math.floor(diff%3600000/60000),ss=Math.floor(diff%60000/1000);
-    var el=document.getElementById('lbdStripCd');
-    if(el) el.textContent=dd+'d '+hh+'h '+mm+'m '+ss+'s remaining';
-  }
-  tick(); setInterval(tick,1000);
-})();
-</script>
-<!-- ═══ END MAY OFFER STRIP ═══ -->
 
 </body>
 </html>
