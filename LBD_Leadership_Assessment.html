@@ -784,8 +784,8 @@
   </div>
 
   <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;flex-wrap:wrap;gap:1rem">
-    <button class="btn btn-outline" onclick="showFullGate()" style="font-size:1.05rem;padding:0.8rem 1.6rem;">Take the Full 75-Question Assessment →</button>
-    <button class="btn btn-primary" onclick="startAssessment()" style="font-size:1.25rem;padding:0.9rem 2.5rem;">Begin Free Sample →</button>
+    <button class="btn btn-outline" id="takeFullBtn" onclick="showFullGate()" style="font-size:1.05rem;padding:0.8rem 1.6rem;">Take the Full 75-Question Assessment →</button>
+    <button class="btn btn-primary" id="beginSampleBtn" onclick="startAssessment()" style="font-size:1.25rem;padding:0.9rem 2.5rem;">Begin Free Sample →</button>
   </div>
 </div>
 
@@ -814,6 +814,10 @@ function toggleAssocBox() {
 }
 
 function showFullGate() {
+  if (window._fullModeUnlocked) {
+    startAssessment();
+    return;
+  }
   document.getElementById('introPage').classList.add('hidden');
   document.getElementById('payGate').style.display = 'block';
   window.scrollTo({top: 0, behavior: 'smooth'});
@@ -851,6 +855,10 @@ async function redeemLACode() {
     document.getElementById('payGate').style.display = 'none';
     document.getElementById('introPage').classList.remove('hidden');
     document.getElementById('fullModeUnlockedBanner').style.display = 'block';
+    var takeFullBtn = document.getElementById('takeFullBtn');
+    if (takeFullBtn) takeFullBtn.style.display = 'none';
+    var beginBtn = document.getElementById('beginSampleBtn');
+    if (beginBtn) beginBtn.textContent = 'Begin Full Assessment →';
     window.scrollTo({top: 0, behavior: 'smooth'});
   } else {
     errEl.textContent = 'Invalid, expired, or already used code. Contact leadbydharma@gmail.com';
