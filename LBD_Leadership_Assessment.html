@@ -634,30 +634,41 @@
   }
   .legal-footer a { color: #8b6c1a; text-decoration: none; }
 
-
-  .report-gate{background:var(--navy,#0d1f35);border-radius:8px;padding:2rem 1.5rem;margin:1.5rem 0;text-align:center;border:1px solid rgba(184,150,62,.35)}
-  .gate-title{font-family:Georgia,serif;font-size:1.2rem;color:#f0ca7a;margin-bottom:.4rem}
-  .gate-sub{font-size:.93rem;color:rgba(245,240,228,.72);font-style:italic;margin-bottom:1.2rem;line-height:1.6}
-  .gate-price{font-family:Georgia,serif;font-size:2rem;color:#fff;margin-bottom:1rem}
-  .gate-price sup{font-size:1rem;vertical-align:super}
-  .gate-features{display:flex;flex-direction:column;gap:.35rem;margin-bottom:1.2rem;text-align:left;max-width:340px;margin-left:auto;margin-right:auto}
-  .gate-feature{font-size:.88rem;color:rgba(245,240,228,.8)}
-  .gate-feature::before{content:"✓  ";color:#b8963e;font-weight:bold}
-  .gate-email-row{display:flex;gap:.5rem;max-width:380px;margin:.6rem auto;flex-wrap:wrap}
-  .gate-email-input{flex:1;padding:.65rem 1rem;font-family:Georgia,serif;font-size:.95rem;border:1.5px solid rgba(184,150,62,.4);border-radius:4px;background:rgba(255,255,255,.08);color:#fff;outline:none;min-width:0}
-  .gate-email-input::placeholder{color:rgba(255,255,255,.4)}
-  .gate-email-input:focus{border-color:#b8963e}
-  .gate-pay-btn{padding:.65rem 1.4rem;background:#b8963e;color:#0d1f35;border:none;border-radius:4px;font-family:Georgia,serif;font-size:.88rem;cursor:pointer;white-space:nowrap;transition:background .2s}
-  .gate-pay-btn:hover:not(:disabled){background:#d4ac5a}
-  .gate-pay-btn:disabled{opacity:.5;cursor:not-allowed}
-  .gate-err{font-size:.82rem;margin-top:.4rem;display:none}
-  .gate-success{font-size:.9rem;color:#4caf50;margin-top:.6rem}
-  .gate-note{font-size:.76rem;color:rgba(245,240,228,.35);margin-top:.5rem;font-style:italic}
-  @media(max-width:480px){.gate-email-row{flex-direction:column}.gate-pay-btn{width:100%}}
+  /* ── PAY GATE (new, real) ─────────────────────────── */
+  .pay-gate{background:var(--white);border:1.5px solid var(--border);border-radius:3px;
+    padding:2rem 1.8rem;margin:1.5rem 0;text-align:center}
+  .pg-title{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--navy);
+    font-weight:700;margin-bottom:.6rem}
+  .pg-sub{font-size:1.05rem;color:var(--ash);font-style:italic;margin-bottom:1.4rem}
+  .pg-price-row{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
+  .pg-price-btn{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;
+    padding:.9rem 2rem;border-radius:2px;cursor:pointer;text-decoration:none;display:inline-block;
+    background:var(--navy);color:var(--gold);border:1px solid var(--navy)}
+  .pg-price-btn:hover{background:var(--navy-deep)}
+  .pg-assoc-toggle{font-size:1.02rem;color:var(--ash);text-decoration:underline;cursor:pointer;
+    background:none;border:none;font-family:'Crimson Pro',serif;margin-top:.4rem}
+  .pg-assoc-box{display:none;margin-top:1rem;padding-top:1rem;border-top:1px dashed var(--border)}
+  .pg-assoc-box.open{display:block}
+  .pay-unlock{background:var(--cream-dark);border:1.5px dashed rgba(201,168,76,.5);
+    border-radius:3px;padding:1.5rem 1.8rem;margin:1.2rem 0;text-align:center}
+  .pu-title{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--navy);
+    margin-bottom:.4rem}
+  .pu-sub{font-size:1.12rem;color:var(--ash);font-style:italic;margin-bottom:1rem}
+  .pu-row{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+  .code-inp{padding:.65rem .9rem;font-family:'JetBrains Mono',monospace;font-size:1.05rem;
+    border:1.5px solid var(--border);border-radius:2px;background:var(--cream);
+    color:var(--ink);outline:none;width:220px;text-align:center;
+    letter-spacing:.12em;text-transform:uppercase;transition:border-color .2s}
+  .code-inp:focus{border-color:var(--navy)}
+  .code-err{font-family:'JetBrains Mono',monospace;font-size:.88rem;color:var(--red);
+    margin-top:.4rem;display:none}
+  .unlock-note{font-family:'JetBrains Mono',monospace;font-size:.94rem;color:var(--amber);
+    background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);border-radius:2px;
+    padding:.6rem .9rem;margin:.8rem 0;text-align:center}
+  .full-cta-box{text-align:center;padding:1.5rem;background:var(--cream-dark);border-radius:2px;margin:.9rem 0}
+  .full-cta-box .btn{margin-top:.8rem}
 
 </style>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script>document.addEventListener("DOMContentLoaded",function(){if(typeof emailjs!=="undefined")emailjs.init({publicKey:"v3yBcZA4mS0rDgGum"});});</script>
 </head>
 <body>
 
@@ -683,22 +694,47 @@
 
 <!-- TAGLINE BAR -->
 <div style="background:#0d1f35;border-bottom:2px solid rgba(184,150,62,.35);text-align:center">
-  <!-- Top line: full assessment info -->
   <div style="background:rgba(184,150,62,.08);padding:.45rem 1.5rem;border-bottom:1px solid rgba(184,150,62,.15)">
-    <span style="font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.18em;color:rgba(184,150,62,.6);text-transform:uppercase">Full Assessment &nbsp;&middot;&nbsp; 75 Questions &nbsp;&middot;&nbsp; 5 Domains &nbsp;&middot;&nbsp; ~25 min to complete &nbsp;&middot;&nbsp; Rs.99</span>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.18em;color:rgba(184,150,62,.6);text-transform:uppercase">Full Assessment &nbsp;&middot;&nbsp; 75 Questions &nbsp;&middot;&nbsp; 5 Domains &nbsp;&middot;&nbsp; ~25 min to complete &nbsp;&middot;&nbsp; Rs.219</span>
   </div>
-  <!-- Bottom line: sample info — larger, higher contrast -->
   <div style="padding:.55rem 1.5rem">
     <span style="font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:700;letter-spacing:.15em;color:#f0ca7a;text-transform:uppercase">Sample Assessment &nbsp;&middot;&nbsp; 15 Questions &nbsp;&middot;&nbsp; 5 Minutes &nbsp;&middot;&nbsp; Free</span>
   </div>
 </div>
+
+<!-- ══════ PAY GATE (hidden until candidate wants the full assessment) ══════ -->
+<div id="payGate" style="display:none">
+  <div class="pay-gate">
+    <div class="pg-title">Unlock the Full 75-Question Assessment</div>
+    <div class="pg-sub">All 5 domains &middot; per-question analysis &middot; Col Rao's personal note for your profile</div>
+    <div class="pg-price-row">
+      <a href="https://rzp.io/rzp/6TnQ8Ui" target="_blank" class="pg-price-btn">Pay ₹219 &amp; Get Access →</a>
+    </div>
+    <button class="pg-assoc-toggle" onclick="toggleAssocBox()">Have an associate referral code?</button>
+    <div class="pg-assoc-box" id="pgAssocBox">
+      <p style="font-size:1.02rem;color:var(--ash);margin-bottom:.7rem">Candidates referred by a Lead By Dharma associate get a discounted rate.</p>
+      <a href="https://rzp.io/rzp/8Ti0dv4" target="_blank" class="pg-price-btn" style="background:var(--amber);border-color:var(--amber);color:var(--white)">Pay ₹169 — Associate Rate →</a>
+    </div>
+  </div>
+
+  <div class="pay-unlock" id="unlockBox">
+    <div class="pu-title">Already Paid? Enter Your Access Code</div>
+    <div class="pu-sub">Check your email — the code arrives within a few minutes of payment.</div>
+    <div class="pu-row">
+      <input class="code-inp" id="laCodeInput" type="text" placeholder="LBD-XXXX"
+        onkeydown="if(event.key==='Enter') redeemLACode()"/>
+      <button class="btn btn-primary" onclick="redeemLACode()">Unlock →</button>
+    </div>
+    <div class="code-err" id="laCodeErr">Invalid or already used code. Contact leadbydharma@gmail.com</div>
+  </div>
+</div>
+
 <!-- ══════════════════════════════════════ INTRO PAGE ══ -->
 <div class="intro-page" id="introPage">
   <div id="fullModeUnlockedBanner" style="display:none;background:linear-gradient(135deg,rgba(26,74,46,.9),rgba(13,31,53,.95));border:1px solid rgba(76,175,80,.4);border-radius:5px;padding:1rem 1.3rem;margin-bottom:1.2rem;text-align:center">
-  <div style="font-size:1.15rem;font-weight:700;color:#4caf50;margin-bottom:.3rem">&#10003; Payment Confirmed — Full Assessment Unlocked</div>
+  <div style="font-size:1.15rem;font-weight:700;color:#4caf50;margin-bottom:.3rem">&#10003; Access Confirmed — Full Assessment Unlocked</div>
   <div style="font-size:.95rem;color:rgba(245,240,228,.75)">You now have access to the complete 75-question assessment. Enter your name below and begin.</div>
 </div>
-<script>if(window._fullModeUnlocked){document.getElementById('fullModeUnlockedBanner').style.display='block';}</script>
 <div class="disclaimer">
     <strong>Before you begin — read this carefully.</strong><br>
     This assessment is not a test you can pass by choosing the 'right' answer. It is a personality and leadership potential evaluation designed to reveal patterns in how you think, feel, and make decisions under pressure. The report it generates will be honest — including about the parts of your personality that work against leadership. Answer every question as you genuinely are, not as you think an officer should be. An experienced psychologist or assessor will see through performance in five days of SSB. This 15-question sample is designed to give you a directional reading. The full 75-question assessment goes deeper. <em>If you are going to cheat this assessment, you are already demonstrating one of the qualities that disqualifies an officer candidate.</em>
@@ -706,7 +742,6 @@
     <strong>Note:</strong> This is an educational tool for self-awareness and development. It is not a clinical assessment, does not constitute professional advice, and carries no guarantee of any selection outcome. Full legal terms appear below.
   </div>
 
-  
   <!-- LEGAL DISCLAIMER -->
   <div class="legal-disclaimer">
     <div class="ld-title">⚖ Legal Disclaimer &amp; Terms of Use — Please Read Before Proceeding</div>
@@ -748,8 +783,9 @@
     </div>
   </div>
 
-  <div style="text-align:right;margin-top:1.5rem;">
-    <button class="btn btn-primary" onclick="startAssessment()" style="font-size:1.25rem;padding:0.9rem 2.5rem;">Begin Assessment →</button>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;flex-wrap:wrap;gap:1rem">
+    <button class="btn btn-outline" onclick="showFullGate()" style="font-size:1.05rem;padding:0.8rem 1.6rem;">Take the Full 75-Question Assessment →</button>
+    <button class="btn btn-primary" onclick="startAssessment()" style="font-size:1.25rem;padding:0.9rem 2.5rem;">Begin Free Sample →</button>
   </div>
 </div>
 
@@ -763,6 +799,65 @@
 
 <div class="footer-credit">© 2026 LEAD BY DHARMA · leadbydharma.com · Col Aniruddha Rao HR (Retd) · Maratha Light Infantry<br><span style="font-size:.74rem;opacity:0.7">Educational use only · Not a clinical assessment · Not affiliated with SSB, MoD, or DIPR · No liability accepted for decisions made in reliance on results</span></div>
 </div><!-- /container -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ── Supabase — secure code validation (same project/table as OPI) ────
+const supabaseUrl = 'https://cyguqfqmnjtjoztcjres.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Z3VxZnFtbmp0am96dGNqcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTcwMzEsImV4cCI6MjA5Mzc5MzAzMX0.sCi_iXTN18gVjXIQPqewpAjVRmM2gSgMKJpYsV1m7QM';
+const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+var LA_UNLOCKED = false;
+
+function toggleAssocBox() {
+  document.getElementById('pgAssocBox').classList.toggle('open');
+}
+
+function showFullGate() {
+  document.getElementById('introPage').classList.add('hidden');
+  document.getElementById('payGate').style.display = 'block';
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function backToIntroFromGate() {
+  document.getElementById('payGate').style.display = 'none';
+  document.getElementById('introPage').classList.remove('hidden');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+async function redeemLACode() {
+  var code = document.getElementById('laCodeInput').value.trim().toUpperCase();
+  var errEl = document.getElementById('laCodeErr');
+  var btn = document.querySelector('#unlockBox button');
+  errEl.style.display = 'none';
+  if (!code) return;
+
+  if (btn) { btn.textContent = 'Checking...'; btn.disabled = true; }
+
+  const { data, error } = await _supabase.rpc('verify_access_code', { input_code: code });
+
+  if (btn) { btn.textContent = 'Unlock →'; btn.disabled = false; }
+
+  if (error) {
+    errEl.textContent = 'System error. Please try again or contact leadbydharma@gmail.com';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const result = data && data[0];
+  if (result && result.is_valid) {
+    LA_UNLOCKED = true;
+    window._fullModeUnlocked = true;
+    document.getElementById('payGate').style.display = 'none';
+    document.getElementById('introPage').classList.remove('hidden');
+    document.getElementById('fullModeUnlockedBanner').style.display = 'block';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  } else {
+    errEl.textContent = 'Invalid, expired, or already used code. Contact leadbydharma@gmail.com';
+    errEl.style.display = 'block';
+  }
+}
+</script>
 
 <script>
 // ════════════════════════════════════════════════════
@@ -955,9 +1050,8 @@ const SECTIONS = [
 ]
 
 // ── FREE ASSESSMENT: 15 analytically selected questions ─────
-let FREE_MODE = true; // overridden to false when ?unlock=true is present
+let FREE_MODE = true; // set to false only after real code verification
 const FREE_QUESTIONS = ['S1Q2', 'S1Q5', 'S1Q8', 'S2Q1', 'S2Q3', 'S2Q6', 'S3Q3', 'S3Q5', 'S3Q6', 'S4Q1', 'S4Q2', 'S4Q5', 'S5Q4', 'S5Q6', 'S5Q1'];
-;
 
 // ════════════════════════════════════════════════════
 //  STATE
@@ -965,6 +1059,7 @@ const FREE_QUESTIONS = ['S1Q2', 'S1Q5', 'S1Q8', 'S2Q1', 'S2Q3', 'S2Q6', 'S3Q3', 
 let responses = {};
 let currentSection = 0;
 let candidateName = '';
+var pendingEmailAddr = '';
 
 function totalQuestions() {
   if (typeof FREE_MODE !== 'undefined' && FREE_MODE) return FREE_QUESTIONS.length;
@@ -991,7 +1086,6 @@ function startAssessment() {
       pendingEmailAddr = emailVal;
     }
   }
-  // If full mode unlocked via payment, set FREE_MODE = false
   if (window._fullModeUnlocked) {
     FREE_MODE = false;
   }
@@ -1013,7 +1107,6 @@ function renderSection(idx) {
       </div>
     </div>`;
 
-  // In free mode, show only the 15 selected questions
   const questionsToShow = (typeof FREE_MODE !== 'undefined' && FREE_MODE)
     ? sec.questions.filter(q => FREE_QUESTIONS.includes(q.id))
     : sec.questions;
@@ -1079,7 +1172,6 @@ function renderSection(idx) {
   wrap.innerHTML = html;
   window.scrollTo({top: 0, behavior:'smooth'});
   updateProgress();
-  // Re-check section complete state after render (handles returning via Previous)
   checkSectionComplete();
 }
 
@@ -1111,7 +1203,6 @@ function recordSJT(qid, score, el) {
 
 function checkSectionComplete() {
   const sec = SECTIONS[currentSection];
-  // Use same filter as renderSection — respect FREE_MODE
   const questionsToCheck = (typeof FREE_MODE !== 'undefined' && FREE_MODE)
     ? sec.questions.filter(q => FREE_QUESTIONS.includes(q.id))
     : sec.questions;
@@ -1137,8 +1228,6 @@ function computeScores() {
   const sectionMap = {'S1':'D1','S2':'D2','S3':'D3','S4':'D4','S5':'D5'};
   SECTIONS.forEach(sec => {
     const dim = sectionMap[sec.id];
-    // Only count questions that were actually answered
-    // In FREE_MODE only 3 of 15 per section are shown and answered
     sec.questions.forEach(q => {
       if (responses[q.id] !== undefined) {
         dims[dim].total += responses[q.id];
@@ -1146,7 +1235,6 @@ function computeScores() {
       }
     });
   });
-  // If no responses in a dimension, default avg to 3 (neutral)
   Object.values(dims).forEach(d => {
     d.avg = d.count > 0 ? d.total / d.count : 3;
     d.pct = Math.round((d.avg / 5) * 100);
@@ -1163,8 +1251,6 @@ function generateSampleReport() {
   document.getElementById('assessmentSections').style.display = 'none';
 
   const d1 = dims.D1, d2 = dims.D2, d3 = dims.D3, d4 = dims.D4, d5 = dims.D5;
-  // With only 3 questions per domain, scores are directional not precise
-  // Use the same verdict logic but note it is sample-based
   const overallRaw = [d1.avg, d2.avg, d3.avg, d4.avg].reduce((a,b) => a+b, 0) / 4;
   const derailerRiskScore = 5 - d5.avg;
   const effD5 = derailerRiskScore > 3.2 ? -0.8 : derailerRiskScore > 2.0 ? -0.3 : 0;
@@ -1185,80 +1271,38 @@ function generateSampleReport() {
     verdictText = 'Your responses point to a specific set of patterns that will require development before SSB. This is not a verdict — it is a diagnostic. The full assessment shows you exactly where those patterns live and what genuine development looks like.';
   }
 
-  // Build the sample report HTML using buildSummaryReport
   const sampleHTML = buildSummaryReport(d1, d2, d3, d4, candidateName, verdictClass, verdictTitle, verdictText, d5);
 
-  // Display the sample report
   const rd = document.getElementById('report');
   rd.innerHTML = sampleHTML;
   rd.style.display = 'block';
 
-  // Progress bar
   document.getElementById('progressFill').style.width = '100%';
   document.getElementById('progressPct').textContent = '100%';
 
   window.scrollTo({top: 0, behavior:'smooth'});
 
-  // Animate bars
   setTimeout(() => {
     document.querySelectorAll('.dim-bar-fill').forEach(b => {
       const w = b.style.width; b.style.width = '0%';
       setTimeout(() => b.style.width = w, 50);
     });
   }, 100);
-
-  // Send brief email if candidate provided email address
-  const sampleEmail = pendingEmailAddr;
-  if (sampleEmail && sampleEmail.indexOf('@') > 0 && typeof emailjs !== 'undefined') {
-    const dims2 = computeScores();
-    const reportDate = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
-    const body = [
-      'LEAD BY DHARMA — SAMPLE Assessment Report (15 of 75 Questions)',
-      'Candidate: ' + candidateName,
-      'Date: ' + reportDate,
-      '',
-      'DIRECTIONAL SCORES — 15 of 75 questions',
-      'Domain I   — Intellectual Qualities : ' + dims2.D1.pct + '%',
-      'Domain II  — Social Effectiveness   : ' + dims2.D2.pct + '%',
-      'Domain III — Dynamism and Drive      : ' + dims2.D3.pct + '%',
-      'Domain IV  — Character and Integrity : ' + dims2.D4.pct + '%',
-      'Domain V   — Derailer Risk (sample)  : ' + dims2.D5.pct + '%',
-      '',
-      'These are directional signals from 15 questions.',
-      'Full 75-question assessment: leadbydharma.com (Rs.99)',
-      '',
-      'Colonel Aniruddha Rao HR (Retd.) — Lead By Dharma',
-      'leadbydharma@gmail.com | +91 98789 30879',
-      '"The SSB does not select the most prepared candidate. It selects the most real one."'
-    ].join('\n');
-    emailjs.send('service_t7ozvf3', 'template_lkhepyo', {
-      to_email: sampleEmail,
-      candidate_name: candidateName,
-      report_html: body,
-      report_date: reportDate,
-      reply_to: 'leadbydharma@gmail.com'
-    }).then(function(){ console.log('Sample email sent to ' + sampleEmail); })
-      .catch(function(e){ console.log('Sample email error:', e); });
-  }
 }
+
 function generateReport() {
-  // ── FREE MODE: show sample report ─────────────────────────
   if (typeof FREE_MODE !== 'undefined' && FREE_MODE) {
     generateSampleReport();
     return;
   }
-  // ── FULL MODE ─────────────────────────────────────────────
+  // ── FULL MODE — candidate already unlocked via real code before starting ──
   const dims = computeScores();
   document.getElementById('assessmentSections').style.display = 'none';
 
   const d1 = dims.D1, d2 = dims.D2, d3 = dims.D3, d4 = dims.D4, d5 = dims.D5;
   const overallRaw = [d1.avg, d2.avg, d3.avg, d4.avg].reduce((a,b) => a+b, 0) / 4;
-  // After reverse scoring on scale items + inverted SJT scores:
-  // HIGH d5.avg = LOW risk (healthy responses stored as high values after reversal)
-  // LOW d5.avg = HIGH risk (dark patterns stored as low values)
-  const derailerRiskScore = 5 - d5.avg;  // 0=healthy, 5=maximum risk
+  const derailerRiskScore = 5 - d5.avg;
 
-  // Overall verdict
   let verdictClass, verdictTitle, verdictText;
   const effD5 = derailerRiskScore > 3.2 ? -0.8 : derailerRiskScore > 2.0 ? -0.3 : 0;
   const adjustedOverall = overallRaw + effD5;
@@ -1279,7 +1323,6 @@ function generateReport() {
 
   function flag(pct, isDer = false) {
     if (isDer) {
-      // d5.pct: high = low risk (healthy), low = high risk (dark patterns)
       if (pct >= 62) return ['flag-strong', '✓ Low Risk'];
       if (pct >= 40) return ['flag-moderate', '⚠ Moderate Risk'];
       return ['flag-weak', '✗ High Risk'];
@@ -1291,7 +1334,6 @@ function generateReport() {
 
   function barColor(pct, isDer = false) {
     if (isDer) {
-      // d5.pct: high = low risk (green), low = high risk (red)
       if (pct >= 62) return '#1a5c2e';
       if (pct >= 40) return '#8b5c00';
       return '#8b1a1a';
@@ -1301,7 +1343,6 @@ function generateReport() {
     return '#8b1a1a';
   }
 
-  // Detailed analysis by domain
   function d1Analysis() {
     let txt = '';
     if (d1.pct >= 76) {
@@ -1497,7 +1538,6 @@ If that description resonates with you — if you are willing to do that work �
   const reportDiv = document.getElementById('report');
   reportDiv.className = 'active';
 
-  // Build full report HTML (for paid delivery)
   const fullReportHTML = `
     <div class="report-cover">
       <div class="header-label" style="margin-bottom:0.5rem">ASSESSMENT REPORT</div>
@@ -1578,31 +1618,28 @@ If that description resonates with you — if you are willing to do that work �
         <div style="border:1px solid rgba(184,150,62,.25);border-radius:3px;padding:.9rem .8rem;text-align:center">
           <div style="font-size:.7rem;letter-spacing:.15em;color:var(--gold);font-family:'JetBrains Mono',monospace;margin-bottom:.3rem">STEP 1</div>
           <div style="font-size:1.05rem;font-family:'Cinzel',serif;color:var(--navy);margin-bottom:.3rem">SSB Psychology Suite</div>
-          <div style="font-size:.88rem;color:var(--ash);line-height:1.6;margin-bottom:.6rem">SRT &middot; WAT &middot; SDT &mdash; timed practice with per-response coaching from Rs.149</div>
+          <div style="font-size:.88rem;color:var(--ash);line-height:1.6;margin-bottom:.6rem">SRT &middot; WAT &middot; SDT &mdash; timed practice with per-response coaching from Rs.225</div>
           <a href="ssb_psych_paid.html" style="display:inline-block;background:var(--gold);color:var(--navy);font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;padding:.35rem .9rem;text-decoration:none;border-radius:2px">Begin &rarr;</a>
         </div>
         <div style="border:2px solid rgba(184,150,62,.4);border-radius:3px;padding:.9rem .8rem;text-align:center">
           <div style="font-size:.7rem;letter-spacing:.15em;color:var(--gold);font-family:'JetBrains Mono',monospace;margin-bottom:.3rem">STEP 2</div>
           <div style="font-size:1.05rem;font-family:'Cinzel',serif;color:var(--navy);margin-bottom:.3rem">OPI Assessment</div>
-          <div style="font-size:.88rem;color:var(--ash);line-height:1.6;margin-bottom:.6rem">93 questions across IQ &middot; EQ &middot; AQ &middot; SQ &middot; VQ &mdash; Rs.199</div>
+          <div style="font-size:.88rem;color:var(--ash);line-height:1.6;margin-bottom:.6rem">93 questions across IQ &middot; EQ &middot; AQ &middot; SQ &middot; VQ &mdash; Rs.395</div>
           <a href="iq_eq_aq_sq.html" style="display:inline-block;background:var(--gold);color:var(--navy);font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;padding:.35rem .9rem;text-decoration:none;border-radius:2px">Begin &rarr;</a>
         </div>
         <div style="border:1px solid rgba(184,150,62,.25);border-radius:3px;padding:.9rem .8rem;text-align:center">
           <div style="font-size:.7rem;letter-spacing:.15em;color:var(--gold);font-family:'JetBrains Mono',monospace;margin-bottom:.3rem">STEP 3</div>
           <div style="font-size:1.05rem;font-family:'Cinzel',serif;color:var(--navy);margin-bottom:.3rem">AI Interview</div>
-          <div style="font-size:.88rem;color:var(--ash);line-height:1.6;margin-bottom:.6rem">12 questions &middot; Col Rao AI persona &middot; 3 difficulty levels &mdash; Rs.498</div>
+          <div style="font-size:.88rem;color:var(--ash);line-height:1.6;margin-bottom:.6rem">12 questions &middot; Col Rao AI persona &middot; 3 difficulty levels &mdash; Rs.895</div>
           <a href="ai_interview.html" style="display:inline-block;background:var(--gold);color:var(--navy);font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;padding:.35rem .9rem;text-decoration:none;border-radius:2px">Begin &rarr;</a>
         </div>
       </div>
     </div>
 
-
-    <!-- Report Legal Footer -->
     <div class="legal-footer">
       <strong>Legal Notice:</strong> This report is generated by the Lead By Dharma Leadership Assessment, an independent educational tool created by Colonel Aniruddha Rao HR (Retd.), Maratha Light Infantry. It is provided for personal educational and self-development purposes only. It is not a clinical diagnosis, a professional psychological evaluation, or career advice. It carries no guarantee of accuracy or of any particular outcome in any selection process including the SSB interview. It is not affiliated with or endorsed by the SSB, Ministry of Defence, DIPR, or the Indian Armed Forces. Lead By Dharma shall not be liable for any decision made in reliance on this report. All data was processed locally in your browser and was not transmitted to any server.
       <br><br>
       © 2026 Lead By Dharma · <a href="https://leadbydharma.com">leadbydharma.com</a> · Colonel Aniruddha Rao HR (Retd.) · Maratha Light Infantry · leadbydharma@gmail.com
-<br><a href="report_recovery.html" style="color:#8b6c1a;font-style:italic;font-size:0.85rem;text-decoration:none;">Paid but didn't receive your report? Click here →</a>
     </div>
 
     <div style="text-align:center;padding:1.5rem 0;">
@@ -1611,37 +1648,15 @@ If that description resonates with you — if you are willing to do that work �
     </div>
   `;
 
-  // ── SHOW FREE SUMMARY ────────────────────────────────────
-  const summaryHTML = buildSummaryReport(
-    d1, d2, d3, d4,
-    candidateName,
-    verdictClass,
-    verdictTitle,
-    verdictText,
-    derailerRiskScore
-  );
-
-  reportDiv.innerHTML = summaryHTML;
+  reportDiv.innerHTML = fullReportHTML;
   reportDiv.className = 'active';
-
-  // ── SHOW PAYMENT GATE ────────────────────────────────────
-  showPaymentGate(fullReportHTML, candidateName);
-
-  // Auto-send if returning from Razorpay with email param
-  if (window._autoSendEmail) {
-    pendingEmailAddr = window._autoSendEmail;
-    window._autoSendEmail = null;
-    setTimeout(function() {
-      sendFullReportByEmail(pendingEmailAddr, candidateName, fullReportHTML);
-    }, 500);
-  }
+  reportDiv.style.display = 'block';
 
   window.scrollTo({top: 0, behavior:'smooth'});
 
   document.getElementById('progressFill').style.width = '100%';
   document.getElementById('progressPct').textContent = '100%';
 
-  // Animate bars
   setTimeout(() => {
     document.querySelectorAll('.dim-bar-fill').forEach(b => {
       const w = b.style.width; b.style.width = '0%';
@@ -1649,338 +1664,6 @@ If that description resonates with you — if you are willing to do that work �
     });
   }, 100);
 }
-
-var RAZORPAY_REPORT_LINK='https://rzp.io/rzp/6TnQ8Ui';
-var pendingFullReportHTML='';
-var pendingCandidateName='';
-var pendingEmailAddr='';
-
-function initiatePayment(){
-  var email=(document.getElementById('gateEmail').value||'').trim();
-  if(!email||email.indexOf('@')<1){
-    var e=document.getElementById('gateErr');
-    e.style.color='#ff8080';e.style.display='block';
-    e.textContent='Please enter a valid email address.';return;
-  }
-  document.getElementById('gateErr').style.display='none';
-  pendingEmailAddr=email;
-
-  // Generate a one-time session token and store it
-  // This token is required when "I have paid" is clicked
-  // It proves the payment flow was initiated in THIS session
-  var token = Math.random().toString(36).substr(2,9) + Date.now().toString(36);
-  try { sessionStorage.setItem('lbd_pay_token', token);
-        sessionStorage.setItem('lbd_pay_email', email);
-        sessionStorage.setItem('lbd_pay_time', Date.now().toString()); }
-  catch(e){}
-
-  // Build the Razorpay URL with redirect back to this page with paid=true AND the token
-  var returnUrl = window.location.href.split('?')[0] + '?paid=true&t=' + token;
-  // Open Razorpay — Razorpay will redirect to returnUrl after payment
-  // Store return URL so Razorpay payment link can use it
-  try { sessionStorage.setItem('lbd_return_url', returnUrl); } catch(e){}
-
-  window.open(RAZORPAY_REPORT_LINK,'_blank');
-
-  var btn=document.querySelector('.gate-pay-btn');
-  if(btn){
-    btn.textContent='I have paid — Verify & Send Report';
-    btn.onclick=confirmPaymentAndSend;
-    btn.style.background='#4caf50';
-    btn.style.color='#fff';
-  }
-  var note=document.querySelector('.gate-note');
-  if(note) note.textContent='Complete payment in the new tab, then click the button above.';
-}
-
-function showTimedMessage(headline, detail, color, countdown) {
-  // Remove any existing message box
-  var existing = document.getElementById('lbdPayMsg');
-  if(existing) existing.remove();
-
-  // Create the message box
-  var box = document.createElement('div');
-  box.id = 'lbdPayMsg';
-  box.style.cssText = [
-    'background:#0d1f35',
-    'border:1.5px solid ' + color,
-    'border-radius:6px',
-    'padding:1rem 1.2rem',
-    'margin:0.8rem 0',
-    'text-align:center',
-    'font-family:Georgia,serif',
-  ].join(';');
-
-  var h = document.createElement('div');
-  h.style.cssText = 'font-size:1rem;font-weight:700;color:' + color + ';margin-bottom:0.4rem';
-  h.textContent = headline;
-
-  var d = document.createElement('div');
-  d.style.cssText = 'font-size:0.88rem;color:rgba(245,240,228,0.75);line-height:1.55';
-  d.textContent = detail;
-
-  box.appendChild(h);
-  box.appendChild(d);
-
-  // Countdown timer if needed
-  if(countdown > 0){
-    var timer = document.createElement('div');
-    timer.style.cssText = 'font-family:monospace;font-size:1.4rem;font-weight:700;color:' + color + ';margin-top:0.6rem';
-    timer.id = 'lbdCountdown';
-    box.appendChild(timer);
-
-    var remaining = countdown;
-    function tick(){
-      if(!document.getElementById('lbdCountdown')) return;
-      document.getElementById('lbdCountdown').textContent = remaining + 's';
-      if(remaining <= 0){
-        // Replace countdown with ready message
-        document.getElementById('lbdCountdown').textContent = '';
-        h.textContent = '✓  Payment window should be complete';
-        d.textContent = 'If you have finished paying, click “I have paid — Verify & Send Report” now.';
-        h.style.color = '#4caf50';
-        box.style.borderColor = '#4caf50';
-        return;
-      }
-      remaining--;
-      setTimeout(tick, 1000);
-    }
-    tick();
-  }
-
-  // Insert the box into the gate — before the error div or after the email row
-  var gate = document.getElementById('payGate');
-  var errDiv = document.getElementById('gateErr');
-  if(gate && errDiv){
-    gate.insertBefore(box, errDiv);
-  } else if(gate){
-    gate.appendChild(box);
-  } else {
-    // Fallback — show in gateErr
-    var e = document.getElementById('gateErr');
-    if(e){ e.style.color=color; e.style.display='block'; e.textContent=headline+' '+detail; }
-  }
-  // Scroll it into view
-  box.scrollIntoView({behavior:'smooth', block:'center'});
-}
-
-function confirmPaymentAndSend(){
-  var email=pendingEmailAddr||(document.getElementById('gateEmail').value||'').trim();
-  if(!email||email.indexOf('@')<1){
-    var e=document.getElementById('gateErr');
-    e.style.color='#ff8080';e.style.display='block';
-    e.textContent='Please enter your email address.';return;
-  }
-  pendingEmailAddr=email;
-
-  // ── Owner bypass ───────────────────────────────────────
-  // Enter owner passphrase as email to skip all payment checks
-  // Report is sent to leadbydharma@gmail.com for testing and demos
-  if(email.toLowerCase() === 'lbd@panchajanya2026'){
-    pendingEmailAddr = 'leadbydharma@gmail.com';
-    var obtn = document.querySelector('.gate-pay-btn');
-    if(obtn){obtn.disabled=true;obtn.textContent='Generating Owner Report…';}
-    sendFullReportByEmail(
-      'leadbydharma@gmail.com',
-      'Col Rao (Owner Test)',
-      pendingFullReportHTML
-    );
-    return;
-  }
-  // ── End owner bypass ─────────────────────────────────────
-
-  // SECURITY CHECK 1: Verify session token exists and matches
-  var storedToken='', storedEmail='', storedTime=0;
-  try {
-    storedToken = sessionStorage.getItem('lbd_pay_token')||'';
-    storedEmail = sessionStorage.getItem('lbd_pay_email')||'';
-    storedTime  = parseInt(sessionStorage.getItem('lbd_pay_time')||'0');
-  } catch(e){}
-
-  // Token must exist (payment flow was started in this session)
-  if(!storedToken){
-    showTimedMessage(
-      '⚠️  Please click “Pay” first',
-      'To receive your report, click the Pay button to complete payment. Once payment is done, click “I have paid” to receive your report.',
-      '#ff8080',
-      0
-    );
-    return;
-  }
-
-  // Token must not be older than 30 minutes (prevents stale session reuse)
-  var AGE_LIMIT = 30 * 60 * 1000;
-  if(Date.now() - storedTime > AGE_LIMIT){
-    try{ sessionStorage.removeItem('lbd_pay_token');
-         sessionStorage.removeItem('lbd_pay_email');
-         sessionStorage.removeItem('lbd_pay_time'); }catch(e){}
-    showTimedMessage(
-      '⌛  Your session has expired',
-      'More than 30 minutes have passed since you initiated payment. Please click Pay again to restart. If you have already paid, write to leadbydharma@gmail.com with your payment details and we will send your report immediately.',
-      '#ff8080',
-      0
-    );
-    return;
-  }
-
-  // SECURITY CHECK 2: Verify email matches the session
-  if(storedEmail && storedEmail.toLowerCase() !== email.toLowerCase()){
-    showTimedMessage(
-      '⚠️  Email address does not match',
-      'Please enter the same email address you used when you clicked Pay (' + storedEmail + '). Your report will be sent to that address.',
-      '#ffa94d',
-      0
-    );
-    return;
-  }
-
-  // SECURITY CHECK 3: Verify minimum time has passed (payment takes at least 15 seconds)
-  var MIN_PAYMENT_TIME = 15 * 1000;
-  if(Date.now() - storedTime < MIN_PAYMENT_TIME){
-    var remaining = Math.ceil((MIN_PAYMENT_TIME - (Date.now() - storedTime)) / 1000);
-    showTimedMessage(
-      '⏳  Payment in progress — please complete it in the tab that just opened.',
-      'Your report will be sent as soon as payment is confirmed. This usually takes 30–60 seconds.',
-      '#ffa94d',
-      remaining
-    );
-    return;
-  }
-
-  // All checks passed — clear the token (single use) and send report
-  try{ sessionStorage.removeItem('lbd_pay_token');
-       sessionStorage.removeItem('lbd_pay_email');
-       sessionStorage.removeItem('lbd_pay_time'); }catch(e){}
-
-  var btn=document.querySelector('.gate-pay-btn');
-  if(btn){btn.disabled=true;btn.textContent='Verifying & Sending…';}
-  sendFullReportByEmail(email,pendingCandidateName,pendingFullReportHTML);
-}
-
-
-
-function payAndOpenReport() {
-  // Open Razorpay payment in a new tab
-  window.open(RAZORPAY_REPORT_LINK, '_blank');
-  // Change button to "I have paid — Open My Report"
-  var btn = document.querySelector('.gate-pay-btn');
-  if (btn) {
-    btn.textContent = 'I have paid — Open My Report →';
-    btn.style.background = '#4caf50';
-    btn.onclick = function() { openFullReportWindow(pendingFullReportHTML, pendingCandidateName); };
-  }
-}
-
-function openFullReportWindow(reportHTML, name) {
-  // Remove the payment gate
-  var gate = document.getElementById('payGate');
-  if (gate) gate.remove();
-
-  // Build a complete HTML document for the new window
-  var fullDoc = '<!DOCTYPE html><html lang="en"><head>'
-    + '<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
-    + '<title>Lead By Dharma — Leadership Assessment Report — ' + name + '</title>'
-    + '<style>'
-    + 'body{margin:0;padding:1.5rem;background:#0d1f35;font-family:Georgia,serif;color:#f5f0e4}'
-    + '.print-bar{background:rgba(184,150,62,.12);border:1px solid rgba(184,150,62,.3);border-radius:4px;padding:.8rem 1.2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:1.5rem}'
-    + '.print-bar p{margin:0;font-size:.9rem;color:rgba(245,240,228,.6);font-style:italic}'
-    + '.print-btn{background:#b8963e;color:#0d1f35;font-family:Georgia,serif;font-weight:700;font-size:.9rem;padding:.5rem 1.4rem;border:none;border-radius:3px;cursor:pointer}'
-    + '@media print{.print-bar{display:none}body{background:#fff;color:#000}}'
-    + '</style></head><body>'
-    + '<div class="print-bar">'
-    + '<p>Lead By Dharma · Leadership Assessment Report · ' + name + '</p>'
-    + '<button class="print-btn" onclick="window.print()">Save / Print Report →</button>'
-    + '</div>'
-    + reportHTML
-    + '</body></html>';
-
-  var win = window.open('', '_blank', 'width=900,height=800');
-  if (win) {
-    win.document.write(fullDoc);
-    win.document.close();
-    showGateMsg('✓ Your full report is open in a new window. Use the Save/Print button to keep a copy.', '#4caf50');
-  } else {
-    // Popup blocked — show inline instead
-    var rd = document.getElementById('report');
-    rd.innerHTML = reportHTML;
-    rd.scrollIntoView({behavior:'smooth'});
-    showGateMsg('✓ Report loaded below. Use Ctrl+P / Cmd+P to print or save.', '#4caf50');
-  }
-
-
-  // Send plain text summary to customer's email
-  var fullEmailAddr = pendingEmailAddr;
-  if (fullEmailAddr && fullEmailAddr.indexOf('@') > 0 && typeof emailjs !== 'undefined') {
-    var fsc = computeScores();
-    var rdt2 = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
-    var dlist = [
-      { label:'Domain I   — Intellectual Qualities', pct: fsc.D1.pct },
-      { label:'Domain II  — Social Effectiveness  ', pct: fsc.D2.pct },
-      { label:'Domain III — Dynamism and Drive     ', pct: fsc.D3.pct },
-      { label:'Domain IV  — Character and Integrity', pct: fsc.D4.pct }
-    ];
-    dlist.sort(function(a,b){ return b.pct - a.pct; });
-    var overallAvg = (fsc.D1.pct + fsc.D2.pct + fsc.D3.pct + fsc.D4.pct) / 4;
-    var vline = overallAvg >= 70
-      ? 'Overall Profile: STRONG — well-developed officer-like qualities.'
-      : overallAvg >= 55
-      ? 'Overall Profile: DEVELOPING — solid foundation with specific areas to build.'
-      : 'Overall Profile: FOUNDATION — clear development priorities identified.';
-    var d5line = fsc.D5.pct >= 62
-      ? 'Derailer Risk: Low — no significant patterns detected.'
-      : fsc.D5.pct >= 40
-      ? 'Derailer Risk: Moderate — one or more derailer patterns present.'
-      : 'Derailer Risk: Elevated — derailer patterns present. Development advised.';
-    var sb = [
-      'LEAD BY DHARMA — Full Leadership Assessment',
-      'Text Summary | Candidate: ' + name + ' | Date: ' + rdt2,
-      '',
-      vline,
-      '',
-      'DIMENSION SCORES',
-      dlist[0].label + ': ' + dlist[0].pct + '%  STRONGEST',
-      dlist[1].label + ': ' + dlist[1].pct + '%',
-      dlist[2].label + ': ' + dlist[2].pct + '%',
-      dlist[3].label + ': ' + dlist[3].pct + '%  PRIMARY DEVELOPMENT AREA',
-      '',
-      d5line,
-      '',
-      'Full visual report was displayed on your screen.',
-      'If saved as PDF — your complete analysis is there.',
-      'If window closed before saving — retake at leadbydharma.com.',
-      '',
-      'Colonel Aniruddha Rao HR (Retd.) | Lead By Dharma',
-      'leadbydharma@gmail.com | +91 98789 30879',
-      '"The SSB does not select the most prepared. It selects the most real."'
-    ].join('\n');
-    emailjs.send('service_t7ozvf3','template_lkhepyo',{
-      to_email: fullEmailAddr,
-      candidate_name: name,
-      report_html: sb,
-      report_date: rdt2,
-      reply_to: 'leadbydharma@gmail.com'
-    }).then(function(){ console.log('Full report summary sent to ' + fullEmailAddr); })
-      .catch(function(e){ console.log('Full report email error:',e); });
-  }
-}
-function showFullReportDirectly(){
-  var gate=document.getElementById('payGate');
-  if(gate) gate.remove();
-  var rd=document.getElementById('report');
-  rd.innerHTML=pendingFullReportHTML;
-  rd.scrollIntoView({behavior:'smooth'});
-}
-
-(function(){
-  var p=new URLSearchParams(window.location.search);
-  if(p.get('paid')==='true') window._returnedFromPayment=true;
-  // When returning from payment, unlock the full 75Q assessment
-  if(p.get('unlock')==='true' || p.get('paid')==='true') {
-    FREE_MODE = false;
-    // Show a welcome banner telling them full assessment is unlocked
-    window._fullModeUnlocked = true;
-  }
-})();
 
 
 function buildSummaryReport(d1obj, d2obj, d3obj, d4obj, candidateName, verdictClass, verdictTitle, verdictText, derailerRisk) {
@@ -2068,9 +1751,7 @@ function buildSummaryReport(d1obj, d2obj, d3obj, d4obj, candidateName, verdictCl
     + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem .8rem;margin-bottom:1rem">' + lockedItems + '</div>'
     + '<div style="text-align:center;margin-top:.8rem">'
     + '<div style="font-family:JetBrains Mono,monospace;font-size:.82rem;letter-spacing:.1em;color:rgba(245,240,228,.6);margin-bottom:.8rem">This sample used 15 of 75 questions. The remaining 60 complete the picture.</div>'
-    + '<a href="' + RAZORPAY_REPORT_LINK + '" target="_blank" style="display:inline-block;background:#b8963e;color:#0d1f35;font-family:Georgia,serif;font-size:.95rem;font-weight:700;padding:.7rem 2rem;text-decoration:none;border-radius:3px;letter-spacing:.03em">Get the Full Assessment \u2192 Rs.99</a>'
-    + '<div style="font-family:JetBrains Mono,monospace;font-size:.8rem;letter-spacing:.07em;color:rgba(245,240,228,.55);margin-top:.7rem;line-height:1.7">Complete 75 questions \u00b7 Full report opens on screen \u00b7 Save or print as PDF \u00b7 Text summary sent to your email</div>'
-    + '<div style="background:rgba(184,150,62,.1);border:1px solid rgba(184,150,62,.35);border-radius:3px;padding:.65rem 1rem;margin-top:.8rem;font-size:.82rem;color:#f0ca7a;line-height:1.65;text-align:left"><strong>&#9888; Allow pop-ups before paying.</strong> The full report opens in a new browser window. If pop-ups are blocked, the window will not open — only the email text summary will be accessible. To allow: look for the pop-up blocked icon in your browser address bar and select Allow.</div>'
+    + '<button onclick="showFullGate()" style="display:inline-block;background:#b8963e;color:#0d1f35;font-family:Georgia,serif;font-size:.95rem;font-weight:700;padding:.7rem 2rem;border:none;cursor:pointer;border-radius:3px;letter-spacing:.03em">Get the Full Assessment \u2192 Rs.219</button>'
     + '</div>'
     + '</div>'
     + '<div style="background:rgba(13,31,53,.6);border:1px solid rgba(184,150,62,.15);border-radius:4px;padding:1.1rem 1rem;margin-top:1rem">'
@@ -2080,262 +1761,23 @@ function buildSummaryReport(d1obj, d2obj, d3obj, d4obj, candidateName, verdictCl
     + '<div style="font-family:JetBrains Mono,monospace;font-size:.6rem;letter-spacing:.12em;color:rgba(184,150,62,.5);margin-bottom:.3rem">SSB PRACTICE</div>'
     + '<div style="font-family:Georgia,serif;font-size:.95rem;color:#f0ca7a;margin-bottom:.25rem">Psychology Suite</div>'
     + '<div style="font-size:.82rem;color:rgba(245,240,228,.5);line-height:1.5;margin-bottom:.55rem">SRT · WAT · SDT — timed with per-response coaching</div>'
-    + '<a href="ssb_psych_paid.html" style="display:inline-block;font-family:JetBrains Mono,monospace;font-size:.65rem;color:#b8963e;text-decoration:none;border:1px solid rgba(184,150,62,.3);padding:.25rem .7rem;border-radius:2px">From Rs.149 →</a>'
+    + '<a href="ssb_psych_paid.html" style="display:inline-block;font-family:JetBrains Mono,monospace;font-size:.65rem;color:#b8963e;text-decoration:none;border:1px solid rgba(184,150,62,.3);padding:.25rem .7rem;border-radius:2px">From Rs.225 →</a>'
     + '</div>'
     + '<div style="background:rgba(245,240,228,.04);border:1px solid rgba(184,150,62,.2);border-radius:3px;padding:.7rem .65rem;text-align:center">'
     + '<div style="font-family:JetBrains Mono,monospace;font-size:.6rem;letter-spacing:.12em;color:rgba(184,150,62,.5);margin-bottom:.3rem">AI SIMULATION</div>'
     + '<div style="font-family:Georgia,serif;font-size:.95rem;color:#f0ca7a;margin-bottom:.25rem">AI Interview</div>'
     + '<div style="font-size:.82rem;color:rgba(245,240,228,.5);line-height:1.5;margin-bottom:.55rem">12 questions · Col Rao AI persona · Scored report</div>'
-    + '<a href="ai_interview.html" style="display:inline-block;font-family:JetBrains Mono,monospace;font-size:.65rem;color:#b8963e;text-decoration:none;border:1px solid rgba(184,150,62,.3);padding:.25rem .7rem;border-radius:2px">Rs.498 →</a>'
+    + '<a href="ai_interview.html" style="display:inline-block;font-family:JetBrains Mono,monospace;font-size:.65rem;color:#b8963e;text-decoration:none;border:1px solid rgba(184,150,62,.3);padding:.25rem .7rem;border-radius:2px">Rs.895 →</a>'
     + '</div>'
     + '<div style="background:rgba(245,240,228,.04);border:1px solid rgba(184,150,62,.2);border-radius:3px;padding:.7rem .65rem;text-align:center">'
     + '<div style="font-family:JetBrains Mono,monospace;font-size:.6rem;letter-spacing:.12em;color:rgba(184,150,62,.5);margin-bottom:.3rem">FIVE DIMENSIONS</div>'
     + '<div style="font-family:Georgia,serif;font-size:.95rem;color:#f0ca7a;margin-bottom:.25rem">OPI Assessment</div>'
     + '<div style="font-size:.82rem;color:rgba(245,240,228,.5);line-height:1.5;margin-bottom:.55rem">93 questions · IQ · EQ · AQ · SQ · VQ with OLQ mapping</div>'
-    + '<a href="iq_eq_aq_sq.html" style="display:inline-block;font-family:JetBrains Mono,monospace;font-size:.65rem;color:#b8963e;text-decoration:none;border:1px solid rgba(184,150,62,.3);padding:.25rem .7rem;border-radius:2px">Rs.199 →</a>'
+    + '<a href="iq_eq_aq_sq.html" style="display:inline-block;font-family:JetBrains Mono,monospace;font-size:.65rem;color:#b8963e;text-decoration:none;border:1px solid rgba(184,150,62,.3);padding:.25rem .7rem;border-radius:2px">Rs.395 →</a>'
     + '</div>'
     + '</div>'
     + '</div>';
 }
-
-
-function showPaymentGate(fullReportHTML, candidateName) {
-  pendingFullReportHTML = fullReportHTML;
-  pendingCandidateName  = candidateName;
-
-  // If returned from Razorpay payment — show full report immediately
-  if (window._returnedFromPayment) {
-    openFullReportWindow(fullReportHTML, candidateName);
-    // Send email via Edge Function (triggered by Razorpay webhook — no action needed here)
-    showGateMsg('\u2713 Payment received. Your full report is open in a new window. Check your email for a summary.', '#4caf50');
-    return;
-  }
-
-  // Build the upsell panel — shown after 15Q sample report
-  var emailNote = pendingEmailAddr
-    ? '<div style="font-size:.82rem;color:rgba(245,240,228,.5);font-style:italic;margin-top:.4rem">Report summary will be sent to: ' + pendingEmailAddr + '</div>'
-    : '<div style="font-size:.82rem;color:rgba(245,240,228,.5);font-style:italic;margin-top:.4rem">Enter your email at the start to receive a summary by email.</div>';
-
-  var html = '<div class="report-gate" id="payGate" style="background:rgba(13,31,53,.97);border:1px solid rgba(184,150,62,.35);border-radius:6px;padding:1.6rem 1.4rem;margin-top:1.4rem;text-align:center">'
-    + '<div style="font-family:JetBrains Mono,monospace;font-size:.65rem;letter-spacing:.2em;color:#b8963e;margin-bottom:.5rem">WHAT COMES NEXT</div>'
-    + '<div style="font-size:1.25rem;color:#f5f0e4;font-weight:700;margin-bottom:.5rem">The Full 75-Question Assessment</div>'
-    + '<div style="font-size:.95rem;color:rgba(245,240,228,.65);line-height:1.75;margin-bottom:1rem">'
-    + 'The sample you just completed used 15 of 75 questions — one from each of the key OLQ sub-dimensions. '
-    + 'The full assessment covers all 15 sub-dimensions across all 5 domains, '
-    + 'with per-question pattern analysis, derailer risk by dimension, '
-    + 'SSB-stage implications, and Col Rao\u2019s personal note for your specific profile.'
-    + '</div>'
-    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem .6rem;margin-bottom:1.1rem;text-align:left">'
-    + ['All 15 OLQ sub-dimensions scored','Derailer risk by dimension (all 8)','Per-question pattern analysis','SSB-stage implications for every score','The question where your character showed most','Col Rao\u2019s personal note for your profile']
-      .map(function(t){ return '<div style="font-size:.84rem;color:rgba(245,240,228,.7);display:flex;gap:.35rem"><span style="color:#b8963e">\u2192</span><span>'+t+'</span></div>'; }).join('')
-    + '</div>'
-    + '<button onclick="payAndOpenReport()" class="gate-pay-btn" style="background:#b8963e;color:#0d1f35;font-family:Georgia,serif;font-size:1.05rem;font-weight:700;padding:.75rem 2.2rem;border:none;border-radius:3px;cursor:pointer;letter-spacing:.03em;display:inline-block">Pay Rs.99 \u2014 Get Full Report \u2192</button>'
-    + emailNote
-    + '<div style="font-family:JetBrains Mono,monospace;font-size:.6rem;letter-spacing:.1em;color:rgba(245,240,228,.25);margin-top:.6rem">Report opens in new window \u00b7 Email summary sent automatically \u00b7 Save or print anytime</div>'
-    + '</div>';
-
-  var rd = document.getElementById('report');
-  rd.insertAdjacentHTML('beforeend', html);
-  document.getElementById('payGate').scrollIntoView({behavior:'smooth'});
-}
-
-function sendFullReportByEmail(email, name, reportHTML) {
-  // Show the full visual report on screen immediately — do not wait for email
-  showFullReportDirectly();
-
-  if (typeof emailjs === 'undefined') {
-    showGateMsg('Report shown below. Email leadbydharma@gmail.com if you need an emailed copy.', '#ffa94d');
-    return;
-  }
-
-  // Build a compact plain-text email — stays well under EmailJS size limits
-  var dims = computeScores();
-  var d1=dims.D1, d2=dims.D2, d3=dims.D3, d4=dims.D4, d5=dims.D5;
-  var overallRaw = (d1.avg+d2.avg+d3.avg+d4.avg)/4;
-  var derailer = 5 - d5.avg;
-  var effD5 = derailer > 3.2 ? -0.8 : derailer > 2.0 ? -0.3 : 0;
-  var adj = overallRaw + effD5;
-  var verdict = adj >= 4.0 ? 'Strong Officer Potential'
-              : adj >= 3.0 ? 'Developing Officer Potential'
-              : 'Foundation Building Required';
-  var drLabel = derailer > 3.2 ? 'HIGH' : derailer > 2.0 ? 'MODERATE' : 'LOW';
-
-  var reportDate = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
-
-  var compactReport = 'LEAD BY DHARMA — Leadership Assessment Report\n'
-    + 'Candidate: ' + name + '\n'
-    + 'Date: ' + reportDate + '\n'
-    + '\n─────────────────────────────\n'
-    + 'OVERALL VERDICT: ' + verdict + '\n'
-    + '─────────────────────────────\n'
-    + '\nDIMENSION SCORES\n'
-    + 'Domain I  — Intellectual Qualities : ' + d1.pct + '%\n'
-    + 'Domain II — Social Effectiveness   : ' + d2.pct + '%\n'
-    + 'Domain III— Dynamism & Drive       : ' + d3.pct + '%\n'
-    + 'Domain IV — Character & Integrity  : ' + d4.pct + '%\n'
-    + 'Domain V  — Derailer Risk Level    : ' + drLabel + ' (' + d5.pct + '% risk score)\n'
-    + '\n─────────────────────────────\n'
-    + 'Your complete visual report with full analysis is shown on your screen.\n'
-    + 'Save or print it using the Print/Save button at the bottom of the report.\n'
-    + '\n─────────────────────────────\n'
-    + 'For mentorship and personal guidance:\n'
-    + 'Colonel Aniruddha Rao HR (Retd.) — Lead By Dharma\n'
-    + 'leadbydharma.com | leadbydharma@gmail.com\n'
-    + '+91 98789 30879 | +91 98000 12027\n'
-    + '\n"The SSB does not select the most prepared candidate.\n'
-    + ' It selects the most real one."\n'
-    + '— Col Aniruddha Rao HR (Retd.)';
-
-  // Save full report to localStorage BEFORE sending email
-  // This allows recovery if the candidate closes the tab
-  try {
-    var dims2 = computeScores();
-    saveReportToStorage(email, name, reportHTML, {
-      d1: dims2.D1.pct, d2: dims2.D2.pct,
-      d3: dims2.D3.pct, d4: dims2.D4.pct, d5: dims2.D5.pct
-    });
-  } catch(saveErr) { console.log('Storage save error:', saveErr); }
-
-  emailjs.send(
-    'service_t7ozvf3',
-    'template_lkhepyo',
-    {
-      to_email:       email,
-      candidate_name: name,
-      report_html:    compactReport,
-      report_date:    reportDate,
-      reply_to:       'leadbydharma@gmail.com'
-    }
-  ).then(function() {
-    showGateMsg('\u2713 Report emailed to ' + email + '. Check inbox and spam folder.', '#4caf50');
-  }, function(e) {
-    console.error('EmailJS:', e);
-    showGateMsg('Email could not be sent. Your full report is shown on screen — use Print/Save to keep a copy.', '#ffa94d');
-  });
-}
-
-function showGateMsg(msg, color) {
-  var succ = document.getElementById('gateSuccess');
-  if (succ) { succ.style.display='block'; succ.style.color=color||'#4caf50'; succ.textContent=msg; }
-  var row = document.querySelector('.gate-email-row');
-  if (row) row.style.display='none';
-  var note = document.querySelector('.gate-note');
-  if (note) note.style.display='none';
-}
-
-
-// =====================================================
-// REPORT RECOVERY SYSTEM
-// Saves report to localStorage on payment confirmation
-// Retrieves it if candidate returns to the page
-// =====================================================
-
-var STORAGE_KEY_PREFIX = 'lbd_report_';
-
-function saveReportToStorage(email, name, fullReportHTML, scores) {
-  try {
-    var key = STORAGE_KEY_PREFIX + email.toLowerCase().replace(/[^a-z0-9]/g, '_');
-    var data = {
-      email:          email,
-      name:           name,
-      reportHTML:     fullReportHTML,
-      scores:         scores,
-      savedAt:        new Date().toISOString(),
-      expires:        new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString() // 90 days
-    };
-    localStorage.setItem(key, JSON.stringify(data));
-    localStorage.setItem('lbd_last_email', email.toLowerCase());
-    console.log('Report saved to localStorage for', email);
-  } catch(e) {
-    console.log('localStorage save failed:', e);
-  }
-}
-
-function getReportFromStorage(email) {
-  try {
-    var key = STORAGE_KEY_PREFIX + email.toLowerCase().replace(/[^a-z0-9]/g, '_');
-    var raw = localStorage.getItem(key);
-    if (!raw) return null;
-    var data = JSON.parse(raw);
-    // Check expiry
-    if (data.expires && new Date(data.expires) < new Date()) {
-      localStorage.removeItem(key);
-      return null;
-    }
-    return data;
-  } catch(e) { return null; }
-}
-
-function getLastEmail() {
-  try { return localStorage.getItem('lbd_last_email') || ''; }
-  catch(e) { return ''; }
-}
-
-function checkForSavedReport() {
-  // Called on page load — if a saved report exists, show retrieval option on intro page
-  var lastEmail = getLastEmail();
-  if (!lastEmail) return;
-
-  var saved = getReportFromStorage(lastEmail);
-  if (!saved) return;
-
-  // Show retrieval banner on intro page
-  var intro = document.getElementById('introPage');
-  if (!intro) return;
-
-  var savedDate = new Date(saved.savedAt).toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'});
-
-  var banner = document.createElement('div');
-  banner.id = 'recoveryBanner';
-  banner.style.cssText = 'background:rgba(26,74,46,.12);border:1.5px solid rgba(26,74,46,.35);border-radius:8px;padding:1.1rem 1.2rem;margin-bottom:1.4rem;text-align:center';
-  banner.innerHTML = '<div style="font-family:JetBrains Mono,monospace;font-size:.62rem;color:#4caf50;letter-spacing:.15em;margin-bottom:.35rem">✓ PAID REPORT AVAILABLE</div>'
-    + '<div style="font-size:.95rem;color:#0d1f35;margin-bottom:.15rem"><strong>' + saved.name + '</strong> — report from ' + savedDate + '</div>'
-    + '<div style="font-size:.82rem;color:#7a6e63;margin-bottom:.7rem">' + saved.email + '</div>'
-    + '<button onclick="retrieveSavedReport()" style="background:#0d1f35;color:#f0ca7a;border:none;padding:.55rem 1.3rem;border-radius:4px;font-family:Georgia,serif;font-size:.9rem;cursor:pointer;margin-right:.5rem">View My Report →</button>'
-    + '<button onclick="hideBanner()" style="background:transparent;color:#7a6e63;border:1px solid #ccc;padding:.5rem 1rem;border-radius:4px;font-family:Georgia,serif;font-size:.85rem;cursor:pointer">Take New Assessment</button>';
-
-  // Insert at top of intro page content
-  var firstChild = intro.firstElementChild;
-  if (firstChild) {
-    intro.insertBefore(banner, firstChild);
-  } else {
-    intro.appendChild(banner);
-  }
-}
-
-function hideBanner() {
-  var b = document.getElementById('recoveryBanner');
-  if (b) b.style.display = 'none';
-}
-
-function retrieveSavedReport() {
-  var lastEmail = getLastEmail();
-  var saved = getReportFromStorage(lastEmail);
-  if (!saved) {
-    alert('Saved report not found. Please re-take the assessment.');
-    return;
-  }
-
-  // Hide intro, show report
-  var intro = document.getElementById('introPage');
-  if (intro) intro.classList.add('hidden');
-  var sections = document.getElementById('assessmentSections');
-  if (sections) sections.style.display = 'none';
-
-  pendingFullReportHTML = saved.reportHTML;
-  pendingCandidateName  = saved.name;
-
-  var reportDiv = document.getElementById('report');
-  reportDiv.className = 'active';
-  reportDiv.innerHTML = saved.reportHTML;
-  window.scrollTo({top: 0, behavior: 'smooth'});
-}
-
-// Run on page load
-document.addEventListener('DOMContentLoaded', function() {
-  checkForSavedReport();
-});
-
 </script>
 
 </body>
