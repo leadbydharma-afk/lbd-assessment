@@ -178,7 +178,7 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 <!-- SETUP PAGE -->
 <div id="aiCodeGate"></div>
 
-<div id="setupPage">
+<div id="setupPage" class="hidden">
   <div class="setup-card">
     <div id="usageContainer"></div>
     <h3>Before We Begin — Tell Me About Yourself</h3>
@@ -576,11 +576,23 @@ function renderCodeGate() {
     + '</div>'
     + '<div id="aiCodeErr" style="display:none;color:var(--red);font-size:1.4rem;font-style:italic;margin-bottom:.6rem"></div>'
     + '<button onclick="submitAICode()" class="btn btn-primary" style="width:100%">Unlock Interview &rarr;</button>'
+    + '<div style="text-align:center;margin:1.2rem 0;font-family:JetBrains Mono,monospace;font-size:.85rem;color:var(--ash);letter-spacing:.1em">— OR —</div>'
+    + '<div style="text-align:center;font-family:\'Playfair Display\',serif;font-size:1.15rem;font-weight:600;color:var(--navy);margin-bottom:.7rem">Get One Now</div>'
+    + '<a href="https://rzp.io/rzp/AukND0g" target="_blank" class="btn btn-outline" style="width:100%;display:block;text-align:center;box-sizing:border-box;text-decoration:none;margin-bottom:.6rem">Standard — ₹895 &rarr;</a>'
+    + '<button onclick="toggleAIAssocBox()" style="display:block;width:100%;text-align:center;background:none;border:none;font-family:\'Crimson Pro\',serif;font-size:1.02rem;color:var(--ash);text-decoration:underline;cursor:pointer;margin-bottom:.4rem">Have an associate referral code?</button>'
+    + '<div id="aiAssocBox" style="display:none;margin-top:.4rem">'
+    + '<a href="https://rzp.io/rzp/oNmR08v" target="_blank" class="btn btn-outline" style="width:100%;display:block;text-align:center;box-sizing:border-box;text-decoration:none;background:var(--amber);color:var(--white);border-color:var(--amber)">Associate — ₹650 &rarr;</a>'
+    + '</div>'
     + '<p style="font-size:1.05rem;color:var(--ash);text-align:center;margin-top:.8rem;font-style:italic">'
     + 'Your code was emailed immediately after payment.<br>'
     + 'Questions? <a href="mailto:leadbydharma@gmail.com" style="color:var(--gold2)">leadbydharma@gmail.com</a> '
     + '&middot; <a href="tel:+919878930879" style="color:var(--gold2)">+91 98789 30879</a></p>'
     + '</div>';
+}
+
+function toggleAIAssocBox() {
+  var box = document.getElementById('aiAssocBox');
+  if (box) box.style.display = (box.style.display === 'none') ? 'block' : 'none';
 }
 
 async function submitAICode() {
