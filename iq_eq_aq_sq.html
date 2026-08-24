@@ -186,7 +186,7 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
   <h1>Know Your <span>Officer Potential Index</span></h1>
   <div class="hdr-sub">The Five Dimensions of Officer Potential</div>
   <div class="hdr-meta">
-    <span><b>93</b> Questions</span>
+    <span><b>115</b> Questions</span>
     <span><b>5</b> Dimensions</span>
     <span><b>~30 min</b></span>
     <span>Col Aniruddha Rao HR (Retd)</span>
@@ -206,8 +206,8 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
   <div class="pay-gate">
     <div class="pg-icon">&#129504;</div>
     <div class="pg-title">Officer Potential Index (OPI)</div>
-    <div class="pg-price"><sup>&#8377;</sup>199</div>
-    <div class="pg-sub">93 questions &middot; Instant personalised report &middot; No login required</div>
+    <div class="pg-price"><sup>&#8377;</sup>395</div>
+    <div class="pg-sub">115 questions &middot; Instant personalised report &middot; No login required</div>
     <div class="pg-tagline" style="font-style:italic;color:var(--gold2);font-size:.95rem;margin:.3rem 0 .6rem">The Five Dimensions</div>
     <div class="pg-includes">
       <span class="pg-inc">IQ &mdash; Cognitive Reasoning</span>
@@ -218,8 +218,17 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
     </div>
     <a href="https://rzp.io/rzp/godzswYk" target="_blank">
       <button class="btn btn-primary" style="font-size:1.1rem;padding:.85rem 2.4rem"
-        onclick="showUnlockAfterPay()">Pay &#8377;199 &amp; Get Access &rarr;</button>
+        onclick="showUnlockAfterPay()">Pay &#8377;395 &amp; Get Access &rarr;</button>
     </a>
+    <div style="margin-top:.8rem">
+      <button onclick="toggleOPIAssocBox()" style="background:none;border:none;font-family:'Crimson Pro',serif;font-size:1.02rem;color:var(--ash);text-decoration:underline;cursor:pointer">Have an associate referral code?</button>
+      <div id="opiAssocBox" style="display:none;margin-top:.7rem">
+        <a href="https://rzp.io/rzp/QG0MbP9" target="_blank">
+          <button class="btn btn-primary" style="font-size:1.05rem;padding:.75rem 2rem;background:var(--amber);border-color:var(--amber)"
+            onclick="showUnlockAfterPay()">Pay &#8377;285 &mdash; Associate Rate &rarr;</button>
+        </a>
+      </div>
+    </div>
     <div class="pg-note">
       After payment, check your email for an access code.<br>
       WhatsApp +91 98789 30879 if you need help.
@@ -284,6 +293,11 @@ var IQ_DEMO = false;
 
 // IQ_CODES removed — validation via Supabase
 ;;
+
+function toggleOPIAssocBox() {
+  var box = document.getElementById('opiAssocBox');
+  if (box) box.style.display = (box.style.display === 'none') ? 'block' : 'none';
+}
 
 function showUnlockAfterPay() {
   setTimeout(function() {
@@ -350,13 +364,13 @@ function launchIQDemo() {
 }
 
 // ═══════════════════════════════════════════
-//  QUESTION BANK — 93 questions, 5 domains
+//  QUESTION BANK — 115 questions, 5 domains
 // ═══════════════════════════════════════════
 const DOMAINS = [
   {
     id:'IQ', label:'Cognitive Intelligence (IQ)',
     badge:'badge-iq', color:'var(--iq)',
-    desc:'Measures logical reasoning, pattern recognition, numerical ability, and verbal reasoning. (20 questions)',
+    desc:'Measures logical reasoning, pattern recognition, numerical ability, and verbal reasoning. (42 questions)',
     questions:[
       {id:'IQ1',type:'mcq',text:'If all Roses are Flowers and some Flowers fade quickly, which must be true?',
        opts:['All roses fade quickly','Some roses may fade quickly','No roses fade quickly','All flowers are roses'],scores:[1,5,1,1]},
@@ -405,6 +419,57 @@ const DOMAINS = [
       {id:'IQ20',type:'mcq',text:'A sequence follows a hidden rule: 2, 4, 8, 10, 20, 22, __. What comes next?',
        opts:['44','24','42','40'],
        scores:[5, 1, 1, 1]},
+
+      // ── Cognitive section expansion — Verbal Reasoning (IQ21–IQ32) ──
+      {id:'IQ21',type:'mcq',text:'Barometer : Atmospheric Pressure :: Seismograph : ?',
+       opts:['Temperature','Sound Waves','Seismic Activity','Wind Speed'],scores:[1,1,5,1]},
+      {id:'IQ22',type:'mcq',text:'Oar : Row :: Rudder : ?',
+       opts:['Steer','Anchor','Sail','Float'],scores:[5,1,1,1]},
+      {id:'IQ23',type:'mcq',text:'Lachrymose : Tears :: Irascible : ?',
+       opts:['Laughter','Anger','Sorrow','Fear'],scores:[1,5,1,1]},
+      {id:'IQ24',type:'mcq',text:'Which word does NOT belong with the others: Scalpel, Forceps, Stethoscope, Retractor?',
+       opts:['Scalpel','Forceps','Stethoscope','Retractor'],scores:[1,1,5,1]},
+      {id:'IQ25',type:'mcq',text:'Which number-pair does NOT follow the same pattern as the others: 3:9, 5:25, 7:49, 9:81, 11:121, 4:12?',
+       opts:['3:9','4:12','9:81','11:121'],scores:[1,5,1,1]},
+      {id:'IQ26',type:'mcq',text:'In a certain code, SOLDIER is written as VUOGOIU. Using the same code, what is the code for SAILOR?',
+       opts:['VBJOPU','VEOOUU','VDLORU','VAIOOU'],scores:[1,5,1,1]},
+      {id:'IQ27',type:'mcq',text:'In a certain code, CAPTAIN is written as ACPATNI. Using the same code, BATSMAN is written as:',
+       opts:['ABTMSNA','ABTSNAM','BATMSNA','ABTMSAN'],scores:[5,1,1,1]},
+      {id:'IQ28',type:'mcq',text:'Find the missing term in the series: AZ, BY, CX, DW, __, FU',
+       opts:['EV','EW','FV','EU'],scores:[5,1,1,1]},
+      {id:'IQ29',type:'mcq',text:'What comes next in the series? 2, 3, 5, 7, 11, 13, __, 19',
+       opts:['15','16','17','18'],scores:[1,1,5,1]},
+      {id:'IQ30',type:'mcq',text:'Pointing to a photograph, Arjun says: "She is the daughter of the only son of my grandfather." How is Arjun related to the person in the photograph?',
+       opts:['Father','Brother','Uncle','Cousin'],scores:[1,5,1,1]},
+      {id:'IQ31',type:'mcq',text:'A patrol starts facing North. It turns 90° clockwise, walks 3 km, turns 90° anti-clockwise, walks 4 km, then turns 180°. Which direction is the patrol now facing?',
+       opts:['North','South','East','West'],scores:[1,5,1,1]},
+      {id:'IQ32',type:'mcq',text:'Statements: (1) All officers are leaders. (2) Some leaders are strategists. (3) No strategist is a coward. Conclusions: I. Some officers are strategists. II. No officer is a coward. III. Some leaders are not cowards. Which conclusion(s) follow?',
+       opts:['Only I follows','Only III follows','Only I and III follow','All three follow'],scores:[1,5,1,1]},
+
+      // ── Cognitive section expansion — Numerical Reasoning (IQ33–IQ42) ──
+      // NOTE: IQ39 and IQ42 replace the bank's original Set/Venn and Combined
+      // Rate items with Number Property and Mathematical Substitution types —
+      // the two OIR-frequent types the original bank was missing.
+      {id:'IQ33',type:'mcq',text:'A regiment of 400 soldiers is deployed. 25% are in forward positions and the rest are in reserve. How many soldiers are in reserve?',
+       opts:['100','200','300','250'],scores:[1,1,5,1]},
+      {id:'IQ34',type:'mcq',text:'Officers and soldiers in a unit are in the ratio 2:9. If there are 44 officers, how many soldiers are there?',
+       opts:['176','198','162','180'],scores:[1,5,1,1]},
+      {id:'IQ35',type:'mcq',text:'Find the missing number: 4, 9, 16, 25, 36, __, 64',
+       opts:['42','48','49','50'],scores:[1,1,5,1]},
+      {id:'IQ36',type:'mcq',text:'Find the missing number: 1, 1, 2, 3, 5, 8, 13, __, 34',
+       opts:['19','20','21','22'],scores:[1,1,5,1]},
+      {id:'IQ37',type:'mcq',text:'A canteen sells tea at Rs.12 per cup, making a 20% profit. What is the cost price per cup?',
+       opts:['Rs.8','Rs.9','Rs.10','Rs.11'],scores:[1,1,5,1]},
+      {id:'IQ38',type:'mcq',text:'A convoy covers 120 km in 3 hours. If it increases speed by 20 km/h, how long will it take to cover the same distance?',
+       opts:['2 hrs','2 hrs 30 min','1 hr 30 min','2 hrs 15 min'],scores:[5,1,1,1]},
+      {id:'IQ39',type:'mcq',text:'What is the units digit of 7\u2074\u2075 (7 raised to the power 45)?',
+       opts:['7','9','3','1'],scores:[5,1,1,1]},
+      {id:'IQ40',type:'mcq',text:'A batsman scores 68, 74, 81, and 59 in four innings. What score must he make in the fifth innings to achieve an average of 72?',
+       opts:['74','76','78','80'],scores:[1,1,5,1]},
+      {id:'IQ41',type:'mcq',text:'If 3x + 4y = 24 and x + 2y = 10, what is the value of x?',
+       opts:['2','3','4','5'],scores:[1,1,5,1]},
+      {id:'IQ42',type:'mcq',text:'If x \u2207 y is defined as x\u00b2 \u2212 xy + y\u00b2, evaluate 5 \u2207 3.',
+       opts:['16','19','22','25'],scores:[1,5,1,1]},
     ]
   },
   {
