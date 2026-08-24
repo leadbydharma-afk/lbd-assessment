@@ -116,6 +116,11 @@ body{font-family:Crimson Pro,Georgia,serif;background:var(--cream);color:var(--i
   .demo-banner{background:rgba(139,92,0,.08);border:1px solid rgba(139,92,0,.25);border-radius:2px;padding:.6rem 1rem;font-family:JetBrains Mono,monospace;font-size:1.4rem;color:var(--amber);text-align:center;margin:.6rem 0}
   @media(max-width:560px){.what-included{grid-template-columns:1fr}.pricing-grid{grid-template-columns:1fr 1fr}}
 
+  /* ASSOCIATE TOGGLE */
+  .assoc-toggle-row{text-align:center;margin:1rem 0}
+  .assoc-toggle-btn{background:none;border:none;font-family:'Crimson Pro',serif;font-size:1.02rem;color:var(--ash);text-decoration:underline;cursor:pointer}
+  .assoc-note{font-size:1.4rem;color:var(--amber);font-style:italic;margin-top:.5rem;display:none}
+  .assoc-note.active{display:block}
 
   /* EXTEND TIME BUTTON */
   .extend-btn {
@@ -145,35 +150,6 @@ body{font-family:Crimson Pro,Georgia,serif;background:var(--cream);color:var(--i
     color: rgba(201,168,76,.5);
     margin-left: .3rem;
   }
-
-
-  .promo-store-box{border:1.5px solid rgba(240,202,122,.4)!important;
-    background:rgba(107,26,26,.04)}
-
-  /* MAY OFFER STRIP */
-  #mayOfferStrip {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    z-index: 9999;
-    background: linear-gradient(90deg, #6B1A1A 0%, #0D1F35 60%);
-    border-top: 1px solid rgba(240,202,122,.4);
-    padding: .55rem 1.2rem;
-    display: none;
-    align-items: center;
-    justify-content: space-between;
-    gap: .8rem;
-    flex-wrap: wrap;
-  }
-  #mayOfferStrip.strip-visible { display: flex !important; }
-  #mayOfferStrip .strip-left { display:flex; align-items:center; gap:.7rem; flex-wrap:wrap; }
-  #mayOfferStrip .strip-badge { font-family:JetBrains Mono,monospace; font-size:.58rem; letter-spacing:.18em; color:#f0ca7a; white-space:nowrap; }
-  #mayOfferStrip .strip-text { font-family:Georgia,serif; font-size:.88rem; color:rgba(245,240,228,.85); }
-  #mayOfferStrip .strip-cd { font-family:JetBrains Mono,monospace; font-size:.68rem; color:rgba(240,202,122,.7); white-space:nowrap; }
-  #mayOfferStrip .strip-btn { font-family:Georgia,serif; font-size:.82rem; font-weight:500; color:#0D1F35; background:#B8963E; border:none; border-radius:3px; padding:.4rem 1.1rem; cursor:pointer; white-space:nowrap; text-decoration:none; display:inline-block; transition:background .2s; flex-shrink:0; }
-  #mayOfferStrip .strip-btn:hover { background:#D4AC5A; }
-  #mayOfferStrip .strip-close { background:none; border:none; color:rgba(245,240,228,.4); cursor:pointer; font-size:1.1rem; padding:0 .25rem; line-height:1; flex-shrink:0; }
-  #mayOfferStrip .strip-close:hover { color:rgba(245,240,228,.8); }
-  @media(max-width:520px){ #mayOfferStrip .strip-cd{display:none} #mayOfferStrip .strip-text{font-size:.78rem} }
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -206,6 +182,10 @@ body{font-family:Crimson Pro,Georgia,serif;background:var(--cream);color:var(--i
     </div>
   </div>
   <div id="pricingGrid" class="pricing-grid"></div>
+  <div class="assoc-toggle-row">
+    <button class="assoc-toggle-btn" onclick="toggleAssocRate()">Have an associate referral code?</button>
+    <div class="assoc-note" id="assocNote">Associate rate applied — select your pack above, then proceed to payment.</div>
+  </div>
   <div class="order-summary" id="orderSummary" style="display:none">
     <div class="os-row">
       <span style="font-weight:600;font-family:Playfair Display,serif;color:var(--navy)">Your Selection</span>
@@ -298,72 +278,34 @@ body{font-family:Crimson Pro,Georgia,serif;background:var(--cream);color:var(--i
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-// MAY 2026 PROMOTIONAL OFFER — Rs.99, 5-Day Access
-// Auto-reverts June 1 2026. Manual revert: set PROMO_ACTIVE=false
-// ═══════════════════════════════════════════════════════════
-var PROMO_ACTIVE = (function(){
-  var d=new Date(); return d.getFullYear()===2026 && d.getMonth()===4;
-})(); // getMonth() 4 = May
-var PROMO_PRICE=99, PROMO_DAYS=2;
-var PROMO_RZP='https://rzp.io/rzp/PROMO99MAY';
-
-function buildPromoCountdown(){
-  var end=new Date('2026-06-01T00:00:00+05:30'),diff=end-new Date();
-  if(diff<=0) return '';
-  var d=Math.floor(diff/86400000),h=Math.floor(diff%86400000/3600000),m=Math.floor(diff%3600000/60000);
-  return '<span style="font-family:JetBrains Mono,monospace;font-size:.68rem;color:#f0ca7a">'+d+'d '+h+'h '+m+'m remaining · Ends May 31</span>';
-}
-
-function buildPromoBanner(prod){
-  if(!PROMO_ACTIVE) return '';
-  return '<div style="background:linear-gradient(135deg,#6B1A1A,#0D1F35);border:1.5px solid rgba(240,202,122,.4);border-radius:6px;padding:.85rem 1.1rem;margin-bottom:1.1rem;text-align:center">'
-    +'<div style="font-family:JetBrains Mono,monospace;font-size:.58rem;letter-spacing:.2em;color:#f0ca7a;margin-bottom:.25rem">MAY 2026 PROMOTIONAL OFFER</div>'
-    +'<div style="font-family:Georgia,serif;font-size:1.05rem;color:#fff;margin-bottom:.15rem">'+prod+' — Rs.99 for 5-Day Access</div>'
-    +'<div style="font-size:.82rem;color:rgba(245,240,228,.6);font-style:italic;margin-bottom:.3rem">Full access for 5 days from first use · Normal pricing resumes June 1</div>'
-    +buildPromoCountdown()
-    +'</div>';
-}
-
-function isPromoExpired(code){
-  try{
-    var k='lbd_px_'+code,s=localStorage.getItem(k);
-    if(!s) return false;
-    return (new Date()-new Date(s))/86400000>PROMO_DAYS;
-  }catch(e){return false;}
-}
-function markPromoFirstUse(code){
-  try{ var k='lbd_px_'+code; if(!localStorage.getItem(k)) localStorage.setItem(k,new Date().toISOString()); }catch(e){}
-}
-function promoDaysLeft(code){
-  try{
-    var k='lbd_px_'+code,s=localStorage.getItem(k);
-    if(!s) return PROMO_DAYS;
-    return Math.max(0,Math.ceil(PROMO_DAYS-(new Date()-new Date(s))/86400000));
-  }catch(e){return 5;}
-}
-
-
 // =====================================================
 // PRICING & ACCESS CONTROL
 // =====================================================
 var PRICING = [
-  {sets:1, price:149, orig:149, save:0, pct:0, label:"Single Set", bestValue:false},
-  {sets:2, price:289, orig:298, save:9, pct:3, label:"Duo Pack", bestValue:false},
-  {sets:3, price:399, orig:447, save:48, pct:11, label:"Triple Pack", bestValue:false},
-  {sets:4, price:499, orig:596, save:97, pct:16, label:"Quad Pack", bestValue:false},
-  {sets:5, price:599, orig:745, save:146, pct:20, label:"Five Set Pack", bestValue:false},
-  {sets:6, price:679, orig:894, save:215, pct:24, label:"Six Set Pack", bestValue:false},
-  {sets:7, price:729, orig:1043, save:314, pct:30, label:"Complete Pack (All 7)", bestValue:true}
+  {sets:1, price:225, orig:225,  save:0,   pct:0,  label:"Single Set", bestValue:false},
+  {sets:2, price:375, orig:450,  save:75,  pct:17, label:"Duo Pack", bestValue:false},
+  {sets:3, price:525, orig:675,  save:150, pct:22, label:"Triple Pack", bestValue:false},
+  {sets:4, price:675, orig:900,  save:225, pct:25, label:"Quad Pack", bestValue:false},
+  {sets:5, price:825, orig:1125, save:300, pct:27, label:"Five Set Pack", bestValue:false},
+  {sets:6, price:975, orig:1350, save:375, pct:28, label:"Six Set Pack", bestValue:false},
+  {sets:7, price:1125,orig:1575, save:450, pct:29, label:"Complete Pack (All 7)", bestValue:true}
 ];
 
-// Access codes — in production these should be server-validated
-// Format: CODE -> sets unlocked
-// YOU manage these codes and email them after Razorpay payment confirmation
-// Example codes below — replace with your actual code list
-// Code format: LBD-XXXX-N (last digit = number of sets)
-// VALID_CODES removed — validation via Supabase
-;;
+// Associate rate — same tiers, discounted pricing for referred candidates
+var ASSOC_PRICING = {
+  1: 155, 2: 255, 3: 355, 4: 455, 5: 555, 6: 655, 7: 755
+};
+
+var assocRateActive = false;
+
+function toggleAssocRate() {
+  assocRateActive = !assocRateActive;
+  var note = document.getElementById('assocNote');
+  if (note) note.classList.toggle('active', assocRateActive);
+  renderPricingGrid();
+  // Re-select current plan if one was chosen, to refresh order summary at new rate
+  if (selectedPlan) selectPlan(selectedPlan);
+}
 
 var selectedPlan = null;
 var unlockedSets = 0;
@@ -375,19 +317,17 @@ var DEMO_SITS = 5;  // Demo shows 5 situations (not 60)
 // ── RENDER PRICING GRID ──────────────────────────────────────
 function renderPricingGrid() {
   var grid = document.getElementById("pricingGrid");
-  // Render promo box above grid if promo is active
-  var pb = document.getElementById('promoBox');
-  if (pb) pb.innerHTML = PROMO_ACTIVE ? renderPromoSection() : '';
   var html = "";
   for (var i = 0; i < PRICING.length; i++) {
     var p = PRICING[i];
-    var perSet = Math.round(p.price / p.sets);
+    var displayPrice = assocRateActive ? ASSOC_PRICING[p.sets] : p.price;
+    var perSet = Math.round(displayPrice / p.sets);
     html += '<div class="price-card' + (p.bestValue ? " best-value" : "") + '" id="pc_' + p.sets + '" onclick="selectPlan(' + p.sets + ')">'
       + (p.bestValue ? '<div class="bv-badge">BEST VALUE</div>' : "")
       + '<div class="pc-sets">' + p.sets + (p.sets === 1 ? " SET" : " SETS") + '</div>'
       + '<div class="pc-label">' + p.label + '</div>'
-      + '<div class="pc-price">&#8377;' + p.price + '</div>'
-      + (p.save > 0 ? '<div class="pc-orig">&#8377;' + p.orig + '</div><div class="pc-save">SAVE &#8377;' + p.save + ' (' + p.pct + '% off)</div>' : '<div class="pc-save" style="visibility:hidden">-</div>')
+      + '<div class="pc-price">&#8377;' + displayPrice + '</div>'
+      + (p.save > 0 && !assocRateActive ? '<div class="pc-orig">&#8377;' + p.orig + '</div><div class="pc-save">SAVE &#8377;' + p.save + ' (' + p.pct + '% off)</div>' : '<div class="pc-save" style="visibility:hidden">-</div>')
       + '<div class="pc-per">&#8377;' + perSet + ' per set</div>'
       + '</div>';
   }
@@ -407,16 +347,17 @@ function selectPlan(sets) {
     if (PRICING[i].sets === sets) { plan = PRICING[i]; break; }
   }
   if (!plan) return;
+  var displayPrice = assocRateActive ? ASSOC_PRICING[sets] : plan.price;
   document.getElementById("orderSummary").style.display = "block";
-  document.getElementById("osSetsLabel").textContent = plan.sets + " set" + (plan.sets > 1 ? "s" : "") + " selected";
+  document.getElementById("osSetsLabel").textContent = plan.sets + " set" + (plan.sets > 1 ? "s" : "") + " selected" + (assocRateActive ? " (associate rate)" : "");
   // List which sets
   var setNames = [];
   for (var i = 1; i <= plan.sets; i++) setNames.push("Set " + i);
   document.getElementById("osSetsDetail").textContent = "Includes: " + setNames.join(", ") + " (SRT + WAT + SDT each)";
   document.getElementById("osOrig").textContent = "₹" + plan.orig;
-  document.getElementById("osTotal").textContent = "₹" + plan.price;
+  document.getElementById("osTotal").textContent = "₹" + displayPrice;
   var saveRow = document.getElementById("osSaveRow");
-  if (plan.save > 0) {
+  if (plan.save > 0 && !assocRateActive) {
     saveRow.style.display = "flex";
     document.getElementById("osSave").textContent = "₹" + plan.save + " (" + plan.pct + "% off)";
   } else {
@@ -442,7 +383,17 @@ function proceedToPayment() {
     7: 'https://rzp.io/rzp/nkgx4Cr4'
   };
 
-  var link = razorpayLinks[selectedPlan];
+  var razorpayLinksAssociate = {
+    1: 'https://rzp.io/rzp/xgOHhpe',
+    2: 'https://rzp.io/rzp/hwc4pf3K',
+    3: 'https://rzp.io/rzp/dDOWn6pz',
+    4: 'https://rzp.io/rzp/tCXqMlh',
+    5: 'https://rzp.io/rzp/VupegfN',
+    6: 'https://rzp.io/rzp/t29AwNy',
+    7: 'https://rzp.io/rzp/z4D46kUb'
+  };
+
+  var link = (assocRateActive ? razorpayLinksAssociate : razorpayLinks)[selectedPlan];
   if (!link) { alert('Payment link not found. Please contact leadbydharma@gmail.com'); return; }
 
   // Open Razorpay payment page in new tab
@@ -554,15 +505,6 @@ async function redeemCode() {
     '&#10003; ' + sets + ' set' + (sets > 1 ? 's' : '') + ' unlocked' + (hasAIAccess ? ' + AI Interview' : '');
   document.getElementById('setUsageInfo').textContent =
     sets + ' set' + (sets > 1 ? 's' : '') + ' available. Each complete session (SRT + WAT + SDT) uses one set.';
-
-  // Promo expiry check for special access codes (skip for OWNER)
-  if (product !== 'OWNER' && window.PROMO_ACTIVE && typeof markPromoFirstUse === 'function') {
-    markPromoFirstUse(enteredCode);
-    if (typeof isPromoExpired === 'function' && isPromoExpired(enteredCode)) {
-      showError('Your 2-day promotional access has expired. Purchase a set at normal pricing below.');
-      return;
-    }
-  }
 }
 
 function goStore() {
@@ -571,10 +513,6 @@ function goStore() {
   document.getElementById("storePage").classList.remove("hidden");
 }
 
-// Override selectTest to check set availability
-var _origSelectTest = null; // will be set after original is defined
-
-// =====================================================
 // =====================================================
 // DATA — SRT SETS (7 x 60)
 // =====================================================
@@ -593,7 +531,7 @@ const SRT = [
     "A new student joins your group and is being subtly excluded by the rest of the team.",
     "Two of your closest friends have had a serious falling-out. Both expect you to take sides.",
     "A classmate makes an offensive joke in front of a group. Everyone laughs except you.",
-    "Your team member\'s personal problem is affecting group performance. Others are getting frustrated.",
+    "Your team member's personal problem is affecting group performance. Others are getting frustrated.",
     "A professor publicly criticises your work in a way you believe is unfair.",
     "You made a decision that caused your team to lose an inter-college competition. Everyone is dejected.",
     "You are responsible for the college cultural event. The main speaker cancels six hours before the event.",
@@ -630,7 +568,7 @@ const SRT = [
     "You must convince a resistant senior professor to change an unfair evaluation criterion.",
     "Your team is panicking before an important presentation. You are the calm one.",
     "You find a serious factual error in a report about to be submitted to the college administration.",
-    "You find a wallet with Rs 5,000 and the owner\'s phone number.",
+    "You find a wallet with Rs 5,000 and the owner's phone number.",
     "You are the only witness to an incident that could result in a friend being unfairly punished.",
     "You see a stranger being harassed on public transport. You are alone.",
     "You must continue an important task after receiving deeply distressing personal news.",
@@ -646,7 +584,7 @@ const SRT = [
     "Your college NSS camp has no coordinator present. The scheduled activity is about to begin.",
     "You are travelling by train when an elderly co-passenger has a medical emergency.",
     "A fire alarm goes off in your college library. No staff member is present.",
-    "Your study group\'s presentation format is rejected by the professor one hour before the slot.",
+    "Your study group's presentation format is rejected by the professor one hour before the slot.",
     "You discover that the winning entry in your college competition was plagiarised.",
     "A professor offers to pass you in exchange for a favour that feels inappropriate.",
     "Your internship manager asks you to adjust figures in a report to make it look better.",
@@ -655,7 +593,7 @@ const SRT = [
     "A classmate who has been struggling all semester breaks down in the library before finals.",
     "You are organising a group activity and one member is being deliberately excluded by others.",
     "A senior student who has been mentoring you makes a request that makes you uncomfortable.",
-    "Your roommate\'s habits are seriously affecting your sleep and academic performance.",
+    "Your roommate's habits are seriously affecting your sleep and academic performance.",
     "A classmate from a different background is being mocked for their cultural practices.",
     "You are the student coordinator for a workshop. The chief guest does not arrive. 200 students are waiting.",
     "You accidentally delete an important shared document that took your team three weeks to create.",
@@ -673,10 +611,10 @@ const SRT = [
     "A key team member drops out of your project one week before the deadline.",
     "You are stuck in traffic and will miss a placement interview unless you find an alternative immediately.",
     "Two strong personalities in your project group are in constant disagreement.",
-    "Your team wants to split work equally but one member\'s section is significantly harder than others.",
+    "Your team wants to split work equally but one member's section is significantly harder than others.",
     "A team member is going through a personal crisis and their contribution has dropped significantly.",
     "You have been chosen as team leader but the most experienced member expected the role.",
-    "Your group\'s strategy is failing but everyone is emotionally invested in it.",
+    "Your group's strategy is failing but everyone is emotionally invested in it.",
     "You are asked to lead a workshop for students one year senior to you.",
     "Your idea is rejected in a group meeting. You are convinced it is the right approach.",
     "You are selected for an opportunity that several more experienced candidates applied for.",
@@ -695,7 +633,7 @@ const SRT = [
     "You find out the person who received an award you believe you deserved used connections to influence the decision.",
     "A friend asks you to testify falsely on their behalf in a college disciplinary proceeding.",
     "You see someone in your group taking stationery from the college store without permission.",
-    "You are offered a significant advantage if you share your team\'s strategy with a competing group.",
+    "You are offered a significant advantage if you share your team's strategy with a competing group.",
     "You must continue an important task after being publicly embarrassed in front of your peers.",
     "You must continue leading your group after receiving news that has personally affected you.",
     "A person you are responsible for makes a serious mistake in front of others.",
@@ -726,7 +664,7 @@ const SRT = [
     "Your team missed a deadline because of collective failure to communicate. You are the coordinator.",
     "You made a promise to a peer that you are now unable to keep.",
     "Your internship supervisor is taking an approach you believe will harm the client.",
-    "You observe a colleague taking credit for another person\'s work in front of senior management.",
+    "You observe a colleague taking credit for another person's work in front of senior management.",
     "You must tell a mentor that their advice, which you followed, produced a bad outcome.",
     "A group decision is about to harm someone who is not in the room.",
     "You are the only one in your peer group who disagrees with a plan that everyone is excited about.",
@@ -757,7 +695,7 @@ const SRT = [
     "You must inspire your team to put in extra effort during a period when everyone is already stretched.",
     "You find a significant billing error in your favour that your employer will not notice.",
     "A colleague shares confidential information with you and asks you to keep it from your supervisor.",
-    "You are asked to evaluate a friend\'s work fairly, knowing a poor evaluation could damage your friendship.",
+    "You are asked to evaluate a friend's work fairly, knowing a poor evaluation could damage your friendship.",
     "An opportunity you want is offered to you due to a misunderstanding about your qualifications.",
     "You must continue working professionally with someone you know has been dishonest.",
     "You must manage the project after discovering it was based on incorrect data.",
@@ -780,14 +718,14 @@ const SRT = [
     "A classmate who helped you significantly during the year asks you to return the favour in an exam.",
     "A peer you are close to is making a career decision you believe is seriously mistaken.",
     "You are managing a volunteer group with very unequal levels of commitment.",
-    "A team member\'s frustration is showing in their communication with clients.",
+    "A team member's frustration is showing in their communication with clients.",
     "You notice a colleague is struggling with something they have not shared with the team.",
     "Two team members have a conflict that began outside work and is now affecting the office.",
     "You are the student safety monitor during a trekking activity and notice a potential hazard.",
     "Your college team has prepared a report based on data you now believe may be incorrect.",
     "You gave advice to a junior student that they followed and which produced a bad outcome.",
     "A task delegated to you has grown significantly beyond what you agreed to take on.",
-    "You agreed to cover for a classmate\'s absence and later discover they were absent for a dishonest reason.",
+    "You agreed to cover for a classmate's absence and later discover they were absent for a dishonest reason.",
     "A popular professor at your college is teaching inaccurate content. You are certain of this.",
     "Your project team is taking a direction you believe is ethically questionable.",
     "A friend asks you to support their complaint against a teacher. You believe it is not entirely fair.",
@@ -831,7 +769,7 @@ const SRT = [
     "At the end of an intense project, the evaluation focuses entirely on one mistake made early on."
   ],
   [
-    "You join a new team at work and quickly realise the team\'s approach to the project is fundamentally flawed.",
+    "You join a new team at work and quickly realise the team's approach to the project is fundamentally flawed.",
     "Your manager asks you to commit to a client something you know your team cannot fulfil.",
     "During an important client meeting, your colleague gives incorrect information confidently.",
     "You are the most junior person in a room and the most experienced person is wrong about something important.",
@@ -839,7 +777,7 @@ const SRT = [
     "You discover a process your organisation has been using has been harming clients unknowingly.",
     "A colleague you respect is about to be unfairly blamed for a failure you contributed to.",
     "You are trusted with information that changes your view of a decision your team has already made.",
-    "Your organisation\'s decision will benefit the majority but unfairly disadvantage one person you know.",
+    "Your organisation's decision will benefit the majority but unfairly disadvantage one person you know.",
     "A mentor who has helped you significantly is acting in a way you believe is unethical.",
     "You are asked to lead a project with a team that has already failed at this once before.",
     "Two of your colleagues apply for the same position. You are asked by the hiring manager for your view.",
@@ -860,17 +798,17 @@ const SRT = [
     "You have taken a risk that has not paid off and your team is dealing with the consequences.",
     "A contact who helped your career asks you for a favour that puts you in an awkward position.",
     "You are asked to evaluate a peer honestly when your honest view is significantly negative.",
-    "Your team\'s plan is well-structured but you have a gut feeling it will not work.",
+    "Your team's plan is well-structured but you have a gut feeling it will not work.",
     "A major opportunity opens up but taking it means leaving a commitment you already made.",
     "You receive credit for something you did not do alone and the others are waiting to see how you respond.",
     "Your decision-making is being second-guessed by someone with less information than you.",
     "A colleague shares a personal problem that affects their work and asks for your confidence.",
     "You are in the middle of an important task when you become aware of a more urgent situation elsewhere.",
     "Your group is going to fail unless someone takes ownership of a task nobody wants.",
-    "A client is unreasonably demanding. Your organisation\'s policy says to accommodate them.",
+    "A client is unreasonably demanding. Your organisation's policy says to accommodate them.",
     "You made an error under pressure that you are fairly confident no one else will notice.",
     "You must manage expectations for a project that is behind schedule without causing panic.",
-    "Your team\'s success depends on cooperation from another team that has no incentive to cooperate.",
+    "Your team's success depends on cooperation from another team that has no incentive to cooperate.",
     "You are asked to take on additional responsibility when you are already at your limit.",
     "A deadline is approaching and you need one more day but have no basis to ask for an extension.",
     "You must deliver disappointing news to someone who has been working very hard.",
@@ -879,7 +817,7 @@ const SRT = [
     "Your judgment about a colleague turns out to have been significantly wrong.",
     "You have agreed to lead something and now doubt whether you were ready to take it on.",
     "A person you manage is capable but requires more support than you have time to give.",
-    "You observe that your organisation\'s stated values and its actual practices are inconsistent.",
+    "You observe that your organisation's stated values and its actual practices are inconsistent.",
     "You must maintain focus and quality during a period of significant personal difficulty.",
     "At the end of an extremely demanding period you are asked for one final effort when you have little left.",
     "A trusted colleague shares information that changes what you know. It was shared in confidence.",
@@ -895,7 +833,7 @@ const SRT = [
   [
     "You are part of a student committee that has received funds. A member suggests using some for personal convenience.",
     "Your organisation has a rule causing harm in a specific case. You have the authority to bend it.",
-    "A vendor your company uses regularly offers you a gift above what your organisation\'s policy permits.",
+    "A vendor your company uses regularly offers you a gift above what your organisation's policy permits.",
     "A junior colleague confides they lied on their job application. They are excellent at their job.",
     "You are in charge of distributing a limited resource among team members who all genuinely need it.",
     "Your organisation is making a public commitment you believe it cannot keep.",
@@ -916,11 +854,11 @@ const SRT = [
     "You have just joined a new group. An established norm conflicts with your personal values.",
     "A team member is going above and beyond but the effort is invisible to senior leadership.",
     "You must make a decision that will disappoint a large number of people for the benefit of a few.",
-    "A colleague\'s mistake is about to be attributed to you. Correcting this will embarrass your colleague.",
+    "A colleague's mistake is about to be attributed to you. Correcting this will embarrass your colleague.",
     "A very senior person makes a decision that you, with specific knowledge, know is likely to fail.",
     "Your final year project partner wants to take the work in a direction you believe is wrong.",
     "A friend asks you to recommend them for a role. You believe they are not the right fit.",
-    "You are negotiating for your group. The other side\'s offer is better for your group but worse for a third party.",
+    "You are negotiating for your group. The other side's offer is better for your group but worse for a third party.",
     "Your team is competing for a prize. You discover an advantage other teams do not have access to.",
     "You are asked to keep a secret that, if revealed, would help someone who deserves to know.",
     "A person in your team has a lighter workload than others. The arrangement was agreed before you joined.",
@@ -930,7 +868,7 @@ const SRT = [
     "A project you recommended is failing. Your credibility is at stake.",
     "You are asked to write a performance evaluation for yourself.",
     "A colleague who is better at your job than you asks you for advice on how to improve.",
-    "The most effective solution to your problem involves disrupting someone else\'s work.",
+    "The most effective solution to your problem involves disrupting someone else's work.",
     "Your team has achieved success through a combination of skill and luck. The attribution is all skill.",
     "You must represent a position in a meeting that you personally disagree with.",
     "A senior person praises you publicly for something that was significantly a team effort.",
@@ -940,7 +878,7 @@ const SRT = [
     "A task you thought would be simple is revealing itself to be significantly more complex.",
     "You realise you have been operating on a wrong assumption for several weeks.",
     "A person who has not been contributing to your project claims co-authorship.",
-    "Your team\'s morale is low. The honest explanation will make it worse.",
+    "Your team's morale is low. The honest explanation will make it worse.",
     "You must choose between saying something true that will cause conflict and staying silent.",
     "You have been selected for something based on a presentation that was accurate but incomplete.",
     "A junior person in your group has identified the right solution and a senior is dismissing it.",
@@ -1525,7 +1463,7 @@ function genWATReport(){
     var isTooLong=wa.split(/\s+/).length>20;
     var isTooShort=wa.split(/\s+/).length<4;
     var isNeg=/fail|afraid|lost|alone|difficult|impossible|angry|weak|scared|defeat|never|cannot|helpless|hopeless/.test(wal);
-    var isActive=/(i|we|one|a person|the student|young people|officers?)\s+(will|can|must|should|would|did|do|lead|serve|act|protect|achieve|help|build|rise|choose|decide|commit)/.test(wal);
+    var isActive=/(i|we|one|a person|the student|young people|officers?)\s+(will|can|must|should|would|did|do|lead|serve|act|protect|achieve|help|build|rise|choose|decide|commit)/.test(wal);
     var hasOfficerOrientation=/service|duty|honest|right|fair|nation|others|team|lead|responsibility|courage|overcome|persist/.test(wal);
     var isPerformed=/should be|ought to|one must|people should|it is important/.test(wal);
 
@@ -1756,72 +1694,20 @@ renderPricingGrid();
 // ── AUTO-SHOW UNLOCK GATE if returning from payment ──────────
 (function() {
   var params = new URLSearchParams(window.location.search);
-  // ?unlock=true  — show gate immediately (for all Razorpay redirects)
-  // ?pack=N       — optionally pre-select the pack they paid for
   if (params.get('unlock') === 'true' || params.get('unlocked') === 'true') {
-    // Hide store, show unlock gate
     document.getElementById('storePage').classList.add('hidden');
     document.getElementById('unlockGate').classList.remove('hidden');
-    // If pack info present, show a contextual note
-    var pack = params.get('pack');
-    if (pack) {
-      var note = document.createElement('div');
-      note.style.cssText = 'background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);'
-        + 'border-radius:2px;padding:.6rem .9rem;font-size:.94rem;color:var(--amber);'
-        + 'font-family:JetBrains Mono,monospace;margin:.6rem 0;text-align:center;';
-      note.textContent = 'Payment received. Check your email for the access code.';
-      var gate = document.getElementById('unlockGate').querySelector('.unlock-gate');
-      if (gate) gate.insertBefore(note, gate.firstChild);
-    }
+    var note = document.createElement('div');
+    note.style.cssText = 'background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);'
+      + 'border-radius:2px;padding:.6rem .9rem;font-size:.94rem;color:var(--amber);'
+      + 'font-family:JetBrains Mono,monospace;margin:.6rem 0;text-align:center;';
+    note.textContent = 'Payment received. Check your email for the access code.';
+    var gate = document.getElementById('unlockGate').querySelector('.unlock-gate');
+    if (gate) gate.insertBefore(note, gate.firstChild);
   }
 })();
 
-
 </script>
-
-
-
-
-
-
-<!-- ═══ MAY OFFER STRIP ═══ -->
-<div id="lbdMayStrip" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:99999;font-family:Georgia,serif"></div>
-<script>
-function lbdCloseStrip(){ document.getElementById('lbdMayStrip').style.display='none'; }
-(function(){
-  var d=new Date();
-  if(!(d.getFullYear()===2026 && d.getMonth()===4)) return;
-  var strip=document.getElementById('lbdMayStrip');
-  if(!strip) return;
-  strip.innerHTML=''
-    +'<div style="background:linear-gradient(90deg,#6B1A1A 0%,#0D1F35 55%);border-top:2px solid #B8963E;padding:.7rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap">'
-    +'<div style="display:flex;align-items:center;gap:.8rem;flex-wrap:wrap">'
-    +'<div style="background:#B8963E;color:#0D1F35;font-family:JetBrains Mono,monospace;font-size:.65rem;font-weight:700;letter-spacing:.18em;padding:.25rem .7rem;border-radius:2px;white-space:nowrap">&#9733; MAY 2026</div>'
-    +'<div style="color:#fff;font-size:1rem">'
-    +'<span style="color:#f0ca7a;font-size:1.15rem;font-weight:700">MAY MONTH OFFER</span>'
-    +' &mdash; Any SSB Set or AI Interview at '
-    +'<span style="color:#f0ca7a;font-size:1.2rem;font-weight:700">Rs.99</span>'
-    +'</div>'
-    +'<div id="lbdStripCd" style="font-family:JetBrains Mono,monospace;font-size:.7rem;color:rgba(240,202,122,.75);white-space:nowrap"></div>'
-    +'</div>'
-    +'<div style="display:flex;align-items:center;gap:.6rem;flex-shrink:0">'
-    +'<a href="https://leadbydharma-afk.github.io/lbd-assessment/special_access.html" target="_blank" style="background:#B8963E;color:#0D1F35;font-family:Georgia,serif;font-size:.92rem;font-weight:600;padding:.5rem 1.4rem;border-radius:3px;text-decoration:none;white-space:nowrap;display:inline-block">Explore Offer &#8594;</a>'
-    +'<button onclick="lbdCloseStrip()" style="background:none;border:none;color:rgba(245,240,228,.5);font-size:1.3rem;cursor:pointer;padding:0 .25rem;line-height:1">&#215;</button>'
-    +'</div>'
-    +'</div>';
-  strip.style.display='block';
-  document.body.style.paddingBottom='58px';
-  function tick(){
-    var end=new Date('2026-06-01T00:00:00+05:30'),diff=end-new Date();
-    if(diff<=0){strip.style.display='none';return;}
-    var dd=Math.floor(diff/86400000),hh=Math.floor(diff%86400000/3600000),mm=Math.floor(diff%3600000/60000),ss=Math.floor(diff%60000/1000);
-    var el=document.getElementById('lbdStripCd');
-    if(el) el.textContent=dd+'d '+hh+'h '+mm+'m '+ss+'s remaining';
-  }
-  tick(); setInterval(tick,1000);
-})();
-</script>
-<!-- ═══ END MAY OFFER STRIP ═══ -->
 
 </body>
 </html>
