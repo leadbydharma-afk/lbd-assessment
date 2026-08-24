@@ -159,35 +159,6 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
     margin-top: .5rem;
   }
 
-
-  .promo-store-box{border:1.5px solid rgba(240,202,122,.4)!important;
-    background:rgba(107,26,26,.04)}
-
-  /* MAY OFFER STRIP */
-  #mayOfferStrip {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    z-index: 9999;
-    background: linear-gradient(90deg, #6B1A1A 0%, #0D1F35 60%);
-    border-top: 1px solid rgba(240,202,122,.4);
-    padding: .55rem 1.2rem;
-    display: none;
-    align-items: center;
-    justify-content: space-between;
-    gap: .8rem;
-    flex-wrap: wrap;
-  }
-  #mayOfferStrip.strip-visible { display: flex !important; }
-  #mayOfferStrip .strip-left { display:flex; align-items:center; gap:.7rem; flex-wrap:wrap; }
-  #mayOfferStrip .strip-badge { font-family:JetBrains Mono,monospace; font-size:.58rem; letter-spacing:.18em; color:#f0ca7a; white-space:nowrap; }
-  #mayOfferStrip .strip-text { font-family:Georgia,serif; font-size:.88rem; color:rgba(245,240,228,.85); }
-  #mayOfferStrip .strip-cd { font-family:JetBrains Mono,monospace; font-size:.68rem; color:rgba(240,202,122,.7); white-space:nowrap; }
-  #mayOfferStrip .strip-btn { font-family:Georgia,serif; font-size:.82rem; font-weight:500; color:#0D1F35; background:#B8963E; border:none; border-radius:3px; padding:.4rem 1.1rem; cursor:pointer; white-space:nowrap; text-decoration:none; display:inline-block; transition:background .2s; flex-shrink:0; }
-  #mayOfferStrip .strip-btn:hover { background:#D4AC5A; }
-  #mayOfferStrip .strip-close { background:none; border:none; color:rgba(245,240,228,.4); cursor:pointer; font-size:1.1rem; padding:0 .25rem; line-height:1; flex-shrink:0; }
-  #mayOfferStrip .strip-close:hover { color:rgba(245,240,228,.8); }
-  @media(max-width:520px){ #mayOfferStrip .strip-cd{display:none} #mayOfferStrip .strip-text{font-size:.78rem} }
-
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -298,52 +269,6 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-// MAY 2026 PROMOTIONAL OFFER — Rs.99, 2-Day Access
-// Auto-reverts June 1 2026. Manual revert: set PROMO_ACTIVE=false
-// ═══════════════════════════════════════════════════════════
-var PROMO_ACTIVE = (function(){
-  var d=new Date(); return d.getFullYear()===2026 && d.getMonth()===4;
-})(); // getMonth() 4 = May
-var PROMO_PRICE=99, PROMO_DAYS=2;
-var PROMO_RZP='https://rzp.io/rzp/PROMO99MAY';
-
-function buildPromoCountdown(){
-  var end=new Date('2026-06-01T00:00:00+05:30'),diff=end-new Date();
-  if(diff<=0) return '';
-  var d=Math.floor(diff/86400000),h=Math.floor(diff%86400000/3600000),m=Math.floor(diff%3600000/60000);
-  return '<span style="font-family:JetBrains Mono,monospace;font-size:.68rem;color:#f0ca7a">'+d+'d '+h+'h '+m+'m remaining · Ends May 31</span>';
-}
-
-function buildPromoBanner(prod){
-  if(!PROMO_ACTIVE) return '';
-  return '<div style="background:linear-gradient(135deg,#6B1A1A,#0D1F35);border:1.5px solid rgba(240,202,122,.4);border-radius:6px;padding:.85rem 1.1rem;margin-bottom:1.1rem;text-align:center">'
-    +'<div style="font-family:JetBrains Mono,monospace;font-size:.58rem;letter-spacing:.2em;color:#f0ca7a;margin-bottom:.25rem">MAY 2026 PROMOTIONAL OFFER</div>'
-    +'<div style="font-family:Georgia,serif;font-size:1.05rem;color:#fff;margin-bottom:.15rem">'+prod+' — Rs.99 for 5-Day Access</div>'
-    +'<div style="font-size:.82rem;color:rgba(245,240,228,.6);font-style:italic;margin-bottom:.3rem">Full access for 2 days from first use · Normal pricing resumes June 1</div>'
-    +buildPromoCountdown()
-    +'</div>';
-}
-
-function isPromoExpired(code){
-  try{
-    var k='lbd_px_'+code,s=localStorage.getItem(k);
-    if(!s) return false;
-    return (new Date()-new Date(s))/86400000>PROMO_DAYS;
-  }catch(e){return false;}
-}
-function markPromoFirstUse(code){
-  try{ var k='lbd_px_'+code; if(!localStorage.getItem(k)) localStorage.setItem(k,new Date().toISOString()); }catch(e){}
-}
-function promoDaysLeft(code){
-  try{
-    var k='lbd_px_'+code,s=localStorage.getItem(k);
-    if(!s) return 5;
-    return Math.max(0,Math.ceil(5-(new Date()-new Date(s))/86400000));
-  }catch(e){return 5;}
-}
-
-
 // =====================================================
 // STATE
 // =====================================================
@@ -390,144 +315,14 @@ function getSystemPrompt() {
 }
 
 // =====================================================
-// START INTERVIEW
+// USAGE LIMIT SYSTEM — real, code-based (Supabase-backed)
+// Max 3 interviews per code — one per difficulty level.
 // =====================================================
-
-// =====================================================
-// USAGE LIMIT SYSTEM
-// Max 3 interviews total — one per difficulty level
-// Reports always accessible
-// Stored in localStorage so persists across sessions
-// =====================================================
-var USAGE_KEY = 'lbd_ai_interview_usage';
 var DIFF_LABELS = {
   'standard':  'Standard',
   'demanding': 'Demanding',
   'stress':    'Stress'
 };
-var MAX_INTERVIEWS = 3;
-
-function getUsage() {
-  try {
-    var raw = localStorage.getItem(USAGE_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch(e) { return {}; }
-}
-
-function saveUsage(usage) {
-  try { localStorage.setItem(USAGE_KEY, JSON.stringify(usage)); } catch(e) {}
-}
-
-function markUsed(difficulty) {
-  var usage = getUsage();
-  if (!usage[difficulty]) usage[difficulty] = { count: 0, reports: [] };
-  usage[difficulty].count++;
-  usage[difficulty].lastUsed = new Date().toISOString();
-  saveUsage(usage);
-}
-
-function totalUsed() {
-  var usage = getUsage();
-  var total = 0;
-  for (var d in usage) { total += (usage[d].count || 0); }
-  return total;
-}
-
-function isDifficultyUsed(difficulty) {
-  var usage = getUsage();
-  return usage[difficulty] && usage[difficulty].count > 0;
-}
-
-function canStartInterview(difficulty) {
-  if (totalUsed() >= MAX_INTERVIEWS) return false;
-  if (isDifficultyUsed(difficulty)) return false;
-  return true;
-}
-
-function saveReport(difficulty, reportHTML) {
-  try {
-    var usage = getUsage();
-    if (!usage[difficulty]) usage[difficulty] = { count: 0, reports: [] };
-    if (!usage[difficulty].reports) usage[difficulty].reports = [];
-    usage[difficulty].reports.push({
-      date: new Date().toLocaleDateString('en-IN'),
-      html: reportHTML
-    });
-    saveUsage(usage);
-  } catch(e) {}
-}
-
-function renderUsageBar() {
-  var usage = getUsage();
-  var used = totalUsed();
-  var remaining = MAX_INTERVIEWS - used;
-  var diffs = ['standard', 'demanding', 'stress'];
-
-  var slotsHTML = diffs.map(function(d) {
-    var isUsed = isDifficultyUsed(d);
-    return '<div class="usage-slot ' + (isUsed ? 'used' : 'available') + '">'
-      + (isUsed ? '✕' : '✓') + ' ' + DIFF_LABELS[d]
-      + '</div>';
-  }).join('');
-
-  var html = '<div class="usage-bar">'
-    + '<div class="usage-title">AI Interview Usage &nbsp;·&nbsp; '
-    + used + '/' + MAX_INTERVIEWS + ' used'
-    + (remaining > 0 ? ' &nbsp;·&nbsp; ' + remaining + ' remaining' : ' &nbsp;·&nbsp; All used')
-    + '</div>'
-    + '<div class="usage-slots">' + slotsHTML + '</div>'
-    + '</div>';
-
-  if (used >= MAX_INTERVIEWS) {
-    html += '<div class="usage-exhausted">'
-      + 'You have used all 3 interview attempts. Your reports are always accessible below.'
-      + '</div>';
-  }
-
-  // Add saved reports access if any exist
-  var reportsHTML = '';
-
-  // Build saved reports lookup for click handlers
-  window._lbdReports = [];
-  diffs.forEach(function(d) {
-    if (usage[d] && usage[d].reports && usage[d].reports.length > 0) {
-      usage[d].reports.forEach(function(r, i) {
-        var idx = window._lbdReports.length;
-        window._lbdReports.push({ diff: d, index: i });
-        reportsHTML += '<div style="margin-top:.4rem">'
-          + '<button onclick="showReportByIndex(' + idx + ')" '
-          + 'style="font-family:JetBrains Mono,monospace;font-size:1.05rem;'
-          + 'background:none;border:1px solid var(--rule);padding:.2rem .6rem;'
-          + 'border-radius:2px;cursor:pointer;color:var(--navy)">'
-          + '\uD83D\uDCCB ' + DIFF_LABELS[d] + ' Report \u2014 ' + r.date
-          + '</button></div>';
-      });
-    }
-  });
-
-  if (reportsHTML) {
-    html += '<div class="report-access-note">📋 Your saved reports:</div>' + reportsHTML;
-  }
-
-  var container = document.getElementById('usageContainer');
-  if (container) container.innerHTML = html;
-}
-
-function showReportByIndex(idx) {
-  if (!window._lbdReports || !window._lbdReports[idx]) return;
-  var r = window._lbdReports[idx];
-  showSavedReport(r.diff, r.index);
-}
-
-function showSavedReport(difficulty, index) {
-  var usage = getUsage();
-  if (!usage[difficulty] || !usage[difficulty].reports || !usage[difficulty].reports[index]) return;
-  var rDiv = document.getElementById('reportPage');
-  rDiv.classList.remove('hidden');
-  rDiv.innerHTML = usage[difficulty].reports[index].html;
-  document.getElementById('setupPage').classList.add('hidden');
-}
-
 
 // =====================================================
 // USAGE LOGGING — silent, sends to Cloudflare Worker
@@ -612,9 +407,6 @@ function startInterview() {
     difficulty: selectedDiff
   };
 
-  // Mark this difficulty as used BEFORE starting (prevents double-use on refresh)
-  markUsed(selectedDiff);
-
   // Log this interview start for abuse detection
   logInterviewStart(currentAICode || 'unknown', profile.difficulty);
 
@@ -678,7 +470,7 @@ function setInputEnabled(enabled) {
 // API CALL
 // =====================================================
 
-// Render usage bar on load
+// Render code gate on load
 document.addEventListener("DOMContentLoaded", function() {
   renderCodeGate();  // Show code entry gate first
   // Check if owner code already active from session
@@ -696,9 +488,6 @@ document.addEventListener("DOMContentLoaded", function() {
 // aiUses tracks remaining interviews (default 3)
 // Persisted in localStorage but code is source of truth
 // =====================================================
-// AI_CODES removed — validation via Supabase
-;;
-
 var AI_USAGE_KEY   = 'lbd_ai_usage_v2';  // versioned to avoid old data
 var currentAICode  = null;
 var aiUsesRemaining = 0;
@@ -740,14 +529,6 @@ async function redeemAICode(code) {
     return { ok: true, uses: 3, type: 'standalone' };
   }
 
-  // Promo expiry check (client-side, no Supabase needed)
-  if (typeof PROMO_ACTIVE !== 'undefined' && PROMO_ACTIVE) {
-    if (typeof markPromoFirstUse === 'function') markPromoFirstUse(code);
-    if (typeof isPromoExpired === 'function' && isPromoExpired(code)) {
-      return { ok: false, msg: 'Your 2-day promotional access has expired. Purchase a new pack to continue.' };
-    }
-  }
-
   // Validate via Supabase
   const { data, error } = await _supabase.rpc('verify_access_code', { input_code: code });
 
@@ -766,7 +547,6 @@ async function redeemAICode(code) {
   var type = 'standalone';
   if (product === 'OWNER')             { uses = 999; type = 'owner'; }
   else if (product === 'AI Special Access') { uses = 1; type = 'special'; }
-  else if (product === 'Readiness Pack')    { uses = 3; type = 'readiness'; }
   // AI Interview (standalone): uses stays at 3 (default)
 
   return { ok: true, uses: uses, type: type };
@@ -785,11 +565,11 @@ function renderCodeGate() {
     + '<div style="font-family:JetBrains Mono,monospace;font-size:1.05rem;letter-spacing:.15em;color:var(--gold2);margin-bottom:.8rem">AI INTERVIEW ACCESS</div>'
     + '<h3 style="font-size:1.4rem;margin-bottom:.4rem">Personal Interview Simulation</h3>'
     + '<p style="font-size:1.1rem;color:var(--ash);font-style:italic;margin-bottom:1.2rem;line-height:1.6">'
-    + 'Enter the access code from your Readiness Pack purchase email. '
+    + 'Enter the access code from your purchase email. '
     + 'Each code allows 3 interview sessions across the three difficulty levels.</p>'
     + '<div style="margin-bottom:.8rem">'
     + '<label style="font-family:JetBrains Mono,monospace;font-size:1.06rem;letter-spacing:.1em;display:block;margin-bottom:.3rem;color:var(--navy)">ACCESS CODE</label>'
-    + '<input id="aiCodeInput" class="inp" type="text" placeholder="e.g. LBD-XXXX-7" '
+    + '<input id="aiCodeInput" class="inp" type="text" placeholder="e.g. LBD-XXXX" '
     + 'style="text-transform:uppercase;letter-spacing:.1em;font-family:JetBrains Mono,monospace" '
     + 'onkeydown="if(event.keyCode===13) submitAICode()" />'
     + '<div id="aiErr" style="color:#ff6b6b;font-size:.85rem;display:none;margin-top:.4rem"></div>'
@@ -797,7 +577,7 @@ function renderCodeGate() {
     + '<div id="aiCodeErr" style="display:none;color:var(--red);font-size:1.4rem;font-style:italic;margin-bottom:.6rem"></div>'
     + '<button onclick="submitAICode()" class="btn btn-primary" style="width:100%">Unlock Interview &rarr;</button>'
     + '<p style="font-size:1.05rem;color:var(--ash);text-align:center;margin-top:.8rem;font-style:italic">'
-    + 'Purchased the Readiness Pack? Your code was emailed immediately after payment.<br>'
+    + 'Your code was emailed immediately after payment.<br>'
     + 'Questions? <a href="mailto:leadbydharma@gmail.com" style="color:var(--gold2)">leadbydharma@gmail.com</a> '
     + '&middot; <a href="tel:+919878930879" style="color:var(--gold2)">+91 98789 30879</a></p>'
     + '</div>';
@@ -832,7 +612,7 @@ function renderUsageDisplay() {
   var isOwner = currentAICode && (currentAIType === 'owner');
   var uses = currentAICode ? getCodeUsage(currentAICode) : 0;
   var codeType = currentAIType || '';
-  var typeLabel = codeType === 'standalone' ? ' &nbsp;·&nbsp; Standalone Pack' : (codeType === 'readiness' ? ' &nbsp;·&nbsp; Readiness Pack' : '');
+  var typeLabel = codeType === 'standalone' ? ' &nbsp;·&nbsp; Standalone Pack' : '';
   var html = '<div class="usage-bar">'
     + '<div class="usage-title">AI Interview Usage'
     + (isOwner ? ' &nbsp;·&nbsp; Owner Access — Unlimited'
@@ -857,11 +637,11 @@ function renderUsageDisplay() {
         + '<div style="font-size:1rem;color:var(--navy);margin-bottom:.3rem">'
         + 'Standalone AI Interview — 3 additional sessions</div>'
         + '<div style="font-size:.9rem;color:var(--ash);font-style:italic;margin-bottom:.6rem">'
-        + 'Rs.498 &middot; Standard, Demanding and Stress &middot; Same scored report</div>'
+        + 'Rs.895 &middot; Standard, Demanding and Stress &middot; Same scored report</div>'
         + '<a href="https://rzp.io/rzp/AukND0g" target="_blank" '
         + 'style="display:inline-block;font-family:JetBrains Mono,monospace;font-size:.76rem;'
         + 'letter-spacing:.1em;background:var(--gold);color:var(--navy);padding:.5rem 1.2rem;'
-        + 'border-radius:2px;text-decoration:none">Buy 3 More Sessions — Rs.498 &rarr;</a>'
+        + 'border-radius:2px;text-decoration:none">Buy 3 More Sessions — Rs.895 &rarr;</a>'
         + '<div style="font-size:.76rem;color:var(--ash);margin-top:.5rem;font-style:italic">'
         + 'New access code emailed within minutes of payment.</div>'
         + '</div>';
@@ -872,16 +652,18 @@ function renderUsageDisplay() {
 }
 
 // ── PROXY URL ──────────────────────────────────────────────
-// Replace this with your Cloudflare Worker URL after setup.
-// See setup guide at leadbydharma.com or contact Col Rao.
-// Format: https://lbd-ai-proxy.YOUR-ACCOUNT.workers.dev
 var PROXY_URL = 'https://lbd-ai-proxy.leadbydharma.workers.dev';
 
 async function callClaude(messages, systemPrompt) {
   // Cloudflare Worker proxy — avoids CORS restriction on Anthropic API
+  // AND performs real server-side access-code verification against
+  // Supabase before forwarding anything to Anthropic.
   var response = await fetch(PROXY_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Access-Code': currentAICode || ''
+    },
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 1000,
@@ -1181,53 +963,7 @@ document.addEventListener('keydown', function(e) {
     sendAnswer();
   }
 });
-
-
 </script>
-
-
-
-
-
-
-<!-- ═══ MAY OFFER STRIP ═══ -->
-<div id="lbdMayStrip" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:99999;font-family:Georgia,serif"></div>
-<script>
-function lbdCloseStrip(){ document.getElementById('lbdMayStrip').style.display='none'; }
-(function(){
-  var d=new Date();
-  if(!(d.getFullYear()===2026 && d.getMonth()===4)) return;
-  var strip=document.getElementById('lbdMayStrip');
-  if(!strip) return;
-  strip.innerHTML=''
-    +'<div style="background:linear-gradient(90deg,#6B1A1A 0%,#0D1F35 55%);border-top:2px solid #B8963E;padding:.7rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap">'
-    +'<div style="display:flex;align-items:center;gap:.8rem;flex-wrap:wrap">'
-    +'<div style="background:#B8963E;color:#0D1F35;font-family:JetBrains Mono,monospace;font-size:.65rem;font-weight:700;letter-spacing:.18em;padding:.25rem .7rem;border-radius:2px;white-space:nowrap">&#9733; MAY 2026</div>'
-    +'<div style="color:#fff;font-size:1rem">'
-    +'<span style="color:#f0ca7a;font-size:1.15rem;font-weight:700">MAY MONTH OFFER</span>'
-    +' &mdash; Any SSB Set or AI Interview at '
-    +'<span style="color:#f0ca7a;font-size:1.2rem;font-weight:700">Rs.99</span>'
-    +'</div>'
-    +'<div id="lbdStripCd" style="font-family:JetBrains Mono,monospace;font-size:.7rem;color:rgba(240,202,122,.75);white-space:nowrap"></div>'
-    +'</div>'
-    +'<div style="display:flex;align-items:center;gap:.6rem;flex-shrink:0">'
-    +'<a href="https://leadbydharma-afk.github.io/lbd-assessment/special_access.html" target="_blank" style="background:#B8963E;color:#0D1F35;font-family:Georgia,serif;font-size:.92rem;font-weight:600;padding:.5rem 1.4rem;border-radius:3px;text-decoration:none;white-space:nowrap;display:inline-block">Explore Offer &#8594;</a>'
-    +'<button onclick="lbdCloseStrip()" style="background:none;border:none;color:rgba(245,240,228,.5);font-size:1.3rem;cursor:pointer;padding:0 .25rem;line-height:1">&#215;</button>'
-    +'</div>'
-    +'</div>';
-  strip.style.display='block';
-  document.body.style.paddingBottom='58px';
-  function tick(){
-    var end=new Date('2026-06-01T00:00:00+05:30'),diff=end-new Date();
-    if(diff<=0){strip.style.display='none';return;}
-    var dd=Math.floor(diff/86400000),hh=Math.floor(diff%86400000/3600000),mm=Math.floor(diff%3600000/60000),ss=Math.floor(diff%60000/1000);
-    var el=document.getElementById('lbdStripCd');
-    if(el) el.textContent=dd+'d '+hh+'h '+mm+'m '+ss+'s remaining';
-  }
-  tick(); setInterval(tick,1000);
-})();
-</script>
-<!-- ═══ END MAY OFFER STRIP ═══ -->
 
 </body>
 </html>
