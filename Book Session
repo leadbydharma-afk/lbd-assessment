@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://checkout.razorpay.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://cyguqfqmnjtjoztcjres.supabase.co; img-src 'self' data: https:; frame-src https://checkout.razorpay.com; object-src 'none';">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lead By Dharma — Book a Session with Col Rao</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{--navy:#1a3a5c;--navy2:#0d1f35;--gold:#c9a84c;--gold2:#e8c87a;--cream:#faf5e8;--cream2:#f0e8d0;--ink:#1a1a14;--ash:#7a7a6a;--green:#1a5c2e;--red:#8b1a1a;--amber:#8b5c00;--white:#ffffff;--border:rgba(26,58,92,.12)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(--ink);min-height:100vh}
+.hdr{background:var(--navy2);padding:2rem 1.5rem 1.5rem;text-align:center;border-bottom:4px solid var(--gold);position:relative}
+.hdr::before{content:'';position:absolute;top:0;left:0;width:6px;height:100%;background:var(--gold)}
+.hdr-lbl{font-family:'JetBrains Mono',monospace;font-size:1.06rem;color:var(--gold);letter-spacing:.25em;text-transform:uppercase;margin-bottom:.6rem}
+.hdr h1{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.6rem);color:var(--white);margin-bottom:.4rem}
+.hdr h1 span{color:var(--gold)}
+.hdr-sub{font-size:1.4rem;color:#aabbcc;font-style:italic}
+.wrap{max-width:720px;margin:0 auto;padding:1.5rem 1.2rem 4rem}
+.btn{font-family:'Playfair Display',serif;font-size:1.4rem;padding:.7rem 1.8rem;border:none;cursor:pointer;border-radius:2px;transition:all .2s}
+.btn-primary{background:var(--navy);color:var(--gold);border:1px solid var(--navy)}
+.btn-primary:hover:not(:disabled){background:var(--navy2)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-outline{background:transparent;color:var(--navy);border:1px solid var(--navy)}
+.btn-outline:hover{background:var(--cream2)}
+.card{background:var(--white);border:1px solid var(--border);border-radius:3px;padding:1.8rem;margin:1.2rem 0}
+.card h3{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--navy);margin-bottom:1rem}
+.inp{width:100%;padding:.7rem .9rem;font-family:'Crimson Pro',serif;font-size:1.12rem;border:1.5px solid var(--border);border-radius:2px;background:var(--cream);color:var(--ink);outline:none;transition:border-color .2s}
+.inp:focus{border-color:var(--navy)}
+.gate-block{background:var(--navy2);border:2px solid var(--gold);border-radius:3px;padding:2rem 1.8rem;text-align:center;margin:1.5rem 0}
+.gate-block h3{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--white);margin-bottom:.8rem}
+.gate-block p{font-size:1.05rem;color:rgba(245,240,228,.8);line-height:1.7;margin-bottom:.6rem}
+.gate-cta-row{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:1.2rem}
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.2rem 0}
+.type-card{background:var(--white);border:2px solid var(--border);border-radius:3px;padding:1.4rem;cursor:pointer;text-align:center;transition:all .2s}
+.type-card:hover,.type-card.selected{border-color:var(--gold)}
+.type-card .tc-icon{font-size:1.8rem;margin-bottom:.5rem}
+.type-card .tc-title{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--navy);font-weight:600}
+.type-card .tc-desc{font-size:1rem;color:var(--ash);font-style:italic;margin-top:.3rem}
+.date-list{display:flex;flex-direction:column;gap:.6rem;margin:1rem 0}
+.date-item{background:var(--cream);border:1.5px solid var(--border);border-radius:2px;padding:.9rem 1.1rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:all .15s}
+.date-item:hover:not(.full){border-color:var(--navy);background:var(--white)}
+.date-item.selected{border-color:var(--gold);background:rgba(201,168,76,.08)}
+.date-item.full{opacity:.5;cursor:not-allowed;background:#e8e4d8}
+.di-label{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--navy);font-weight:600}
+.di-time{font-family:'JetBrains Mono',monospace;font-size:1rem;color:var(--ash)}
+.di-seats{font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--green)}
+.di-seats.low{color:var(--amber)}
+.di-full-label{font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--red)}
+.price-box{background:var(--cream2);border:1px solid var(--border);border-radius:3px;padding:1.2rem 1.4rem;margin:1rem 0;text-align:center}
+.price-amt{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--navy)}
+.price-tier-note{font-size:.95rem;color:var(--ash);font-style:italic;margin-top:.4rem}
+.assoc-toggle{background:none;border:none;font-family:'Crimson Pro',serif;font-size:1.02rem;color:var(--ash);text-decoration:underline;cursor:pointer;display:block;margin:.8rem auto}
+.assoc-box{display:none;margin:.8rem 0}
+.assoc-box.open{display:block}
+.err-msg{color:var(--red);font-family:'JetBrains Mono',monospace;font-size:.94rem;margin-top:.5rem;display:none}
+.hidden{display:none}
+.ftr{text-align:center;padding:1.5rem;font-family:'JetBrains Mono',monospace;font-size:1.05rem;color:var(--ash);letter-spacing:.1em;border-top:1px solid var(--border);margin-top:1.5rem}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-lbl">Lead By Dharma — Session Booking</div>
+  <h1>Book a Session with <span>Col Rao</span></h1>
+  <div class="hdr-sub">Group Counselling or a Personal Session — for candidates who've completed both assessments</div>
+</div>
+<div class="wrap">
+
+<!-- STEP 1: EMAIL ENTRY -->
+<div id="emailStep" class="card">
+  <h3>Let's Check Your Eligibility</h3>
+  <p style="font-size:1.02rem;color:var(--ash);font-style:italic;margin-bottom:1rem">Enter the email you used for your Leadership Assessment and OPI. Both must be completed before you can book.</p>
+  <input class="inp" id="candEmail" type="email" placeholder="Your email address..." onkeydown="if(event.key==='Enter') checkEligibility()"/>
+  <div style="text-align:right;margin-top:1rem">
+    <button class="btn btn-primary" onclick="checkEligibility()">Check Eligibility &rarr;</button>
+  </div>
+</div>
+
+<!-- BLOCKING GATE (shown if not eligible) -->
+<div id="blockGate" class="hidden"></div>
+
+<!-- STEP 2: SESSION TYPE + DATE (shown if eligible) -->
+<div id="bookingFlow" class="hidden">
+  <div class="card" style="background:rgba(26,92,46,.06);border-color:rgba(26,92,46,.2)">
+    <p style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:.94rem">&#10003; Both assessments confirmed. You're eligible to book.</p>
+  </div>
+
+  <div class="card">
+    <h3>Choose Your Session Type</h3>
+    <div class="type-grid">
+      <div class="type-card" id="typeGroup" onclick="selectType('group')">
+        <div class="tc-icon">&#128101;</div>
+        <div class="tc-title">Group Counselling</div>
+        <div class="tc-desc">Tue &amp; Thu &middot; 5:30&ndash;8:30pm &middot; Max 30</div>
+      </div>
+      <div class="type-card" id="typeIndividual" onclick="selectType('individual')">
+        <div class="tc-icon">&#128100;</div>
+        <div class="tc-title">Individual Session</div>
+        <div class="tc-desc">Mon/Wed/Fri &middot; 3 fixed slots</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dateStep" class="card hidden">
+    <h3 id="dateStepTitle">Select a Date</h3>
+    <div class="date-list" id="dateList"></div>
+  </div>
+
+  <div id="priceStep" class="card hidden">
+    <h3>Your Price</h3>
+    <div class="price-box">
+      <div class="price-amt" id="priceAmt">&#8377;0</div>
+      <div class="price-tier-note" id="priceTierNote"></div>
+    </div>
+    <button class="assoc-toggle" id="assocToggleBtn" onclick="toggleAssoc()">Have an associate referral code?</button>
+    <div class="assoc-box" id="assocBox">
+      <input class="inp" id="assocCodeInput" type="text" placeholder="Enter associate code..." style="text-transform:uppercase"/>
+      <button class="btn btn-outline" style="margin-top:.6rem;width:100%" onclick="applyAssocCode()">Apply Code</button>
+      <div class="err-msg" id="assocErr"></div>
+    </div>
+    <div style="text-align:center;margin-top:1.2rem">
+      <button class="btn btn-primary" onclick="proceedToPayment()" style="font-size:1.2rem;padding:.85rem 2.5rem">Proceed to Payment &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<div class="ftr">
+  &copy; 2026 LEAD BY DHARMA &middot; leadbydharma.com &middot; Col Aniruddha Rao HR (Retd) &middot; Maratha Light Infantry
+</div>
+</div>
+
+<script>
+const supabaseUrl = 'https://cyguqfqmnjtjoztcjres.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Z3VxZnFtbmp0am96dGNqcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTcwMzEsImV4cCI6MjA5Mzc5MzAzMX0.sCi_iXTN18gVjXIQPqewpAjVRmM2gSgMKJpYsV1m7QM';
+const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+var candidateEmail = '';
+var eligibilityData = null;
+var sessionType = null;      // 'group' | 'individual'
+var selectedDate = null;     // ISO date string
+var selectedTimeLabel = '';  // e.g. "5:30–8:30pm" or "10:00–11:30am"
+var priceTier = null;        // 'standard' | 'discount' | 'deep'
+var assocCodeValid = false;
+var assocCodeUsed = '';
+
+const RAZORPAY_LINKS = {
+  group: {
+    standard: 'https://rzp.io/rzp/gmKS80i',
+    discount: 'https://rzp.io/rzp/SSh9qwI',
+    deep:     'https://rzp.io/rzp/IuQpO9E'
+  },
+  individual: {
+    standard: 'https://rzp.io/rzp/MsLmpZ1',
+    discount: 'https://rzp.io/rzp/XUNs7HRZ',
+    deep:     'https://rzp.io/rzp/AJ2vsMj'
+  }
+};
+
+const PRICES = {
+  group:      { standard: 2999, discount: 1999, deep: 1199 },
+  individual: { standard: 3999, discount: 3199, deep: 2499 }
+};
+
+// ── STEP 1: ELIGIBILITY CHECK ──────────────────────────────
+async function checkEligibility() {
+  var email = document.getElementById('candEmail').value.trim();
+  if (!email || email.indexOf('@') < 1) { alert('Please enter a valid email address.'); return; }
+  candidateEmail = email;
+
+  const { data, error } = await _supabase.rpc('check_session_eligibility', { input_email: email });
+  if (error) { alert('System error. Please try again or contact leadbydharma@gmail.com'); return; }
+
+  eligibilityData = data && data[0];
+  document.getElementById('emailStep').classList.add('hidden');
+
+  if (!eligibilityData || !eligibilityData.eligible) {
+    renderBlockGate();
+  } else {
+    document.getElementById('bookingFlow').classList.remove('hidden');
+  }
+}
+
+function renderBlockGate() {
+  var laDone = eligibilityData && eligibilityData.la_completed;
+  var opiDone = eligibilityData && eligibilityData.opi_completed;
+  var gate = document.getElementById('blockGate');
+  gate.classList.remove('hidden');
+
+  if (!laDone && !opiDone) {
+    gate.innerHTML = '<div class="gate-block">'
+      + '<h3>Two Assessments Stand Between You and This Session</h3>'
+      + '<p>Before any candidate sits with Col Rao, he asks for two things: the Leadership Assessment and the OPI &mdash; completed, in full. Together they give him the honest picture that makes his time with you worth something. Start with either one; once both are done, this page unlocks.</p>'
+      + '<div class="gate-cta-row">'
+      + '<a href="LBD_Leadership_Assessment.html" class="btn btn-primary">Take the Leadership Assessment &rarr;</a>'
+      + '<a href="iq_eq_aq_sq.html" class="btn btn-primary">Take the OPI &rarr;</a>'
+      + '</div></div>';
+  } else {
+    var missing = !laDone ? 'Leadership Assessment' : 'OPI';
+    var have = !laDone ? 'OPI' : 'Leadership Assessment';
+    var link = !laDone ? 'LBD_Leadership_Assessment.html' : 'iq_eq_aq_sq.html';
+    gate.innerHTML = '<div class="gate-block">'
+      + '<h3>One Step Away From a Session With Col Rao</h3>'
+      + '<p>Every candidate who sits with Col Rao &mdash; whether in the Group Counselling Session or a Personal Session &mdash; has completed both the Leadership Assessment and the OPI first. This isn\'t a formality standing between you and a booking. Col Rao reads both reports in full before every session, and everything he tells you is built on what they reveal about your intellectual, emotional, social, and character profile. Walking in without them means he\'s counselling a stranger. Walking in with them means he\'s counselling <em>you</em>.</p>'
+      + '<p>Right now, we have your <strong>' + have + '</strong> &mdash; but not your <strong>' + missing + '</strong> yet. Complete it now, and you\'ll be able to book your session immediately after.</p>'
+      + '<div class="gate-cta-row"><a href="' + link + '" class="btn btn-primary">Take the ' + missing + ' Now &rarr;</a></div>'
+      + '</div>';
+  }
+}
+
+// ── STEP 2: SESSION TYPE ───────────────────────────────────
+function selectType(type) {
+  sessionType = type;
+  document.getElementById('typeGroup').classList.toggle('selected', type === 'group');
+  document.getElementById('typeIndividual').classList.toggle('selected', type === 'individual');
+  selectedDate = null;
+  document.getElementById('priceStep').classList.add('hidden');
+  renderDateStep();
+}
+
+// ── DATE COMPUTATION ────────────────────────────────────────
+// Group: next 2 weeks of Tue/Thu, merged with overrides + seat counts.
+// Individual: next 2 weeks of Mon/Wed/Fri, 3 fixed slots each (no capacity limit).
+async function renderDateStep() {
+  var dateStep = document.getElementById('dateStep');
+  var list = document.getElementById('dateList');
+  dateStep.classList.remove('hidden');
+  list.innerHTML = '<div style="text-align:center;color:var(--ash);font-style:italic">Loading available dates...</div>';
+
+  if (sessionType === 'group') {
+    document.getElementById('dateStepTitle').textContent = 'Select a Group Session Date';
+    var dates = getUpcomingWeekdays([2, 4], 14); // Tue=2, Thu=4
+
+    // Fetch overrides
+    var overridesRes = await fetch(supabaseUrl + '/rest/v1/group_session_overrides?select=*', {
+      headers: { 'apikey': supabaseKey, 'Authorization': 'Bearer ' + supabaseKey }
+    });
+    var overrides = await overridesRes.json();
+    var overrideMap = {};
+    (overrides || []).forEach(function(o) { overrideMap[o.session_date] = o; });
+
+    // Fetch seat counts
+    var seatsRes = await fetch(supabaseUrl + '/rest/v1/group_session_seats?select=*', {
+      headers: { 'apikey': supabaseKey, 'Authorization': 'Bearer ' + supabaseKey }
+    });
+    var seats = await seatsRes.json();
+    var seatMap = {};
+    (seats || []).forEach(function(s) { seatMap[s.session_date] = s.seats_taken; });
+
+    var html = '';
+    dates.forEach(function(d) {
+      var override = overrideMap[d];
+      if (override && override.is_cancelled) return; // skip cancelled dates
+      var capacity = (override && override.capacity) || 30;
+      var startT = (override && override.start_time) || '17:30';
+      var endT = (override && override.end_time) || '20:30';
+      var taken = seatMap[d] || 0;
+      var remaining = capacity - taken;
+      var isFull = remaining <= 0;
+      var dLabel = formatDateLabel(d);
+      html += '<div class="date-item' + (isFull ? ' full' : '') + '" '
+        + (isFull ? '' : 'onclick="pickDate(\'' + d + '\',\'' + startT + '\u2013' + endT + '\')"') + '>'
+        + '<div><div class="di-label">' + dLabel + '</div><div class="di-time">' + formatTimeRange(startT, endT) + '</div></div>'
+        + (isFull ? '<div class="di-full-label">FULLY BOOKED</div>' : '<div class="di-seats' + (remaining <= 5 ? ' low' : '') + '">' + remaining + ' seats left</div>')
+        + '</div>';
+    });
+    list.innerHTML = html || '<div style="color:var(--ash);font-style:italic">No upcoming dates available. Please check back soon.</div>';
+
+  } else {
+    document.getElementById('dateStepTitle').textContent = 'Select a Date & Time';
+    var dates = getUpcomingWeekdays([1, 3, 5], 14); // Mon=1, Wed=3, Fri=5
+    var slots = [
+      { start: '10:00', end: '11:30', label: '10:00\u201311:30am' },
+      { start: '17:30', end: '19:00', label: '5:30\u20137:00pm' },
+      { start: '19:30', end: '21:00', label: '7:30\u20139:00pm' }
+    ];
+    var html = '';
+    dates.forEach(function(d) {
+      var dLabel = formatDateLabel(d);
+      slots.forEach(function(s) {
+        html += '<div class="date-item" onclick="pickDate(\'' + d + '\',\'' + s.label + '\')">'
+          + '<div><div class="di-label">' + dLabel + '</div><div class="di-time">' + s.label + '</div></div>'
+          + '</div>';
+      });
+    });
+    list.innerHTML = html;
+  }
+}
+
+function getUpcomingWeekdays(dayNumbers, windowDays) {
+  var result = [];
+  var today = new Date();
+  for (var i = 0; i < windowDays; i++) {
+    var d = new Date(today);
+    d.setDate(today.getDate() + i);
+    if (dayNumbers.indexOf(d.getDay()) !== -1) {
+      result.push(d.toISOString().split('T')[0]);
+    }
+  }
+  return result;
+}
+
+function formatDateLabel(isoDate) {
+  var d = new Date(isoDate + 'T00:00:00');
+  return d.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
+}
+
+function formatTimeRange(start, end) {
+  function fmt(t) {
+    var parts = t.split(':');
+    var h = parseInt(parts[0], 10);
+    var m = parts[1];
+    var ap = h >= 12 ? 'pm' : 'am';
+    var h12 = h % 12 === 0 ? 12 : h % 12;
+    return h12 + (m !== '00' ? ':' + m : '') + ap;
+  }
+  return fmt(start) + '\u2013' + fmt(end);
+}
+
+function pickDate(dateStr, timeLabel) {
+  selectedDate = dateStr;
+  selectedTimeLabel = timeLabel;
+  document.querySelectorAll('.date-item').forEach(function(el) { el.classList.remove('selected'); });
+  event.currentTarget.classList.add('selected');
+  determinePriceTier();
+  document.getElementById('priceStep').classList.remove('hidden');
+}
+
+// ── STEP 3: PRICE TIER DETERMINATION ───────────────────────
+function determinePriceTier() {
+  var now = new Date();
+  var mostRecent = eligibilityData.most_recent_test_date ? new Date(eligibilityData.most_recent_test_date) : null;
+  var minutesSince = mostRecent ? (now - mostRecent) / 60000 : Infinity;
+  var hoursSince = minutesSince / 60;
+
+  if (minutesSince <= 25) {
+    priceTier = 'deep';
+    document.getElementById('priceTierNote').textContent = 'Deep discount \u2014 booked within 25 minutes of finishing your assessment.';
+  } else if (assocCodeValid) {
+    priceTier = 'deep';
+    document.getElementById('priceTierNote').textContent = 'Associate rate applied.';
+  } else if (hoursSince <= 24) {
+    priceTier = 'discount';
+    document.getElementById('priceTierNote').textContent = '24-hour window rate.';
+  } else if (eligibilityData.within_90_day_window) {
+    priceTier = 'standard';
+    document.getElementById('priceTierNote').textContent = 'Have an associate code? Apply it below for a discounted rate.';
+  } else {
+    priceTier = 'standard';
+    document.getElementById('priceTierNote').textContent = 'Standard rate.';
+  }
+
+  renderPrice();
+}
+
+function renderPrice() {
+  var amt = PRICES[sessionType][priceTier];
+  document.getElementById('priceAmt').textContent = '\u20B9' + amt;
+}
+
+function toggleAssoc() {
+  document.getElementById('assocBox').classList.toggle('open');
+}
+
+async function applyAssocCode() {
+  var code = document.getElementById('assocCodeInput').value.trim().toUpperCase();
+  var errEl = document.getElementById('assocErr');
+  errEl.style.display = 'none';
+  if (!code) return;
+
+  var product = sessionType === 'group' ? 'Group Session' : 'Individual Session';
+  const { data, error } = await _supabase.rpc('verify_associate_code', {
+    input_code: code, input_email: candidateEmail, input_phone: '', input_product: product
+  });
+
+  if (error) { errEl.textContent = 'System error. Please try again.'; errEl.style.display = 'block'; return; }
+  var result = data && data[0];
+  if (!result || !result.is_valid) {
+    errEl.textContent = result ? result.reason : 'Invalid code.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  assocCodeValid = true;
+  assocCodeUsed = code;
+  determinePriceTier();
+}
+
+// ── STEP 4: PROCEED TO PAYMENT ─────────────────────────────
+function proceedToPayment() {
+  var baseLink = RAZORPAY_LINKS[sessionType][priceTier];
+  var params = '?notes[session_date]=' + encodeURIComponent(selectedDate)
+    + '&notes[email]=' + encodeURIComponent(candidateEmail);
+  if (assocCodeValid) {
+    params += '&notes[associate_code]=' + encodeURIComponent(assocCodeUsed);
+  }
+  window.open(baseLink + params, '_blank');
+  alert('Payment page opened in a new tab. After payment, you will receive a confirmation email for your ' + formatDateLabel(selectedDate) + ' (' + selectedTimeLabel + ') session.');
+}
+</script>
+</body>
+</html>
