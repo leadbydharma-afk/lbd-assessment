@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://cyguqfqmnjtjoztcjres.supabase.co; img-src 'self' data:; object-src 'none';">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lead By Dharma — Associate Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{--navy:#1a3a5c;--navy2:#0d1f35;--gold:#c9a84c;--gold2:#e8c87a;--cream:#faf5e8;--cream2:#f0e8d0;--ink:#1a1a14;--ash:#7a7a6a;--green:#1a5c2e;--red:#8b1a1a;--amber:#8b5c00;--white:#ffffff;--border:rgba(26,58,92,.12)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(--ink);min-height:100vh}
+.hdr{background:var(--navy2);padding:1.6rem 1.5rem;text-align:center;border-bottom:4px solid var(--gold)}
+.hdr h1{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white)}
+.hdr h1 span{color:var(--gold)}
+.wrap{max-width:1000px;margin:0 auto;padding:1.5rem 1.2rem 4rem}
+.btn{font-family:'Playfair Display',serif;font-size:1.1rem;padding:.6rem 1.5rem;border:none;cursor:pointer;border-radius:2px}
+.btn-primary{background:var(--navy);color:var(--gold);border:1px solid var(--navy)}
+.btn-primary:hover{background:var(--navy2)}
+.card{background:var(--white);border:1px solid var(--border);border-radius:3px;padding:1.6rem;margin:1.2rem 0}
+.card h3{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--navy);margin-bottom:1rem}
+.inp{width:100%;padding:.6rem .8rem;font-family:'Crimson Pro',serif;font-size:1.05rem;border:1.5px solid var(--border);border-radius:2px;background:var(--cream);color:var(--ink);outline:none}
+.inp:focus{border-color:var(--navy)}
+.gate{max-width:400px;margin:4rem auto;text-align:center}
+.err{color:var(--red);font-family:'JetBrains Mono',monospace;font-size:.9rem;margin-top:.5rem;display:none}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th{text-align:left;padding:.5rem .7rem;border-bottom:2px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:.78rem;letter-spacing:.05em;color:var(--ash);text-transform:uppercase}
+td{padding:.5rem .7rem;border-bottom:1px solid var(--border)}
+.hidden{display:none}
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
+.tab-btn{font-family:'JetBrains Mono',monospace;font-size:.85rem;padding:.4rem .9rem;border:1.5px solid var(--border);border-radius:2px;background:var(--cream);cursor:pointer}
+.tab-btn.active{background:var(--navy);color:var(--gold);border-color:var(--navy)}
+.badge-active{background:rgba(26,92,46,.1);color:var(--green);font-family:'JetBrains Mono',monospace;font-size:.78rem;padding:.15rem .5rem;border-radius:20px}
+.badge-inactive{background:rgba(139,26,26,.1);color:var(--red);font-family:'JetBrains Mono',monospace;font-size:.78rem;padding:.15rem .5rem;border-radius:20px}
+</style>
+</head>
+<body>
+
+<div class="hdr"><h1>Lead By Dharma — <span>Associate Dashboard</span></h1></div>
+
+<div class="wrap">
+
+<!-- PASSWORD GATE -->
+<div id="gate" class="gate">
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--navy);margin-bottom:1rem">Enter Access Password</h3>
+  <input class="inp" id="gatePass" type="password" placeholder="Password..." onkeydown="if(event.key==='Enter') checkPassword()"/>
+  <div style="margin-top:1rem"><button class="btn btn-primary" onclick="checkPassword()">Enter →</button></div>
+  <div class="err" id="gateErr">Incorrect password.</div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
+
+  <div class="card">
+    <h3>Generate a New Associate Code</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:.8rem;align-items:end">
+      <div>
+        <label style="font-size:.85rem;color:var(--ash);display:block;margin-bottom:.3rem">Associate name</label>
+        <input class="inp" id="newAssocName" type="text" placeholder="e.g. Sunita Sharma"/>
+      </div>
+      <div>
+        <label style="font-size:.85rem;color:var(--ash);display:block;margin-bottom:.3rem">Expiry (optional)</label>
+        <input class="inp" id="newAssocExpiry" type="date"/>
+      </div>
+      <button class="btn btn-primary" onclick="generateCode()">Generate →</button>
+    </div>
+    <div id="genResult" style="margin-top:1rem;font-family:'JetBrains Mono',monospace;font-size:1.1rem;display:none"></div>
+  </div>
+
+  <div class="card">
+    <h3>All Associate Codes</h3>
+    <div id="codesTable">Loading...</div>
+  </div>
+
+  <div class="card">
+    <h3>Performance Leaderboard</h3>
+    <div class="tabs">
+      <button class="tab-btn active" id="tabQuarterly" onclick="switchTab('quarterly')">Quarterly</button>
+      <button class="tab-btn" id="tabYearly" onclick="switchTab('yearly')">Yearly</button>
+    </div>
+    <div id="leaderboardTable">Loading...</div>
+  </div>
+
+  <div class="card">
+    <h3>Commission Calculator — Current Quarter</h3>
+    <div id="commissionTable">Loading...</div>
+    <p style="font-size:.85rem;color:var(--ash);font-style:italic;margin-top:.8rem">Tiers: 1–30 sales @ 20% · 31–100 @ 25% · 101–200 @ 30% · 201+ @ 35% (progressive, not retroactive). Bonus: highest threshold crossed this quarter only (₹300 / ₹1,500 / ₹4,000 / ₹6,500). Downstream: 12% flat on Group/Individual Session sales made with the associate's code.</p>
+  </div>
+
+</div>
+</div>
+
+<script>
+
+const ADMIN_FUNCTION_URL = 'https://cyguqfqmnjtjoztcjres.supabase.co/functions/v1/lbd-associate-admin';
+var storedPassword = '';
+
+async function checkPassword() {
+  var val = document.getElementById('gatePass').value;
+  var res = await fetch(ADMIN_FUNCTION_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: val, action: 'list_codes' })
+  });
+  if (res.status === 401) {
+    document.getElementById('gateErr').style.display = 'block';
+    return;
+  }
+  storedPassword = val;
+  var result = await res.json();
+  document.getElementById('gate').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+  renderCodes(result.data);
+  loadLeaderboard('quarterly');
+  loadCommission();
+}
+
+async function callAdmin(action, params) {
+  var body = Object.assign({ password: storedPassword, action: action }, params || {});
+  var res = await fetch(ADMIN_FUNCTION_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  return await res.json();
+}
+
+async function generateCode() {
+  var name = document.getElementById('newAssocName').value.trim();
+  var expiry = document.getElementById('newAssocExpiry').value || null;
+  if (!name) { alert('Please enter the associate\'s name.'); return; }
+
+  var result = await callAdmin('generate_code', { name: name, expiry: expiry });
+  var resultEl = document.getElementById('genResult');
+  if (!result.ok) {
+    resultEl.style.display = 'block';
+    resultEl.style.color = 'var(--red)';
+    resultEl.textContent = 'Error: ' + result.error;
+  } else {
+    resultEl.style.display = 'block';
+    resultEl.style.color = 'var(--green)';
+    resultEl.textContent = '✓ Generated: ' + result.code + ' for ' + name;
+    document.getElementById('newAssocName').value = '';
+    document.getElementById('newAssocExpiry').value = '';
+    loadCodes();
+  }
+}
+
+async function loadCodes() {
+  var result = await callAdmin('list_codes');
+  renderCodes(result.data);
+}
+
+function renderCodes(data) {
+  var container = document.getElementById('codesTable');
+  var html = '<table><tr><th>Code</th><th>Name</th><th>Status</th><th>Expires</th><th></th></tr>';
+  data.forEach(function(a) {
+    html += '<tr><td style="font-family:JetBrains Mono,monospace">' + a.code + '</td>'
+      + '<td>' + (a.associate_name || '—') + '</td>'
+      + '<td><span class="' + (a.is_active ? 'badge-active">Active' : 'badge-inactive">Inactive') + '</span></td>'
+      + '<td>' + (a.expires_on || 'Never') + '</td>'
+      + '<td><button class="tab-btn" onclick="toggleActive(\'' + a.code + '\',' + !a.is_active + ')">' + (a.is_active ? 'Deactivate' : 'Reactivate') + '</button></td></tr>';
+  });
+  html += '</table>';
+  container.innerHTML = html;
+}
+
+async function toggleActive(code, newState) {
+  await callAdmin('toggle_active', { code: code, newState: newState });
+  loadCodes();
+}
+
+var currentTab = 'quarterly';
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('tabQuarterly').classList.toggle('active', tab === 'quarterly');
+  document.getElementById('tabYearly').classList.toggle('active', tab === 'yearly');
+  loadLeaderboard(tab);
+}
+
+async function loadLeaderboard(tab) {
+  var result = await callAdmin('leaderboard', { period: tab });
+  var container = document.getElementById('leaderboardTable');
+  var data = result.data;
+  if (!data || data.length === 0) { container.innerHTML = '<p style="color:var(--ash);font-style:italic">No redemptions recorded yet.</p>'; return; }
+
+  var periodLabel = tab === 'quarterly' ? 'Quarter' : 'Year';
+  var periodKey = tab === 'quarterly' ? 'quarter_label' : 'fiscal_year_label';
+  var html = '<table><tr><th>' + periodLabel + '</th><th>Code</th><th>Associate</th><th>Sales</th></tr>';
+  data.forEach(function(r) {
+    html += '<tr><td>' + r[periodKey] + '</td><td style="font-family:JetBrains Mono,monospace">' + r.code + '</td><td>' + (r.associate_name || '—') + '</td><td>' + r.sales_count + '</td></tr>';
+  });
+  html += '</table>';
+  container.innerHTML = html;
+}
+
+function computeCommission(sales) {
+  var tiers = [[30, 0.20], [70, 0.25], [100, 0.30], [Infinity, 0.35]];
+  var remaining = sales, count = 0;
+  var breakdown = [];
+  for (var i = 0; i < tiers.length; i++) {
+    var take = Math.min(remaining, tiers[i][0]);
+    if (take <= 0) break;
+    breakdown.push({ count: take, rate: tiers[i][1] });
+    remaining -= take;
+    count += take;
+    if (remaining <= 0) break;
+  }
+  var bonus = 0;
+  if (sales >= 300) bonus = 6500;
+  else if (sales >= 200) bonus = 4000;
+  else if (sales >= 100) bonus = 1500;
+  else if (sales >= 30) bonus = 300;
+  return { breakdown: breakdown, bonus: bonus };
+}
+
+async function loadCommission() {
+  var result = await callAdmin('leaderboard', { period: 'quarterly' });
+  var container = document.getElementById('commissionTable');
+  var data = result.data;
+  if (!data || data.length === 0) { container.innerHTML = '<p style="color:var(--ash);font-style:italic">No sales recorded this quarter.</p>'; return; }
+
+  var currentQuarterData = {};
+  var latestQuarter = data.reduce(function(max, r) { return r.quarter_label > max ? r.quarter_label : max; }, '');
+  data.filter(function(r) { return r.quarter_label === latestQuarter; }).forEach(function(r) {
+    currentQuarterData[r.code] = r;
+  });
+
+  var html = '<table><tr><th>Code</th><th>Associate</th><th>Sales</th><th>Bonus</th><th>Note</th></tr>';
+  Object.keys(currentQuarterData).forEach(function(code) {
+    var r = currentQuarterData[code];
+    var c = computeCommission(r.sales_count);
+    html += '<tr><td style="font-family:JetBrains Mono,monospace">' + code + '</td><td>' + (r.associate_name || '—') + '</td><td>' + r.sales_count + '</td><td>₹' + c.bonus + '</td>'
+      + '<td style="font-size:.85rem;color:var(--ash)">Commission = sum of (tier sales × tier rate × actual sale price) — pull exact revenue figures from associate_redemptions_tagged to finalize payout.</td></tr>';
+  });
+  html += '</table>';
+  container.innerHTML = html;
+}
+</script>
+
+</body>
+</html>
