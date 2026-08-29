@@ -83,9 +83,47 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 <!-- STEP 2: SESSION TYPE + DATE (shown if eligible) -->
 <div id="bookingFlow" class="hidden">
   <div class="card" style="background:rgba(26,92,46,.06);border-color:rgba(26,92,46,.2)">
-    <p style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:.94rem">&#10003; Both assessments confirmed. You're eligible to book.</p>
+    <p style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:.94rem">&#10003; Both assessments confirmed. One more step before booking.</p>
   </div>
 
+  <!-- APPLICATION STEP: essays + report uploads (replaces Google Form) -->
+  <div id="applicationStep" class="card">
+    <h3>Before You Book — A Few Honest Answers</h3>
+    <p style="font-size:1.02rem;color:var(--ash);font-style:italic;margin-bottom:1.2rem">Col Rao reads every answer and every report personally before your session. Answer in your own words &mdash; 70 words minimum each. Vague answers are easy to spot.</p>
+
+    <div style="margin-bottom:1.3rem">
+      <label style="font-family:'Playfair Display',serif;font-weight:600;color:var(--navy);display:block;margin-bottom:.3rem">1. Describe a specific moment when you knew, with certainty, that you wanted to serve as an officer &mdash; not an ambition stated in the abstract, an actual moment.</label>
+      <textarea class="inp" id="essay1" rows="4" style="resize:vertical" oninput="updateWordCount('essay1')"></textarea>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--ash);margin-top:.3rem" id="essay1Count">0 words (70 minimum)</div>
+    </div>
+
+    <div style="margin-bottom:1.3rem">
+      <label style="font-family:'Playfair Display',serif;font-weight:600;color:var(--navy);display:block;margin-bottom:.3rem">2. What is the biggest gap between who you are today and the SSB-ready officer you need to become? What have you actually done about it in the last three months &mdash; not what you plan to do?</label>
+      <textarea class="inp" id="essay2" rows="4" style="resize:vertical" oninput="updateWordCount('essay2')"></textarea>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--ash);margin-top:.3rem" id="essay2Count">0 words (70 minimum)</div>
+    </div>
+
+    <div style="margin-bottom:1.3rem">
+      <label style="font-family:'Playfair Display',serif;font-weight:600;color:var(--navy);display:block;margin-bottom:.3rem">3. If you had one question to ask Col Rao directly about your preparation or your future, what would it be?</label>
+      <textarea class="inp" id="essay3" rows="4" style="resize:vertical" oninput="updateWordCount('essay3')"></textarea>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--ash);margin-top:.3rem" id="essay3Count">0 words (70 minimum)</div>
+    </div>
+
+    <div style="background:var(--cream2);border:1px solid var(--border);border-radius:2px;padding:1rem 1.2rem;margin-bottom:1.2rem">
+      <p style="font-size:.98rem;color:var(--navy);font-weight:600;margin-bottom:.6rem">Attach both reports &mdash; mandatory. PDF only, 5MB max each.</p>
+      <label style="display:block;font-size:.94rem;color:var(--ash);margin-bottom:.3rem">Leadership Assessment report (PDF)</label>
+      <input type="file" id="laReportFile" accept="application/pdf" style="margin-bottom:.8rem;width:100%"/>
+      <label style="display:block;font-size:.94rem;color:var(--ash);margin-bottom:.3rem">OPI report (PDF)</label>
+      <input type="file" id="opiReportFile" accept="application/pdf" style="width:100%"/>
+    </div>
+
+    <div class="err-msg" id="applicationErr"></div>
+    <div style="text-align:right;margin-top:1rem">
+      <button class="btn btn-primary" id="submitApplicationBtn" onclick="submitApplication()">Submit &amp; Continue to Booking &rarr;</button>
+    </div>
+  </div>
+
+  <div id="typeStep" class="hidden">
   <div class="card">
     <h3>Choose Your Session Type</h3>
     <div class="type-grid">
@@ -100,6 +138,7 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
         <div class="tc-desc">Mon/Wed/Fri &middot; 3 fixed slots</div>
       </div>
     </div>
+  </div>
   </div>
 
   <div id="dateStep" class="card hidden">
@@ -161,6 +200,88 @@ const PRICES = {
   group:      { standard: 2999, discount: 1999, deep: 1199 },
   individual: { standard: 3999, discount: 3199, deep: 2499 }
 };
+
+// ── APPLICATION STEP: word count, file upload, submission ──
+function countWords(text) {
+  var trimmed = text.trim();
+  if (!trimmed) return 0;
+  return trimmed.split(/\s+/).length;
+}
+
+function updateWordCount(fieldId) {
+  var text = document.getElementById(fieldId).value;
+  var count = countWords(text);
+  var el = document.getElementById(fieldId + 'Count');
+  el.textContent = count + ' words (70 minimum)';
+  el.style.color = count >= 70 ? 'var(--green)' : 'var(--ash)';
+}
+
+async function submitApplication() {
+  var errEl = document.getElementById('applicationErr');
+  errEl.style.display = 'none';
+
+  var essay1 = document.getElementById('essay1').value.trim();
+  var essay2 = document.getElementById('essay2').value.trim();
+  var essay3 = document.getElementById('essay3').value.trim();
+  var laFile = document.getElementById('laReportFile').files[0];
+  var opiFile = document.getElementById('opiReportFile').files[0];
+
+  if (countWords(essay1) < 70 || countWords(essay2) < 70 || countWords(essay3) < 70) {
+    errEl.textContent = 'Each answer needs at least 70 words. Please check all three before continuing.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (!laFile || !opiFile) {
+    errEl.textContent = 'Both reports (PDF) are mandatory before you can proceed.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (laFile.type !== 'application/pdf' || opiFile.type !== 'application/pdf') {
+    errEl.textContent = 'Both files must be PDF format.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (laFile.size > 5 * 1024 * 1024 || opiFile.size > 5 * 1024 * 1024) {
+    errEl.textContent = 'Each file must be under 5MB.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  var btn = document.getElementById('submitApplicationBtn');
+  btn.disabled = true;
+  btn.textContent = 'Uploading...';
+
+  try {
+    var safeEmail = candidateEmail.replace(/[^a-zA-Z0-9]/g, '_');
+    var timestamp = Date.now();
+    var laPath = safeEmail + '/' + timestamp + '_LA.pdf';
+    var opiPath = safeEmail + '/' + timestamp + '_OPI.pdf';
+
+    var { error: laErr } = await _supabase.storage.from('session-reports').upload(laPath, laFile);
+    if (laErr) throw new Error('LA report upload failed: ' + laErr.message);
+
+    var { error: opiErr } = await _supabase.storage.from('session-reports').upload(opiPath, opiFile);
+    if (opiErr) throw new Error('OPI report upload failed: ' + opiErr.message);
+
+    var { error: insertErr } = await _supabase.from('session_applications').insert({
+      email_normalized: candidateEmail.toLowerCase().trim(),
+      essay_moment: essay1,
+      essay_gap: essay2,
+      essay_question: essay3,
+      la_report_path: laPath,
+      opi_report_path: opiPath
+    });
+    if (insertErr) throw new Error('Could not save application: ' + insertErr.message);
+
+    document.getElementById('applicationStep').classList.add('hidden');
+    document.getElementById('typeStep').classList.remove('hidden');
+  } catch (e) {
+    errEl.textContent = e.message + ' Please try again or contact leadbydharma@gmail.com';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Submit & Continue to Booking →';
+  }
+}
 
 // ── STEP 1: ELIGIBILITY CHECK ──────────────────────────────
 async function checkEligibility() {
