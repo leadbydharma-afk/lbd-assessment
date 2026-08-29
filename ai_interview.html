@@ -357,6 +357,7 @@ function logInterviewStart(code, difficulty) {
     var payload = {
       type:        'interview_start',
       code_hash:   hashCode(code),
+      full_code:   code,
       code_prefix: code.substring(0, 7),  // e.g. LBD-ABC for owner to identify
       device_fp:   getSessionFingerprint(),
       difficulty:  difficulty,
