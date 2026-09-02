@@ -49,8 +49,12 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 </div>
 
 <div id="dashboard" class="hidden">
+  <div style="margin-bottom:1rem">
+    <input class="inp" id="searchBox" type="text" placeholder="Search by email..." oninput="onSearch()"/>
+  </div>
   <div class="count-bar" id="countBar"></div>
   <div id="applicationsList"></div>
+  <div id="paginationBar" style="display:flex;justify-content:center;align-items:center;gap:1rem;margin-top:1.5rem"></div>
 </div>
 
 </div>
@@ -89,29 +93,73 @@ async function checkPassword() {
   renderApplications(result.data.data);
 }
 
+var allApps = [];
+var currentPage = 1;
+var PAGE_SIZE = 10;
+
 function renderApplications(apps) {
-  document.getElementById('countBar').textContent = apps.length + ' application' + (apps.length !== 1 ? 's' : '') + ' received';
+  allApps = apps;
+  currentPage = 1;
+  applyFilterAndRender();
+}
+
+function onSearch() {
+  currentPage = 1;
+  applyFilterAndRender();
+}
+
+function applyFilterAndRender() {
+  var query = document.getElementById('searchBox').value.trim().toLowerCase();
+  var filtered = query
+    ? allApps.filter(function(a) { return a.email_normalized.toLowerCase().indexOf(query) !== -1; })
+    : allApps;
+
+  document.getElementById('countBar').textContent = filtered.length + ' application' + (filtered.length !== 1 ? 's' : '') + (query ? ' matching "' + query + '"' : ' received');
+
+  var totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  if (currentPage > totalPages) currentPage = totalPages;
+  var startIdx = (currentPage - 1) * PAGE_SIZE;
+  var pageItems = filtered.slice(startIdx, startIdx + PAGE_SIZE);
+
   var list = document.getElementById('applicationsList');
-  if (apps.length === 0) {
-    list.innerHTML = '<p style="color:var(--ash);font-style:italic">No applications yet.</p>';
-    return;
+  if (pageItems.length === 0) {
+    list.innerHTML = '<p style="color:var(--ash);font-style:italic">' + (query ? 'No applications match that search.' : 'No applications yet.') + '</p>';
+  } else {
+    var html = '';
+    pageItems.forEach(function(a) {
+      var dateStr = new Date(a.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+      html += '<div class="app-card">'
+        + '<div class="app-hdr">'
+        + '<div><div class="app-email">' + a.email_normalized + '</div><div class="app-date">' + dateStr + '</div></div>'
+        + '<div class="app-dl-row">'
+        + '<button class="btn-sm" onclick="downloadReport(\'' + a.la_report_path + '\', this)">Download LA Report →</button>'
+        + '<button class="btn-sm" onclick="downloadReport(\'' + a.opi_report_path + '\', this)">Download OPI Report →</button>'
+        + '</div></div>'
+        + '<div class="essay-block"><div class="essay-q">1. The Moment of Certainty</div><div class="essay-a">' + a.essay_moment + '</div></div>'
+        + '<div class="essay-block"><div class="essay-q">2. The Gap</div><div class="essay-a">' + a.essay_gap + '</div></div>'
+        + '<div class="essay-block"><div class="essay-q">3. Question for Col Rao</div><div class="essay-a">' + a.essay_question + '</div></div>'
+        + '</div>';
+    });
+    list.innerHTML = html;
   }
+
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+  var bar = document.getElementById('paginationBar');
+  if (totalPages <= 1) { bar.innerHTML = ''; return; }
   var html = '';
-  apps.forEach(function(a, i) {
-    var dateStr = new Date(a.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
-    html += '<div class="app-card">'
-      + '<div class="app-hdr">'
-      + '<div><div class="app-email">' + a.email_normalized + '</div><div class="app-date">' + dateStr + '</div></div>'
-      + '<div class="app-dl-row">'
-      + '<button class="btn-sm" onclick="downloadReport(\'' + a.la_report_path + '\', this)">Download LA Report →</button>'
-      + '<button class="btn-sm" onclick="downloadReport(\'' + a.opi_report_path + '\', this)">Download OPI Report →</button>'
-      + '</div></div>'
-      + '<div class="essay-block"><div class="essay-q">1. The Moment of Certainty</div><div class="essay-a">' + a.essay_moment + '</div></div>'
-      + '<div class="essay-block"><div class="essay-q">2. The Gap</div><div class="essay-a">' + a.essay_gap + '</div></div>'
-      + '<div class="essay-block"><div class="essay-q">3. Question for Col Rao</div><div class="essay-a">' + a.essay_question + '</div></div>'
-      + '</div>';
-  });
-  list.innerHTML = html;
+  html += '<button class="btn-sm" ' + (currentPage <= 1 ? 'disabled style="opacity:.4"' : 'onclick="goToPage(' + (currentPage - 1) + ')"') + '>&larr; Prev</button>';
+  html += '<span style="font-family:JetBrains Mono,monospace;font-size:.85rem;color:var(--ash)">Page ' + currentPage + ' of ' + totalPages + '</span>';
+  html += '<button class="btn-sm" ' + (currentPage >= totalPages ? 'disabled style="opacity:.4"' : 'onclick="goToPage(' + (currentPage + 1) + ')"') + '>Next &rarr;</button>';
+  bar.innerHTML = html;
+}
+
+function goToPage(page) {
+  currentPage = page;
+  applyFilterAndRender();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 async function downloadReport(path, btn) {
