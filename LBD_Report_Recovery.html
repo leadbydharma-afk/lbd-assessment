@@ -17,10 +17,12 @@
   .sub{font-size:0.9rem;color:rgba(245,240,228,0.6);margin-bottom:2rem;line-height:1.6}
   label{display:block;font-size:0.82rem;color:var(--gold);letter-spacing:0.05em;
     text-transform:uppercase;margin-bottom:0.4rem;margin-top:1.2rem}
-  input,textarea{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(184,150,62,0.3);
+  input,textarea,select{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(184,150,62,0.3);
     border-radius:4px;padding:0.7rem 0.9rem;color:var(--cream);font-family:Georgia,serif;
     font-size:0.95rem;outline:none}
-  input:focus,textarea:focus{border-color:var(--gold)}
+  select{cursor:pointer}
+  select option{background:var(--navy);color:var(--cream)}
+  input:focus,textarea:focus,select:focus{border-color:var(--gold)}
   textarea{resize:vertical;min-height:80px}
   .btn{display:block;width:100%;margin-top:1.5rem;background:var(--gold);color:var(--navy);
     border:none;padding:0.85rem;font-family:Georgia,serif;font-size:1rem;font-weight:700;
@@ -42,11 +44,22 @@
 <div class="card">
   <div class="brand">Lead By Dharma</div>
   <h1>Report Recovery</h1>
-  <p class="sub">If you completed payment but did not receive your Leadership Assessment report,
-  please fill in the details below. Col Rao will personally verify your payment and 
-  send your report within a few hours.</p>
-
+  <p class="sub">If you completed payment but did not receive your access code or report,
+  please fill in the details below. Col Rao will personally verify your payment and
+  send it to you within a few hours.</p>
   <form id="recoveryForm" onsubmit="submitRecovery(event)">
+    <label>Which Product Did You Pay For?</label>
+    <select id="rProduct" required>
+      <option value="">Select a product...</option>
+      <option value="Leadership Assessment">Leadership Assessment</option>
+      <option value="OPI — Officer Potential Index">OPI — Officer Potential Index</option>
+      <option value="AI Personal Interview">AI Personal Interview</option>
+      <option value="SSB Psychology Practice Suite">SSB Psychology Practice Suite</option>
+      <option value="Group Counselling Session">Group Counselling Session</option>
+      <option value="Individual Session">Individual Session</option>
+      <option value="Not sure / Other">Not sure / Other</option>
+    </select>
+
     <label>Your Full Name</label>
     <input type="text" id="rName" placeholder="As entered during payment" required>
 
@@ -64,16 +77,13 @@
 
     <button type="submit" class="btn">Submit Recovery Request &rarr;</button>
   </form>
-
   <div class="success" id="successMsg">
     <strong>&#10003; Request received.</strong><br>
-    Col Rao will verify your payment and send your report to the email address above
-    within a few hours. If you do not hear back within 24 hours, 
+    Col Rao will verify your payment and send your report or access code to the email
+    address above within a few hours. If you do not hear back within 24 hours,
     please WhatsApp +91 98789 30879 directly.
   </div>
-
   <div class="error" id="errorMsg"></div>
-
   <hr>
   <p class="note">
     You can also email directly:<br>
@@ -83,24 +93,22 @@
   <hr>
   <p class="quote">"The SSB does not select the most prepared candidate.<br>It selects the most real one."</p>
 </div>
-
 <script>
 function submitRecovery(e){
   e.preventDefault();
+  var product = document.getElementById('rProduct').value;
   var name    = document.getElementById('rName').value.trim();
   var email   = document.getElementById('rEmail').value.trim();
   var date    = document.getElementById('rDate').value.trim();
   var payId   = document.getElementById('rPayId').value.trim();
   var notes   = document.getElementById('rNotes').value.trim();
-
-  if(!name || !email){
+  if(!product || !name || !email){
     var err = document.getElementById('errorMsg');
     err.style.display='block';
-    err.textContent='Please enter your name and email address.';
+    err.textContent='Please select the product, and enter your name and email address.';
     return;
   }
-
-  // Send via EmailJS — same service ID used in Leadership Assessment
+  // Send via EmailJS — same service ID used across the assessment tools
   if(typeof emailjs === 'undefined'){
     // EmailJS not loaded — show manual contact instructions
     document.getElementById('recoveryForm').style.display='none';
@@ -108,23 +116,21 @@ function submitRecovery(e){
     s.style.display='block';
     s.innerHTML='<strong>Please contact us directly:</strong><br>'
       +'Email <strong>leadbydharma@gmail.com</strong> with:<br>'
-      +'Name: '+name+'<br>Email: '+email
+      +'Product: '+product+'<br>Name: '+name+'<br>Email: '+email
       +(payId?'<br>Payment ID: '+payId:'')
       +'<br><br>Col Rao will respond personally within a few hours.';
     return;
   }
-
   var btn = document.querySelector('.btn');
   btn.textContent='Sending…';
   btn.disabled=true;
-
   emailjs.send(
     'service_t7ozvf3',
     'template_lkhepyo',
     {
       to_email:       'leadbydharma@gmail.com',
-      candidate_name: 'RECOVERY REQUEST — ' + name,
-      report_html:    'Name: '+name+'\nEmail: '+email+'\nDate: '+date
+      candidate_name: 'RECOVERY REQUEST [' + product + '] — ' + name,
+      report_html:    'Product: '+product+'\nName: '+name+'\nEmail: '+email+'\nDate: '+date
                      +'\nPayment ID: '+payId+'\nNotes: '+notes,
       report_date:    new Date().toLocaleDateString('en-IN'),
       reply_to:       email
@@ -141,8 +147,7 @@ function submitRecovery(e){
   });
 }
 </script>
-
-<!-- EmailJS — same as Leadership Assessment -->
+<!-- EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
   (function(){
