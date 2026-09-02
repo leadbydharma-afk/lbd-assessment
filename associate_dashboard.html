@@ -73,6 +73,67 @@ td{padding:.5rem .7rem;border-bottom:1px solid var(--border)}
   </div>
 
   <div class="card">
+    <h3>Commission Calculator</h3>
+    <div style="display:grid;grid-template-columns:2fr auto;gap:.8rem;align-items:end;margin-bottom:1rem">
+      <div>
+        <label style="font-size:.85rem;color:var(--ash);display:block;margin-bottom:.3rem">Associate Code</label>
+        <input class="inp" id="commAssocCode" type="text" placeholder="e.g. LBD-AB12CD"/>
+      </div>
+      <button class="btn btn-primary" onclick="loadCommissionFor()">Load →</button>
+    </div>
+    <div id="commissionDetail"></div>
+  </div>
+
+  <div class="card">
+    <h3>Set a Negotiated Rate</h3>
+    <p style="font-size:.85rem;color:var(--ash);font-style:italic;margin-bottom:1rem">Changes take effect from tomorrow — today's sales always use whatever rate was already active.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem">
+      <div>
+        <label style="font-size:.85rem;color:var(--ash);display:block;margin-bottom:.3rem">Associate Code</label>
+        <input class="inp" id="rateAssocCode" type="text" placeholder="e.g. LBD-AB12CD"/>
+      </div>
+      <div>
+        <label style="font-size:.85rem;color:var(--ash);display:block;margin-bottom:.3rem">Rate Type</label>
+        <select class="inp" id="rateType">
+          <option value="tier1">Tier 1 (1–30 sales) %</option>
+          <option value="tier2">Tier 2 (31–100 sales) %</option>
+          <option value="tier3">Tier 3 (101–200 sales) %</option>
+          <option value="tier4">Tier 4 (201+ sales) %</option>
+          <option value="bonus30">Bonus at 30 sales (₹)</option>
+          <option value="bonus100">Bonus at 100 sales (₹)</option>
+          <option value="bonus200">Bonus at 200 sales (₹)</option>
+          <option value="bonus300">Bonus at 300 sales (₹)</option>
+          <option value="downstream">Downstream Session Rate %</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 2fr;gap:.8rem;margin-bottom:.8rem">
+      <div>
+        <label style="font-size:.85rem;color:var(--ash);display:block;margin-bottom:.3rem">New Value</label>
+        <input class="inp" id="rateValue" type="number" step="0.01" placeholder="e.g. 22.5"/>
+      </div>
+      <div>
+        <label style="font-size:.85rem;color:var(--ash);display:block;margin-bottom:.3rem">Reason (optional)</label>
+        <input class="inp" id="rateReason" type="text" placeholder="e.g. Negotiated Aug 2026 — high volume"/>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="setRate()">Save Rate →</button>
+    <div id="rateResult" style="margin-top:1rem;font-family:'JetBrains Mono',monospace;font-size:1rem;display:none"></div>
+  </div>
+
+  <div class="card">
+    <h3>Rate History</h3>
+    <div style="display:grid;grid-template-columns:2fr auto;gap:.8rem;align-items:end;margin-bottom:1rem">
+      <div>
+        <label style="font-size:.85rem;color:var(--ash);display:block;margin-bottom:.3rem">Associate Code</label>
+        <input class="inp" id="histAssocCode" type="text" placeholder="e.g. LBD-AB12CD"/>
+      </div>
+      <button class="btn btn-primary" onclick="loadRateHistory()">Load →</button>
+    </div>
+    <div id="rateHistoryTable"></div>
+  </div>
+
+  <div class="card">
     <h3>Performance Leaderboard</h3>
     <div class="tabs">
       <button class="tab-btn active" id="tabQuarterly" onclick="switchTab('quarterly')">Quarterly</button>
@@ -112,7 +173,6 @@ async function checkPassword() {
   document.getElementById('dashboard').classList.remove('hidden');
   renderCodes(result.data);
   loadLeaderboard('quarterly');
-  loadCommission();
 }
 
 async function callAdmin(action, params) {
@@ -194,44 +254,93 @@ async function loadLeaderboard(tab) {
   container.innerHTML = html;
 }
 
-function computeCommission(sales) {
-  var tiers = [[30, 0.20], [70, 0.25], [100, 0.30], [Infinity, 0.35]];
-  var remaining = sales, count = 0;
-  var breakdown = [];
-  for (var i = 0; i < tiers.length; i++) {
-    var take = Math.min(remaining, tiers[i][0]);
-    if (take <= 0) break;
-    breakdown.push({ count: take, rate: tiers[i][1] });
-    remaining -= take;
-    count += take;
-    if (remaining <= 0) break;
+function getCurrentQuarterRange() {
+  // Quarters anchored to Sep 1, matching the fiscal_quarter_label convention.
+  var now = new Date();
+  var year = now.getFullYear();
+  var anchors = [
+    new Date(year, 8, 1),  // Sep 1
+    new Date(year, 11, 1), // Dec 1
+    new Date(year + 1, 2, 1), // Mar 1 next year
+    new Date(year + 1, 5, 1), // Jun 1 next year
+  ];
+  // Handle Jan/Feb/Mar–Aug falling before this year's Sep anchor
+  if (now < anchors[0]) {
+    anchors = [
+      new Date(year - 1, 8, 1),
+      new Date(year - 1, 11, 1),
+      new Date(year, 2, 1),
+      new Date(year, 5, 1),
+    ];
   }
-  var bonus = 0;
-  if (sales >= 300) bonus = 6500;
-  else if (sales >= 200) bonus = 4000;
-  else if (sales >= 100) bonus = 1500;
-  else if (sales >= 30) bonus = 300;
-  return { breakdown: breakdown, bonus: bonus };
+  var start, end;
+  for (var i = 0; i < 4; i++) {
+    var next = i < 3 ? anchors[i + 1] : new Date(anchors[i].getFullYear() + 1, 8, 1);
+    if (now >= anchors[i] && now < next) { start = anchors[i]; end = next; break; }
+  }
+  return { start: start.toISOString().split('T')[0], end: end.toISOString().split('T')[0] };
 }
 
-async function loadCommission() {
-  var result = await callAdmin('leaderboard', { period: 'quarterly' });
-  var container = document.getElementById('commissionTable');
-  var data = result.data;
-  if (!data || data.length === 0) { container.innerHTML = '<p style="color:var(--ash);font-style:italic">No sales recorded this quarter.</p>'; return; }
+async function loadCommissionFor() {
+  var code = document.getElementById('commAssocCode').value.trim().toUpperCase();
+  var detail = document.getElementById('commissionDetail');
+  if (!code) { detail.innerHTML = '<p style="color:var(--red)">Enter an associate code.</p>'; return; }
+  detail.innerHTML = '<p style="color:var(--ash);font-style:italic">Loading...</p>';
 
-  var currentQuarterData = {};
-  var latestQuarter = data.reduce(function(max, r) { return r.quarter_label > max ? r.quarter_label : max; }, '');
-  data.filter(function(r) { return r.quarter_label === latestQuarter; }).forEach(function(r) {
-    currentQuarterData[r.code] = r;
-  });
+  var range = getCurrentQuarterRange();
+  var result = await callAdmin('compute_commission', { code: code, quarter_start: range.start, quarter_end: range.end });
 
-  var html = '<table><tr><th>Code</th><th>Associate</th><th>Sales</th><th>Bonus</th><th>Note</th></tr>';
-  Object.keys(currentQuarterData).forEach(function(code) {
-    var r = currentQuarterData[code];
-    var c = computeCommission(r.sales_count);
-    html += '<tr><td style="font-family:JetBrains Mono,monospace">' + code + '</td><td>' + (r.associate_name || '—') + '</td><td>' + r.sales_count + '</td><td>₹' + c.bonus + '</td>'
-      + '<td style="font-size:.85rem;color:var(--ash)">Commission = sum of (tier sales × tier rate × actual sale price) — pull exact revenue figures from associate_redemptions_tagged to finalize payout.</td></tr>';
+  if (!result.ok) {
+    detail.innerHTML = '<p style="color:var(--red)">' + (result.error || 'Error computing commission.') + '</p>';
+    return;
+  }
+
+  detail.innerHTML = '<table>'
+    + '<tr><th>Metric</th><th>Value</th></tr>'
+    + '<tr><td>Entry-product sales this quarter</td><td>' + result.entry_sales_count + '</td></tr>'
+    + '<tr><td>Entry-product commission</td><td>₹' + result.entry_commission.toLocaleString('en-IN') + '</td></tr>'
+    + '<tr><td>Session (downstream) sales this quarter</td><td>' + result.session_sales_count + '</td></tr>'
+    + '<tr><td>Downstream commission</td><td>₹' + result.downstream_commission.toLocaleString('en-IN') + '</td></tr>'
+    + '<tr><td>Milestone bonus</td><td>₹' + result.bonus_amount.toLocaleString('en-IN') + (result.bonus_threshold ? ' (crossed ' + result.bonus_threshold + ')' : '') + '</td></tr>'
+    + '<tr style="font-weight:700"><td>TOTAL PAYABLE</td><td>₹' + result.total_commission.toLocaleString('en-IN') + '</td></tr>'
+    + '</table>';
+}
+
+async function setRate() {
+  var code = document.getElementById('rateAssocCode').value.trim().toUpperCase();
+  var rateType = document.getElementById('rateType').value;
+  var value = document.getElementById('rateValue').value;
+  var reason = document.getElementById('rateReason').value.trim();
+  var resultEl = document.getElementById('rateResult');
+
+  if (!code || value === '') { alert('Enter an associate code and a value.'); return; }
+
+  var result = await callAdmin('set_rate', { code: code, rate_type: rateType, rate_value: parseFloat(value), reason: reason });
+  resultEl.style.display = 'block';
+  if (!result.ok) {
+    resultEl.style.color = 'var(--red)';
+    resultEl.textContent = 'Error: ' + result.error;
+  } else {
+    resultEl.style.color = 'var(--green)';
+    resultEl.textContent = '✓ Saved — effective from ' + result.effective_date + ' onward.';
+    document.getElementById('rateValue').value = '';
+    document.getElementById('rateReason').value = '';
+  }
+}
+
+async function loadRateHistory() {
+  var code = document.getElementById('histAssocCode').value.trim().toUpperCase();
+  var container = document.getElementById('rateHistoryTable');
+  if (!code) { container.innerHTML = '<p style="color:var(--red)">Enter an associate code.</p>'; return; }
+
+  var result = await callAdmin('get_rates', { code: code });
+  if (!result.ok || !result.data || result.data.length === 0) {
+    container.innerHTML = '<p style="color:var(--ash);font-style:italic">No custom rates set for this associate — using all standard defaults.</p>';
+    return;
+  }
+  var html = '<table><tr><th>Rate Type</th><th>Value</th><th>Effective From</th><th>Reason</th></tr>';
+  result.data.forEach(function(r) {
+    html += '<tr><td>' + r.rate_type + '</td><td>' + r.rate_value + '</td><td>' + r.effective_date + '</td><td>' + (r.reason || '—') + '</td></tr>';
   });
   html += '</table>';
   container.innerHTML = html;
