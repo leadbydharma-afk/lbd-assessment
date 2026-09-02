@@ -79,6 +79,11 @@ async function checkPassword() {
     storedPassword = '';
     return;
   }
+  if (!result.data.ok) {
+    document.getElementById('gateErr').style.display = 'block';
+    document.getElementById('gateErr').textContent = result.data.error || 'Something went wrong loading applications.';
+    return;
+  }
   document.getElementById('gate').classList.add('hidden');
   document.getElementById('dashboard').classList.remove('hidden');
   renderApplications(result.data.data);
