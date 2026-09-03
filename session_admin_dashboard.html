@@ -97,6 +97,12 @@ var allApps = [];
 var currentPage = 1;
 var PAGE_SIZE = 10;
 
+function esc(str) {
+  var div = document.createElement('div');
+  div.textContent = str == null ? '' : String(str);
+  return div.innerHTML;
+}
+
 function renderApplications(apps) {
   allApps = apps;
   currentPage = 1;
@@ -130,14 +136,14 @@ function applyFilterAndRender() {
       var dateStr = new Date(a.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
       html += '<div class="app-card">'
         + '<div class="app-hdr">'
-        + '<div><div class="app-email">' + a.email_normalized + '</div><div class="app-date">' + dateStr + '</div></div>'
+        + '<div><div class="app-email">' + esc(a.email_normalized) + '</div><div class="app-date">' + dateStr + '</div></div>'
         + '<div class="app-dl-row">'
-        + '<button class="btn-sm" onclick="downloadReport(\'' + a.la_report_path + '\', this)">Download LA Report →</button>'
-        + '<button class="btn-sm" onclick="downloadReport(\'' + a.opi_report_path + '\', this)">Download OPI Report →</button>'
+        + '<button class="btn-sm" onclick="downloadReport(\'' + esc(a.la_report_path) + '\', this)">Download LA Report →</button>'
+        + '<button class="btn-sm" onclick="downloadReport(\'' + esc(a.opi_report_path) + '\', this)">Download OPI Report →</button>'
         + '</div></div>'
-        + '<div class="essay-block"><div class="essay-q">1. The Moment of Certainty</div><div class="essay-a">' + a.essay_moment + '</div></div>'
-        + '<div class="essay-block"><div class="essay-q">2. The Gap</div><div class="essay-a">' + a.essay_gap + '</div></div>'
-        + '<div class="essay-block"><div class="essay-q">3. Question for Col Rao</div><div class="essay-a">' + a.essay_question + '</div></div>'
+        + '<div class="essay-block"><div class="essay-q">1. The Moment of Certainty</div><div class="essay-a">' + esc(a.essay_moment) + '</div></div>'
+        + '<div class="essay-block"><div class="essay-q">2. The Gap</div><div class="essay-a">' + esc(a.essay_gap) + '</div></div>'
+        + '<div class="essay-block"><div class="essay-q">3. Question for Col Rao</div><div class="essay-a">' + esc(a.essay_question) + '</div></div>'
         + '</div>';
     });
     list.innerHTML = html;
