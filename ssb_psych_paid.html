@@ -1202,6 +1202,51 @@ function renderWAT(){
 
 
 
+function renderSDT(){
+  var sdtCount = isDemoMode ? 2 : SDT_SECS.length;
+  var sdtTimerSecs = isDemoMode ? 120 : 900;
+  var sdtTimerLabel = isDemoMode ? '02:00' : '15:00';
+  var sdtHeader = isDemoMode
+    ? 'SDT &middot; DEMO &middot; 2 of 5 Sections'
+    : 'SDT &middot; Set ' + (selSet+1) + ' &middot; 5 Sections';
+
+  var html = '<div class="timer-bar">'
+    + '<div class="timer-lbl">' + sdtHeader + '</div>'
+    + '<div class="timer-val" id="timerDisp">' + sdtTimerLabel + '</div>'
+    + '<button class="btn btn-sm" style="background:var(--gold);color:var(--navy);border:none;cursor:pointer;font-family:Playfair Display,serif;border-radius:2px;padding:.4rem 1rem" onclick="submitSDT()">Submit &rarr;</button>'
+    + '<div style="display:flex;align-items:center;gap:.3rem">'
+    + '<button class="extend-btn" id="extendBtn" onclick="extendTime()">'
+    + (isDemoMode ? '+1 min' : '+3 min') + '</button>'
+    + '<span class="extend-uses" id="extendUses">' + EXTEND_MAX + ' left</span>'
+    + '</div>'
+    + '</div>'
+    + '<div style="padding:1rem 0">'
+    + '<p style="font-size:1.1rem;color:var(--ash);font-style:italic;margin-bottom:1rem">Write honestly in each section. The SSB psychologist reads for consistency across all five — and for specificity, not generic praise.</p>';
+
+  for (var i = 0; i < sdtCount; i++) {
+    var sec = SDT_SECS[i];
+    html += '<div style="margin-bottom:1.4rem">'
+      + '<div style="font-family:Playfair Display,serif;font-size:1.15rem;color:var(--navy);font-weight:600;margin-bottom:.3rem">' + (i+1) + '. ' + sec.label + '</div>'
+      + '<div style="font-size:.98rem;color:var(--ash);font-style:italic;margin-bottom:.5rem">' + sec.sub + '</div>'
+      + '<textarea id="sdt_' + sec.id + '" rows="4" style="width:100%;padding:.7rem .9rem;font-family:inherit;font-size:1.02rem;border:1.5px solid rgba(26,58,92,.15);border-radius:2px;resize:vertical" placeholder="' + sec.ph + '" oninput="sdtUpdate(\'' + sec.id + '\',this)"></textarea>'
+      + '</div>';
+  }
+
+  html += '<div style="text-align:right;padding:1rem 0">'
+    + '<button class="btn btn-primary" onclick="submitSDT()">Submit SDT &rarr;</button>'
+    + '</div></div>';
+
+  document.getElementById('testArea').innerHTML = html;
+  startTimer(sdtTimerSecs, submitSDT);
+}
+
+function sdtUpdate(id, el) {
+  sdtAns[id] = el.value;
+  el.style.borderColor = el.value.trim().length > 0 ? 'var(--gold)' : 'rgba(26,58,92,.15)';
+}
+
+
+
 // =====================================================
 // EXTEND TIME
 // =====================================================
