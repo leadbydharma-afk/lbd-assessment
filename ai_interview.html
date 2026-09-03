@@ -228,14 +228,6 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
       <div class="field-sub">Write your honest answer. The AI will probe this and test its authenticity.</div>
       <textarea class="ta" id="cWhy" rows="3" placeholder="Write in your own words — not what sounds impressive, what is true for you..."></textarea>
     </div>
-    <div class="field-row">
-      <label class="field-lbl">Interview Difficulty</label>
-      <select class="sel" id="cDiff">
-        <option value="standard">Standard — realistic SSB PI level</option>
-        <option value="demanding">Demanding — probing, follow-up heavy</option>
-        <option value="stress">Stress Interview — designed to unsettle</option>
-      </select>
-    </div>
 
     <div style="margin-top:1.5rem;text-align:right">
       <button class="btn btn-primary" onclick="startInterview()" style="font-size:1.1rem;padding:.85rem 2.2rem">Begin Interview &rarr;</button>
@@ -247,9 +239,35 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 <div id="interviewRoom" class="interview-room">
   <div class="ir-hdr">
     <div class="ir-title">PERSONAL INTERVIEW SIMULATION &middot; LEAD BY DHARMA</div>
-    <div class="ir-qcount" id="qCount">Question 1 of ~12</div>
+    <div class="ir-qcount" id="qCount">Question 1 of 12</div>
   </div>
   <div class="chat-area" id="chatArea"></div>
+
+  <!-- BONUS INVITATION BANNER -->
+  <div id="bonusInviteBanner" class="hidden" style="background:rgba(26,92,46,.08);border:2px solid #1a5c2e;border-radius:6px;padding:1.4rem 1.6rem;margin:1rem 0">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.1em;color:#1a5c2e;font-weight:700;text-transform:uppercase;margin-bottom:.5rem">&#9733; Bonus Performance Enhancement</div>
+    <p style="font-size:1.05rem;color:var(--ink);line-height:1.6;margin-bottom:1rem">Your answers so far have earned you the option to continue into two rounds of tougher questioning — the kind a real board uses to see how you hold up when it gets harder. This is optional.</p>
+    <div style="display:flex;gap:.8rem;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="acceptBonus()">Continue Into the Harder Round &rarr;</button>
+      <button class="btn btn-outline" onclick="showDeclineReasons()">Stop Here</button>
+    </div>
+  </div>
+
+  <!-- DECLINE REASON SELECTOR -->
+  <div id="declineReasonBox" class="hidden" style="background:var(--cream2);border:1px solid var(--border);border-radius:6px;padding:1.4rem 1.6rem;margin:1rem 0">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--navy);font-weight:700;margin-bottom:.8rem">Before you stop — what's driving that? (select any that apply)</div>
+    <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem" id="declineOptionsList">
+      <label style="display:flex;align-items:flex-start;gap:.5rem;font-size:1rem"><input type="checkbox" class="decline-opt" value="Running low on time"> Running low on time</label>
+      <label style="display:flex;align-items:flex-start;gap:.5rem;font-size:1rem"><input type="checkbox" class="decline-opt" value="Wanted to end on my strongest answers"> Wanted to end on my strongest answers</label>
+      <label style="display:flex;align-items:flex-start;gap:.5rem;font-size:1rem"><input type="checkbox" class="decline-opt" value="Not confident about the harder questions"> Not confident about the harder questions</label>
+      <label style="display:flex;align-items:flex-start;gap:.5rem;font-size:1rem"><input type="checkbox" class="decline-opt" value="Felt I'd already shown what I could"> Felt I'd already shown what I could</label>
+      <label style="display:flex;align-items:flex-start;gap:.5rem;font-size:1rem"><input type="checkbox" class="decline-opt" value="Technical or environment issue"> Technical or environment issue</label>
+      <label style="display:flex;align-items:flex-start;gap:.5rem;font-size:1rem"><input type="checkbox" class="decline-opt" value="Prefer not to say"> Prefer not to say</label>
+    </div>
+    <textarea class="ans-inp" id="declineFreeText" rows="2" placeholder="Anything else you'd like to add (optional)..." style="margin-bottom:1rem"></textarea>
+    <button class="btn btn-primary" onclick="confirmDecline()">Confirm — End Interview Here &rarr;</button>
+  </div>
+
   <div class="ans-area" id="ansArea">
     <textarea class="ans-inp" id="ansInput" placeholder="Type your answer here... Speak as you would in a real interview — in full sentences, naturally."></textarea>
     <div class="ans-row">
@@ -275,7 +293,11 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 var profile = {};
 var conversationHistory = [];
 var questionCount = 0;
-var maxQuestions = 12;
+var interviewPhase = 'core';   // 'core' | 'bonus1' | 'bonus2'
+var phaseQuestionCount = 0;    // resets to 0 at the start of each phase
+var CORE_MAX = 12, BONUS1_MAX = 4, BONUS2_MAX = 4;
+var bonusOutcome = 'not_offered'; // 'not_offered' | 'accepted' | 'declined'
+var declineReasons = [];
 var interviewActive = false;
 var qaLog = []; // [{q, a, feedback}]
 
@@ -283,16 +305,15 @@ var qaLog = []; // [{q, a, feedback}]
 // SYSTEM PROMPT — Col Rao AI Persona
 // =====================================================
 function getSystemPrompt() {
-  var diff = profile.difficulty || 'standard';
-  var diffInstructions = {
-    'standard': 'Conduct a realistic, professional SSB Personal Interview. Ask probing follow-up questions when answers are vague. Be respectful but direct.',
-    'demanding': 'Conduct a demanding interview. Press hard on every answer. Follow up with "Why?" and "Give me a specific example" on almost every response. Challenge comfortable answers.',
-    'stress': 'Conduct a stress interview. Express mild scepticism. Challenge answers. Express surprise at vague claims. Say things like "That is not convincing enough" or "I expected more from someone with your background." Do not be cruel — be the kind of experienced officer who is deliberately testing how the candidate handles pressure.'
+  var phaseInstructions = {
+    'core': 'Conduct a realistic, professional SSB Personal Interview. Ask probing follow-up questions when answers are vague. Be respectful but direct.',
+    'bonus1': 'The candidate has earned entry into a tougher round. Press harder now. Follow up with "Why?" and "Give me a specific example" on almost every response. Challenge comfortable answers. Do not mention that this is a "bonus round" — simply conduct the interview at this higher intensity from here on.',
+    'bonus2': 'This is the final, most demanding stage. Conduct a genuine stress interview — express mild scepticism, challenge answers, express surprise at vague claims. Say things like "That is not convincing enough" or "I expected more from someone with your background." Do not be cruel — be the kind of experienced officer deliberately testing how the candidate handles real pressure. Do not mention that this is a "bonus round."'
   };
 
   return 'You are conducting a Services Selection Board (SSB) Personal Interview for the Indian Armed Forces. You are roleplaying as a senior Interviewing Officer — a retired Colonel with 25 years of service in the Indian Army, Infantry. Your name in this simulation is "Col Rao (AI)". You are experienced, intelligent, direct, and thorough.\n\n'
     + 'IMPORTANT: You are clearly an AI simulation, not the real person. Never claim to be human or the real Colonel.\n\n'
-    + 'INTERVIEW STYLE: ' + diffInstructions[diff] + '\n\n'
+    + 'INTERVIEW STYLE: ' + phaseInstructions[interviewPhase] + '\n\n'
     + 'CANDIDATE PROFILE:\n'
     + 'Name: ' + profile.name + '\n'
     + 'Entry: ' + profile.entry + '\n'
@@ -306,8 +327,8 @@ function getSystemPrompt() {
     + '- Then systematically cover: personal background, family, education, achievements, hobbies, current affairs awareness, why armed forces, leadership experience, strengths/weaknesses, situational judgment\n'
     + '- Ask ONE question at a time. Never ask multiple questions in one turn.\n'
     + '- Follow up on specific details in their answers. If they claim something, probe for evidence.\n'
-    + '- After approximately 12 questions, conclude the interview professionally.\n'
-    + '- When concluding, say: "Thank you, [name]. That concludes our interview. [INTERVIEW_COMPLETE]"\n\n'
+    + '- After approximately ' + (interviewPhase === 'core' ? '12' : '4') + ' questions in this phase, conclude professionally.\n'
+    + '- When concluding, say: "Thank you, [name]. That concludes this part of the interview. [INTERVIEW_COMPLETE]"\n\n'
     + 'ASSESSMENT NOTES TO YOURSELF (internal — do not share with candidate):\n'
     + 'After EVERY candidate response, internally assess: clarity, confidence, honesty, depth of thinking, OLQ indicators (initiative, integrity, courage, social adaptability, sense of responsibility). You will be asked for a full assessment at the end.\n\n'
     + 'Keep your questions and responses concise. One question per turn. No lengthy speeches.\n'
@@ -316,7 +337,7 @@ function getSystemPrompt() {
 
 // =====================================================
 // USAGE LIMIT SYSTEM — real, code-based (Supabase-backed)
-// Max 3 interviews per code — one per difficulty level.
+// One interview per code — adaptive difficulty within a single session.
 // =====================================================
 var DIFF_LABELS = {
   'standard':  'Standard',
@@ -383,13 +404,11 @@ function startInterview() {
     return;
   }
 
-  var selectedDiff = document.getElementById('cDiff').value || 'standard';
-
   // ── Code-based usage check ──────────────────────────────
   var isOwner = (currentAIType === 'owner');
   var codedUses = isOwner ? 999 : (currentAICode ? getCodeUsage(currentAICode) : 0);
   if (!isOwner && codedUses <= 0) {
-    alert('You have used all your interview sessions. Your reports are permanently saved on this page. Contact leadbydharma@gmail.com if you need additional sessions.');
+    alert('Your one interview session with this code has already been used. Your reports are permanently saved on this page. Contact leadbydharma@gmail.com if you need another session.');
     return;
   }
   if (!isOwner) {
@@ -404,21 +423,23 @@ function startInterview() {
     edu: document.getElementById('cEdu').value.trim() || 'Not specified',
     home: document.getElementById('cHome').value.trim() || 'Not specified',
     hobbies: document.getElementById('cHobbies').value.trim() || 'Not specified',
-    why: document.getElementById('cWhy').value.trim() || 'Not specified',
-    difficulty: selectedDiff
+    why: document.getElementById('cWhy').value.trim() || 'Not specified'
   };
 
-  // Log this interview start for abuse detection
-  logInterviewStart(currentAICode || 'unknown', profile.difficulty);
+  logInterviewStart(currentAICode || 'unknown', 'adaptive');
 
   document.getElementById('setupPage').classList.add('hidden');
   document.getElementById('interviewRoom').style.display = 'block';
   interviewActive = true;
   conversationHistory = [];
   questionCount = 0;
+  phaseQuestionCount = 0;
+  interviewPhase = 'core';
+  bonusOutcome = 'not_offered';
+  declineReasons = [];
   qaLog = [];
 
-  addSystemMsg('Interview session started. ' + profile.difficulty.charAt(0).toUpperCase() + profile.difficulty.slice(1) + ' mode.');
+  addSystemMsg('Interview session started.');
   askFirstQuestion();
 }
 
@@ -567,7 +588,7 @@ function renderCodeGate() {
     + '<h3 style="font-size:1.4rem;margin-bottom:.4rem">Personal Interview Simulation</h3>'
     + '<p style="font-size:1.1rem;color:var(--ash);font-style:italic;margin-bottom:1.2rem;line-height:1.6">'
     + 'Enter the access code from your purchase email. '
-    + 'Each code allows 3 interview sessions across the three difficulty levels.</p>'
+    + 'Each code allows one full interview session, which adapts in difficulty as you go.</p>'
     + '<div style="margin-bottom:.8rem">'
     + '<label style="font-family:JetBrains Mono,monospace;font-size:1.06rem;letter-spacing:.1em;display:block;margin-bottom:.3rem;color:var(--navy)">ACCESS CODE</label>'
     + '<input id="aiCodeInput" class="inp" type="text" placeholder="e.g. LBD-XXXX" '
@@ -719,6 +740,7 @@ async function askFirstQuestion() {
 
     addMsg('ai', aiResponse);
     questionCount++;
+    phaseQuestionCount++;
     updateQCount();
     setInputEnabled(true);
   } catch (e) {
@@ -729,7 +751,11 @@ async function askFirstQuestion() {
 }
 
 function updateQCount() {
-  document.getElementById('qCount').textContent = 'Question ' + questionCount + ' of ~' + maxQuestions;
+  var label, max;
+  if (interviewPhase === 'core') { label = 'Question'; max = CORE_MAX; }
+  else if (interviewPhase === 'bonus1') { label = 'Bonus Round 1 — Question'; max = BONUS1_MAX; }
+  else { label = 'Bonus Round 2 — Question'; max = BONUS2_MAX; }
+  document.getElementById('qCount').textContent = label + ' ' + phaseQuestionCount + ' of ' + max;
 }
 
 async function sendAnswer() {
@@ -759,27 +785,23 @@ async function sendAnswer() {
     removeTyping();
     conversationHistory.push({ role: 'assistant', content: aiResponse });
 
-    // Check if interview is complete
+    // Check if this phase is complete
     if (aiResponse.indexOf('[INTERVIEW_COMPLETE]') !== -1) {
       var cleanResponse = aiResponse.replace('[INTERVIEW_COMPLETE]', '').trim();
       addMsg('ai', cleanResponse);
-      interviewActive = false;
-
-      setTimeout(function() {
-        addSystemMsg('Interview concluded. Generating your assessment report...');
-        document.getElementById('ansArea').style.display = 'none';
-        generateReport();
-      }, 1500);
+      await handlePhaseComplete();
     } else {
       addMsg('ai', aiResponse);
       questionCount++;
+      phaseQuestionCount++;
       updateQCount();
 
-      // Force end after maxQuestions
-      if (questionCount >= maxQuestions + 2) {
+      // Safety net: force phase end if AI runs long
+      var phaseMax = interviewPhase === 'core' ? CORE_MAX : (interviewPhase === 'bonus1' ? BONUS1_MAX : BONUS2_MAX);
+      if (phaseQuestionCount >= phaseMax + 2) {
         setInputEnabled(false);
-        addSystemMsg('Maximum questions reached. Generating your report...');
-        setTimeout(generateReport, 1500);
+        addSystemMsg('Wrapping up this part...');
+        await handlePhaseComplete();
       } else {
         setInputEnabled(true);
       }
@@ -791,9 +813,147 @@ async function sendAnswer() {
   }
 }
 
+// ── PHASE TRANSITION LOGIC ──────────────────────────────
+async function handlePhaseComplete() {
+  if (interviewPhase === 'core') {
+    setInputEnabled(false);
+    addSystemMsg('Reviewing your responses...');
+    var invite = await evaluateForBonusInvite();
+    if (invite) {
+      document.getElementById('ansArea').style.display = 'none';
+      document.getElementById('bonusInviteBanner').classList.remove('hidden');
+    } else {
+      bonusOutcome = 'not_offered';
+      interviewActive = false;
+      addSystemMsg('Interview concluded. Generating your assessment report...');
+      document.getElementById('ansArea').style.display = 'none';
+      generateReport();
+    }
+  } else if (interviewPhase === 'bonus1') {
+    interviewPhase = 'bonus2';
+    phaseQuestionCount = 0;
+    updateQCount();
+    setInputEnabled(false);
+    showTyping();
+    try {
+      var msg = [{ role: 'user', content: 'Continue the interview at the next level of intensity.' }];
+      var resp = await callClaude(conversationHistory.concat(msg), getSystemPrompt());
+      removeTyping();
+      conversationHistory.push({ role: 'user', content: 'Continue the interview at the next level of intensity.' });
+      conversationHistory.push({ role: 'assistant', content: resp });
+      addMsg('ai', resp);
+      phaseQuestionCount++;
+      updateQCount();
+      setInputEnabled(true);
+    } catch (e) {
+      removeTyping();
+      addSystemMsg('Error: ' + e.message);
+      setInputEnabled(true);
+    }
+  } else {
+    // bonus2 complete — full interview done
+    interviewActive = false;
+    addSystemMsg('Interview concluded. Generating your assessment report...');
+    document.getElementById('ansArea').style.display = 'none';
+    generateReport();
+  }
+}
+
+// ── EVALUATION: does this candidate earn the bonus invite? ──
+async function evaluateForBonusInvite() {
+  var qaText = '';
+  for (var i = 0; i < qaLog.length; i++) {
+    qaText += 'Q' + (i+1) + ': ' + qaLog[i].q + '\nA' + (i+1) + ': ' + qaLog[i].a + '\n\n';
+  }
+
+  var evalPrompt = 'Review this SSB Personal Interview transcript. Decide whether this candidate should be invited into a tougher bonus round.\n\n'
+    + 'BE GENEROUS. The bar is engagement, not eloquence — invite anyone who answered in genuine, thoughtful sentences. '
+    + 'Only decline the invite if answers were consistently limited to bare phrases or a handful of words with no real engagement. '
+    + 'A short answer that is precise and substantive should still be invited — judge substance, not just length.\n\n'
+    + 'TRANSCRIPT:\n' + qaText + '\n\n'
+    + 'Respond with ONLY this exact JSON, nothing else: {"invite": true or false}';
+
+  try {
+    var raw = await callClaude(
+      [{ role: 'user', content: evalPrompt }],
+      'You are evaluating interview engagement. Return only valid JSON, no other text.'
+    );
+    var jsonStr = raw.replace(/```json/g, '').replace(/```/g, '').trim();
+    var start = jsonStr.indexOf('{'), end = jsonStr.lastIndexOf('}');
+    var parsed = JSON.parse(jsonStr.substring(start, end + 1));
+    return parsed.invite === true;
+  } catch (e) {
+    return false; // fail safe — if evaluation breaks, don't force the bonus round
+  }
+}
+
+function acceptBonus() {
+  bonusOutcome = 'accepted';
+  interviewPhase = 'bonus1';
+  phaseQuestionCount = 0;
+  document.getElementById('bonusInviteBanner').classList.add('hidden');
+  document.getElementById('ansArea').style.display = 'flex';
+  updateQCount();
+
+  setInputEnabled(false);
+  showTyping();
+  callClaude(
+    conversationHistory.concat([{ role: 'user', content: 'The candidate has chosen to continue into the tougher round. Begin it now.' }]),
+    getSystemPrompt()
+  ).then(function(resp) {
+    removeTyping();
+    conversationHistory.push({ role: 'user', content: 'The candidate has chosen to continue into the tougher round.' });
+    conversationHistory.push({ role: 'assistant', content: resp });
+    addMsg('ai', resp);
+    phaseQuestionCount++;
+    updateQCount();
+    setInputEnabled(true);
+  }).catch(function(e) {
+    removeTyping();
+    addSystemMsg('Error: ' + e.message);
+    setInputEnabled(true);
+  });
+}
+
+function showDeclineReasons() {
+  document.getElementById('bonusInviteBanner').classList.add('hidden');
+  document.getElementById('declineReasonBox').classList.remove('hidden');
+}
+
+function confirmDecline() {
+  var checked = document.querySelectorAll('.decline-opt:checked');
+  declineReasons = Array.prototype.map.call(checked, function(el) { return el.value; });
+  var freeText = document.getElementById('declineFreeText').value.trim();
+  if (freeText) declineReasons.push('Other: ' + freeText);
+
+  bonusOutcome = 'declined';
+  interviewActive = false;
+  document.getElementById('declineReasonBox').classList.add('hidden');
+  addSystemMsg('Interview concluded. Generating your assessment report...');
+  generateReport();
+}
+
 // =====================================================
 // REPORT GENERATION
 // =====================================================
+// ── Instructions for the report generator, based on which of
+// the three outcomes actually happened. Never exposes the
+// underlying evaluation theory to the candidate — describes
+// only what happened, in Col Rao's normal narrative voice. ──
+function bonusOutcomeContext() {
+  if (bonusOutcome === 'accepted') {
+    return 'BONUS ROUND CONTEXT: This candidate was invited into a tougher round after the core interview and chose to continue through two escalating rounds of harder questioning. Note this positively in the bonusNarrative field, in a warm, direct, personal tone — describing what happened, not why it was tested.';
+  } else if (bonusOutcome === 'declined') {
+    return 'BONUS ROUND CONTEXT: This candidate was invited into a tougher round after the core interview and chose to stop instead. Their stated reasons: ' + (declineReasons.length ? declineReasons.join('; ') : 'none given') + '. In the bonusNarrative field, describe this observationally and honestly, in Col Rao\'s normal voice — mention that the invitation was offered and declined, reference their stated reasons if given, and note this is worth reflecting on alongside the rest of the interview. Do not moralize or lecture. Do not explain any underlying theory about opportunity versus caution — simply describe what happened plainly and let it stand.';
+  } else {
+    return 'BONUS ROUND CONTEXT: This candidate completed the core interview only and was not invited into the tougher round. In the bonusNarrative field, write ONE neutral sentence simply noting the interview was completed in full — do not imply this is a shortfall or that anything was missed.';
+  }
+}
+
+function bonusNarrativeInstruction() {
+  return 'Write 2-4 sentences here per the BONUS ROUND CONTEXT instructions above — this is a distinct field from overallSummary, describing specifically what happened with the bonus round invitation.';
+}
+
 async function generateReport() {
   document.getElementById('interviewRoom').style.display = 'none';
   var rDiv = document.getElementById('reportPage');
@@ -811,6 +971,7 @@ async function generateReport() {
     + 'CANDIDATE: ' + profile.name + '\n'
     + 'ENTRY: ' + profile.entry + ' (' + profile.service + ')\n\n'
     + 'INTERVIEW TRANSCRIPT:\n' + qaText + '\n\n'
+    + bonusOutcomeContext() + '\n\n'
     + 'Generate a structured assessment report in this EXACT JSON format (no markdown, no backticks, pure JSON):\n'
     + '{\n'
     + '  "overallVerdict": "Recommended / Borderline / Not Recommended",\n'
@@ -827,7 +988,8 @@ async function generateReport() {
     + '  "questionFeedback": [\n'
     + '    { "question": "...", "answer": "...", "feedback": "specific coaching feedback on this answer" }\n'
     + '  ],\n'
-    + '  "developmentPriorities": "2-3 sentences on what to work on before the real SSB"\n'
+    + '  "developmentPriorities": "2-3 sentences on what to work on before the real SSB",\n'
+    + '  "bonusNarrative": "' + bonusNarrativeInstruction() + '"\n'
     + '}\n\n'
     + 'Be honest and direct. This is a development tool — the candidate needs truth, not encouragement. '
     + 'Only mark "Recommended" if the responses genuinely demonstrate officer-like qualities across the board.';
@@ -936,6 +1098,13 @@ function renderReport(r) {
     + '<div class="rpt-box" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">'
     + '<div><h3 style="border:none;padding:0;margin-bottom:.6rem">Strengths</h3><ul style="padding-left:1.2rem">' + strengthsHtml + '</ul></div>'
     + '<div><h3 style="border:none;padding:0;margin-bottom:.6rem">Gaps to Address</h3><ul style="padding-left:1.2rem">' + gapsHtml + '</ul></div>'
+    + '</div>'
+
+    + (r.bonusNarrative ? '<div class="rpt-box" style="border-color:rgba(184,150,62,.4)"><h3>The Bonus Round</h3><p>' + r.bonusNarrative + '</p></div>' : '')
+
+    + '<div class="rpt-box" style="background:var(--cream2);font-size:.92rem;color:var(--ash)">'
+    + '<strong style="color:var(--navy)">A note on the bonus round: </strong>'
+    + 'How a candidate responds when offered the chance to go further — not just what they answer, but whether they choose to continue at all — is its own kind of signal, one this simulation is designed to surface alongside everything else in the interview.'
     + '</div>'
 
     + (qaHtml ? '<div class="rpt-box"><h3>Question-by-Question Feedback</h3>' + qaHtml + '</div>' : '')
