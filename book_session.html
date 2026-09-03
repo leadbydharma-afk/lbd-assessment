@@ -52,6 +52,9 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 .price-box{background:var(--cream2);border:1px solid var(--border);border-radius:3px;padding:1.2rem 1.4rem;margin:1rem 0;text-align:center}
 .price-amt{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--navy)}
 .price-tier-note{font-size:.95rem;color:var(--ash);font-style:italic;margin-top:.4rem}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th{text-align:left;padding:.4rem .5rem;border-bottom:2px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--ash);text-transform:uppercase}
+td{padding:.4rem .5rem;border-bottom:1px solid var(--border)}
 .assoc-toggle{background:none;border:none;font-family:'Crimson Pro',serif;font-size:1.02rem;color:var(--ash);text-decoration:underline;cursor:pointer;display:block;margin:.8rem auto}
 .assoc-box{display:none;margin:.8rem 0}
 .assoc-box.open{display:block}
@@ -70,6 +73,17 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 <div class="wrap">
 
 <!-- STEP 1: EMAIL ENTRY -->
+<div class="card" style="background:var(--cream2)">
+  <h3 style="margin-bottom:.8rem">Session Pricing</h3>
+  <table style="width:100%">
+    <tr><th></th><th>Group</th><th>Individual</th></tr>
+    <tr><td>Standard</td><td>₹2,999</td><td>₹3,999</td></tr>
+    <tr><td>24-hour offer</td><td>₹1,999</td><td>₹3,199</td></tr>
+    <tr><td>Associate code / within 25 min of assessment</td><td>₹1,199</td><td>₹2,499</td></tr>
+  </table>
+  <p style="font-size:.85rem;color:var(--ash);font-style:italic;margin-top:.6rem">Your exact price is confirmed automatically once you're eligible.</p>
+</div>
+
 <div id="emailStep" class="card">
   <h3>Let's Check Your Eligibility</h3>
   <p style="font-size:1.02rem;color:var(--ash);font-style:italic;margin-bottom:1rem">Enter the email you used for your Leadership Assessment and OPI. Both must be completed before you can book.</p>
