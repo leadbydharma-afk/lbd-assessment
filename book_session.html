@@ -46,6 +46,8 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 .di-time{font-family:'JetBrains Mono',monospace;font-size:1rem;color:var(--ash)}
 .di-seats{font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--green)}
 .di-seats.low{color:var(--amber)}
+.date-item.next-available{border-color:var(--gold);background:rgba(201,168,76,.06)}
+.next-avail-badge{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.05em;color:var(--navy);background:var(--gold);padding:.15rem .5rem;border-radius:2px;margin-left:.5rem;vertical-align:middle}
 .di-full-label{font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--red)}
 .price-box{background:var(--cream2);border:1px solid var(--border);border-radius:3px;padding:1.2rem 1.4rem;margin:1rem 0;text-align:center}
 .price-amt{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--navy)}
@@ -369,20 +371,40 @@ async function renderDateStep() {
     (seats || []).forEach(function(s) { seatMap[s.session_date] = s.seats_taken; });
 
     var html = '';
-    dates.forEach(function(d) {
+    var dateInfo = dates.map(function(d) {
       var override = overrideMap[d];
-      if (override && override.is_cancelled) return; // skip cancelled dates
+      if (override && override.is_cancelled) return null;
       var capacity = (override && override.capacity) || 30;
       var startT = (override && override.start_time) || '17:30';
       var endT = (override && override.end_time) || '20:30';
       var taken = seatMap[d] || 0;
       var remaining = capacity - taken;
-      var isFull = remaining <= 0;
+      return { date: d, startT: startT, endT: endT, remaining: remaining, isFull: remaining <= 0 };
+    }).filter(function(x) { return x !== null; });
+
+    // Find the first non-full date after each full one, for highlighting.
+    var nextAvailableForFull = {};
+    for (var i = 0; i < dateInfo.length; i++) {
+      if (dateInfo[i].isFull) {
+        for (var j = i + 1; j < dateInfo.length; j++) {
+          if (!dateInfo[j].isFull) { nextAvailableForFull[dateInfo[i].date] = dateInfo[j].date; break; }
+        }
+      }
+    }
+    var highlightDates = {};
+    Object.keys(nextAvailableForFull).forEach(function(k) { highlightDates[nextAvailableForFull[k]] = true; });
+
+    dateInfo.forEach(function(info) {
+      var d = info.date, remaining = info.remaining, isFull = info.isFull;
       var dLabel = formatDateLabel(d);
-      html += '<div class="date-item' + (isFull ? ' full' : '') + '" '
-        + (isFull ? '' : 'onclick="pickDate(\'' + d + '\',\'' + startT + '\u2013' + endT + '\')"') + '>'
-        + '<div><div class="di-label">' + dLabel + '</div><div class="di-time">' + formatTimeRange(startT, endT) + '</div></div>'
-        + (isFull ? '<div class="di-full-label">FULLY BOOKED</div>' : '<div class="di-seats' + (remaining <= 5 ? ' low' : '') + '">' + remaining + ' seats left</div>')
+      var seatsLabel = remaining <= 15
+        ? '<div class="di-seats' + (remaining <= 5 ? ' low' : '') + '">' + remaining + ' seats left</div>'
+        : '<div class="di-seats">Few seats left</div>';
+      var isNextAvailable = highlightDates[d];
+      html += '<div class="date-item' + (isFull ? ' full' : '') + (isNextAvailable ? ' next-available' : '') + '" '
+        + (isFull ? '' : 'onclick="pickDate(\'' + d + '\',\'' + info.startT + '\u2013' + info.endT + '\')"') + '>'
+        + '<div><div class="di-label">' + dLabel + (isNextAvailable ? ' <span class="next-avail-badge">Next Available</span>' : '') + '</div><div class="di-time">' + formatTimeRange(info.startT, info.endT) + '</div></div>'
+        + (isFull ? '<div class="di-full-label">FULLY BOOKED</div>' : seatsLabel)
         + '</div>';
     });
     list.innerHTML = html || '<div style="color:var(--ash);font-style:italic">No upcoming dates available. Please check back soon.</div>';
