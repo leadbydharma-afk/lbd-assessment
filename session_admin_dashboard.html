@@ -49,6 +49,12 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 </div>
 
 <div id="dashboard" class="hidden">
+  <div class="card">
+    <h3>Session Bookings</h3>
+    <button class="btn-sm" onclick="loadBookings()" style="margin-bottom:1rem">Refresh Bookings →</button>
+    <div id="bookingsList"></div>
+  </div>
+
   <div style="margin-bottom:1rem">
     <input class="inp" id="searchBox" type="text" placeholder="Search by email..." oninput="onSearch()"/>
   </div>
@@ -74,6 +80,50 @@ async function callAdmin(action, params) {
   return { status: res.status, data: await res.json() };
 }
 
+async function loadBookings() {
+  var container = document.getElementById('bookingsList');
+  container.innerHTML = '<p style="color:var(--ash);font-style:italic">Loading...</p>';
+  var result = await callAdmin('list_bookings');
+  if (!result.data.ok) {
+    container.innerHTML = '<p style="color:var(--red)">' + (result.data.error || 'Error loading bookings.') + '</p>';
+    return;
+  }
+  var bookings = result.data.data;
+  if (bookings.length === 0) {
+    container.innerHTML = '<p style="color:var(--ash);font-style:italic">No bookings yet.</p>';
+    return;
+  }
+  var html = '<table><tr><th>Email</th><th>Type</th><th>Date</th><th>Status</th><th>Reschedules Used</th><th></th></tr>';
+  bookings.forEach(function(b) {
+    html += '<tr><td>' + b.email_normalized + '</td>'
+      + '<td>' + (b.session_type === 'group' ? 'Group' : 'Individual') + '</td>'
+      + '<td>' + b.session_date + '</td>'
+      + '<td>' + b.status + '</td>'
+      + '<td>' + b.reschedule_count + '</td>'
+      + '<td>'
+      + (b.reschedule_count > 0 ? '<button class="btn-sm" onclick="resetReschedule(' + b.id + ')">Reset Free Reschedule</button> ' : '')
+      + '<button class="btn-sm" onclick="adminReschedulePrompt(' + b.id + ')">Move Date</button>'
+      + '</td></tr>';
+  });
+  html += '</table>';
+  container.innerHTML = html;
+}
+
+async function resetReschedule(bookingId) {
+  if (!confirm('Reset this booking\'s free reschedule, allowing one more self-service use?')) return;
+  var result = await callAdmin('reset_reschedule_count', { booking_id: bookingId });
+  if (result.data.ok) { alert('Reset.'); loadBookings(); }
+  else alert('Error: ' + result.data.error);
+}
+
+async function adminReschedulePrompt(bookingId) {
+  var newDate = prompt('Enter new date (YYYY-MM-DD):');
+  if (!newDate) return;
+  var result = await callAdmin('admin_reschedule', { booking_id: bookingId, new_date: newDate, reason: 'admin_manual' });
+  if (result.data.ok && result.data.result[0].success) { alert('Moved.'); loadBookings(); }
+  else alert('Error: ' + (result.data.error || result.data.result[0].message));
+}
+
 async function checkPassword() {
   var val = document.getElementById('gatePass').value;
   storedPassword = val;
@@ -91,6 +141,7 @@ async function checkPassword() {
   document.getElementById('gate').classList.add('hidden');
   document.getElementById('dashboard').classList.remove('hidden');
   renderApplications(result.data.data);
+  loadBookings();
 }
 
 var allApps = [];
