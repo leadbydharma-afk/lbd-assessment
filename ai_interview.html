@@ -688,7 +688,7 @@ function renderUsageDisplay() {
 // ── PROXY URL ──────────────────────────────────────────────
 var PROXY_URL = 'https://lbd-ai-proxy.leadbydharma.workers.dev';
 
-async function callClaude(messages, systemPrompt) {
+async function callClaude(messages, systemPrompt, maxTokens) {
   // Cloudflare Worker proxy — avoids CORS restriction on Anthropic API
   // AND performs real server-side access-code verification against
   // Supabase before forwarding anything to Anthropic.
@@ -700,7 +700,7 @@ async function callClaude(messages, systemPrompt) {
     },
     body: JSON.stringify({
       model: 'claude-sonnet-5',
-      max_tokens: 1000,
+      max_tokens: maxTokens || 1000,
       system: systemPrompt,
       messages: messages
     })
@@ -997,7 +997,8 @@ async function generateReport() {
   try {
     var raw = await callClaude(
       [{ role: 'user', content: assessPrompt }],
-      'You are an SSB assessment expert generating structured JSON reports. Return only valid JSON, no other text.'
+      'You are an SSB assessment expert generating structured JSON reports. Return only valid JSON, no other text.',
+      4000
     );
 
     // Clean and parse JSON
