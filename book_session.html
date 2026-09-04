@@ -78,10 +78,9 @@ td{padding:.4rem .5rem;border-bottom:1px solid var(--border)}
   <table style="width:100%">
     <tr><th></th><th>Group</th><th>Individual</th></tr>
     <tr><td>Standard</td><td>₹2,999</td><td>₹3,999</td></tr>
-    <tr><td>24-hour offer</td><td>₹1,999</td><td>₹3,199</td></tr>
-    <tr><td>Associate code / within 25 min of assessment</td><td>₹1,199</td><td>₹2,499</td></tr>
+    <tr><td>Associate code</td><td>₹1,199</td><td>₹2,499</td></tr>
   </table>
-  <p style="font-size:.85rem;color:var(--ash);font-style:italic;margin-top:.6rem">Your exact price is confirmed automatically once you're eligible.</p>
+  <p style="font-size:.85rem;color:var(--ash);font-style:italic;margin-top:.6rem">Don't have a code? Message us within 3 days of completing your Leadership Assessment and OPI, and we'll send you one.</p>
 </div>
 
 <div id="emailStep" class="card">
@@ -485,26 +484,12 @@ function pickDate(dateStr, timeLabel) {
 
 // ── STEP 3: PRICE TIER DETERMINATION ───────────────────────
 function determinePriceTier() {
-  var now = new Date();
-  var mostRecent = eligibilityData.most_recent_test_date ? new Date(eligibilityData.most_recent_test_date) : null;
-  var minutesSince = mostRecent ? (now - mostRecent) / 60000 : Infinity;
-  var hoursSince = minutesSince / 60;
-
-  if (minutesSince <= 25) {
-    priceTier = 'deep';
-    document.getElementById('priceTierNote').textContent = 'Deep discount \u2014 booked within 25 minutes of finishing your assessment.';
-  } else if (assocCodeValid) {
+  if (assocCodeValid) {
     priceTier = 'deep';
     document.getElementById('priceTierNote').textContent = 'Associate rate applied.';
-  } else if (hoursSince <= 24) {
-    priceTier = 'discount';
-    document.getElementById('priceTierNote').textContent = '24-hour window rate.';
-  } else if (eligibilityData.within_90_day_window) {
-    priceTier = 'standard';
-    document.getElementById('priceTierNote').textContent = 'Have an associate code? Apply it below for a discounted rate.';
   } else {
     priceTier = 'standard';
-    document.getElementById('priceTierNote').textContent = 'Standard rate.';
+    document.getElementById('priceTierNote').textContent = "Have an associate code? Apply it below for a discounted rate. Don't have one? Message us within 3 days of completing your Leadership Assessment and OPI, and we'll send you one.";
   }
 
   renderPrice();
