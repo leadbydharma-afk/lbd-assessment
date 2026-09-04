@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://cyguqfqmnjtjoztcjres.supabase.co; img-src 'self' data:; object-src 'none';">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lead By Dharma — Session Calendar</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{--navy:#1a3a5c;--navy2:#0d1f35;--gold:#c9a84c;--cream:#faf5e8;--cream2:#f0e8d0;--ink:#1a1a14;--ash:#7a7a6a;--green:#1a5c2e;--red:#8b1a1a;--amber:#8b5c00;--white:#ffffff;--border:rgba(26,58,92,.12)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(--ink);min-height:100vh}
+.hdr{background:var(--navy2);padding:1.6rem 1.5rem;text-align:center;border-bottom:4px solid var(--gold)}
+.hdr h1{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white)}
+.hdr h1 span{color:var(--gold)}
+.wrap{max-width:1000px;margin:0 auto;padding:1.5rem 1.2rem 4rem}
+.btn{font-family:'Playfair Display',serif;font-size:1.1rem;padding:.6rem 1.5rem;border:none;cursor:pointer;border-radius:2px}
+.btn-primary{background:var(--navy);color:var(--gold);border:1px solid var(--navy)}
+.btn-primary:hover{background:var(--navy2)}
+.btn-sm{font-family:'JetBrains Mono',monospace;font-size:.8rem;padding:.35rem .8rem;border-radius:2px;cursor:pointer;border:1px solid var(--gold);background:var(--cream2);color:var(--navy)}
+.btn-sm:hover{background:var(--gold);color:var(--white)}
+.inp{width:100%;padding:.6rem .8rem;font-family:'Crimson Pro',serif;font-size:1.05rem;border:1.5px solid var(--border);border-radius:2px;background:var(--cream);color:var(--ink);outline:none}
+.inp:focus{border-color:var(--navy)}
+.gate{max-width:400px;margin:4rem auto;text-align:center}
+.err{color:var(--red);font-family:'JetBrains Mono',monospace;font-size:.9rem;margin-top:.5rem;display:none}
+.hidden{display:none}
+.card{background:var(--white);border:1px solid var(--border);border-radius:3px;padding:1.5rem 1.7rem;margin-bottom:1.2rem}
+.cal-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.cal-nav h3{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--navy)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.4rem}
+.cal-dow{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--ash);text-align:center;padding:.3rem}
+.cal-day{min-height:60px;border:1px solid var(--border);border-radius:2px;padding:.4rem;cursor:pointer;background:var(--cream)}
+.cal-day:hover{border-color:var(--gold)}
+.cal-day.empty{background:transparent;border:none;cursor:default}
+.cal-day.has-bookings{background:rgba(201,168,76,.1);border-color:var(--gold)}
+.cal-day.selected{background:var(--gold);border-color:var(--navy)}
+.cal-day-num{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--navy)}
+.cal-day-count{font-size:.72rem;color:var(--green);margin-top:.2rem}
+.day-list-item{padding:.7rem .9rem;border:1px solid var(--border);border-radius:2px;margin-bottom:.5rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.day-list-item:hover{border-color:var(--gold);background:var(--cream2)}
+.essay-block{margin-bottom:1rem}
+.essay-q{font-family:'JetBrains Mono',monospace;font-size:.78rem;letter-spacing:.05em;color:var(--gold);text-transform:uppercase;margin-bottom:.3rem}
+.essay-a{font-size:1.02rem;color:var(--ink);line-height:1.65;background:var(--cream);padding:.7rem .9rem;border-radius:2px;border-left:3px solid var(--border)}
+.date-item{background:var(--cream);border:1.5px solid var(--border);border-radius:2px;padding:.9rem 1.1rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.date-item:hover:not(.full){border-color:var(--navy)}
+.date-item.full{opacity:.5;cursor:not-allowed}
+</style>
+</head>
+<body>
+
+<div class="hdr"><h1>Lead By Dharma — <span>Session Calendar</span></h1></div>
+
+<div class="wrap">
+
+<div id="gate" class="gate">
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--navy);margin-bottom:1rem">Enter Access Password</h3>
+  <input class="inp" id="gatePass" type="password" placeholder="Password..." onkeydown="if(event.key==='Enter') checkPassword()"/>
+  <div style="margin-top:1rem"><button class="btn btn-primary" onclick="checkPassword()">Enter →</button></div>
+  <div class="err" id="gateErr">Incorrect password.</div>
+</div>
+
+<div id="dashboard" class="hidden">
+
+  <div class="card">
+    <input class="inp" id="searchBox" type="text" placeholder="Search by email — jumps straight to that candidate..." onkeydown="if(event.key==='Enter') searchByEmail()"/>
+    <div style="text-align:right;margin-top:.6rem"><button class="btn-sm" onclick="searchByEmail()">Search →</button></div>
+    <div id="searchResult"></div>
+  </div>
+
+  <div class="card">
+    <div class="cal-nav">
+      <button class="btn-sm" onclick="changeMonth(-1)">&larr; Prev</button>
+      <h3 id="calMonthLabel"></h3>
+      <button class="btn-sm" onclick="changeMonth(1)">Next &rarr;</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+  <div id="dayListCard" class="card hidden">
+    <h3 id="dayListTitle"></h3>
+    <div id="dayListItems"></div>
+  </div>
+
+  <div id="detailCard" class="card hidden"></div>
+
+  <div class="card">
+    <h3>Applied but Not Yet Booked</h3>
+    <p style="font-size:.85rem;color:var(--ash);font-style:italic;margin-bottom:1rem">Essays and reports submitted, but no session booked yet.</p>
+    <div id="unbookedList">Loading...</div>
+  </div>
+
+</div>
+</div>
+
+<script>
+const ADMIN_FUNCTION_URL = 'https://cyguqfqmnjtjoztcjres.supabase.co/functions/v1/lbd-session-admin';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Z3VxZnFtbmp0am96dGNqcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTcwMzEsImV4cCI6MjA5Mzc5MzAzMX0.sCi_iXTN18gVjXIQPqewpAjVRmM2gSgMKJpYsV1m7QM';
+const supabaseUrl = 'https://cyguqfqmnjtjoztcjres.supabase.co';
+const supabaseKey = SUPABASE_ANON_KEY;
+var storedPassword = '';
+var currentMonth = new Date();
+var monthBookings = [];
+
+function esc(str) {
+  var div = document.createElement('div');
+  div.textContent = str == null ? '' : String(str);
+  return div.innerHTML;
+}
+
+async function callAdmin(action, params) {
+  var body = Object.assign({ password: storedPassword, action: action }, params || {});
+  var res = await fetch(ADMIN_FUNCTION_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+    body: JSON.stringify(body)
+  });
+  return await res.json();
+}
+
+async function checkPassword() {
+  var val = document.getElementById('gatePass').value;
+  storedPassword = val;
+  var result = await callAdmin('get_unbooked_applications');
+  if (!result.ok) {
+    document.getElementById('gateErr').style.display = 'block';
+    document.getElementById('gateErr').textContent = result.error && result.error.indexOf('Invalid password') !== -1 ? 'Incorrect password.' : (result.error || 'Error');
+    storedPassword = '';
+    return;
+  }
+  document.getElementById('gate').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+  renderUnbooked(result.data);
+  renderCalendar();
+}
+
+function renderUnbooked(rows) {
+  var container = document.getElementById('unbookedList');
+  if (!rows || rows.length === 0) {
+    container.innerHTML = '<p style="color:var(--ash);font-style:italic">None right now.</p>';
+    return;
+  }
+  var html = '<table style="width:100%"><tr><th style="text-align:left;font-family:JetBrains Mono,monospace;font-size:.75rem;color:var(--ash)">Name</th><th style="text-align:left;font-family:JetBrains Mono,monospace;font-size:.75rem;color:var(--ash)">Email</th><th style="text-align:left;font-family:JetBrains Mono,monospace;font-size:.75rem;color:var(--ash)">Applied</th></tr>';
+  rows.forEach(function(r) {
+    html += '<tr><td>' + esc(r.candidate_name) + '</td><td>' + esc(r.email_normalized) + '</td><td>' + new Date(r.created_at).toLocaleDateString('en-IN') + '</td></tr>';
+  });
+  html += '</table>';
+  container.innerHTML = html;
+}
+
+function changeMonth(delta) {
+  currentMonth.setMonth(currentMonth.getMonth() + delta);
+  document.getElementById('dayListCard').classList.add('hidden');
+  document.getElementById('detailCard').classList.add('hidden');
+  renderCalendar();
+}
+
+async function renderCalendar() {
+  var year = currentMonth.getFullYear(), month = currentMonth.getMonth();
+  document.getElementById('calMonthLabel').textContent = currentMonth.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+
+  var firstDay = new Date(year, month, 1);
+  var lastDay = new Date(year, month + 1, 0);
+  var startStr = firstDay.toISOString().split('T')[0];
+  var endStr = lastDay.toISOString().split('T')[0];
+
+  var result = await callAdmin('get_calendar_bookings', { start: startStr, end: endStr });
+  monthBookings = result.ok ? result.data : [];
+
+  var countByDate = {};
+  monthBookings.forEach(function(b) {
+    if (!countByDate[b.session_date]) countByDate[b.session_date] = { group: 0, individual: 0 };
+    countByDate[b.session_date][b.session_type]++;
+  });
+
+  var grid = document.getElementById('calGrid');
+  var html = '';
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(function(d) { html += '<div class="cal-dow">' + d + '</div>'; });
+
+  var startWeekday = firstDay.getDay();
+  for (var i = 0; i < startWeekday; i++) html += '<div class="cal-day empty"></div>';
+
+  for (var d = 1; d <= lastDay.getDate(); d++) {
+    var dateStr = new Date(year, month, d).toISOString().split('T')[0];
+    var counts = countByDate[dateStr];
+    var hasBookings = !!counts;
+    var label = '';
+    if (counts) {
+      var parts = [];
+      if (counts.group) parts.push(counts.group + ' Group');
+      if (counts.individual) parts.push(counts.individual + ' Individual');
+      label = parts.join(' · ');
+    }
+    html += '<div class="cal-day' + (hasBookings ? ' has-bookings' : '') + '" onclick="' + (hasBookings ? "showDayList('" + dateStr + "')" : '') + '">'
+      + '<div class="cal-day-num">' + d + '</div>'
+      + (hasBookings ? '<div class="cal-day-count">' + label + '</div>' : '')
+      + '</div>';
+  }
+  grid.innerHTML = html;
+}
+
+function showDayList(dateStr) {
+  document.getElementById('detailCard').classList.add('hidden');
+  var dayCard = document.getElementById('dayListCard');
+  dayCard.classList.remove('hidden');
+  var dLabel = new Date(dateStr + 'T00:00:00').toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
+  document.getElementById('dayListTitle').textContent = dLabel;
+
+  var bookings = monthBookings.filter(function(b) { return b.session_date === dateStr; });
+  var html = '';
+  bookings.forEach(function(b) {
+    html += '<div class="day-list-item" onclick="showCandidateDetail(' + b.id + ')">'
+      + '<div><strong>' + esc(b.candidate_name) + '</strong> — ' + (b.session_type === 'group' ? 'Group' : 'Individual') + '</div>'
+      + '<div style="font-family:JetBrains Mono,monospace;font-size:.8rem;color:var(--ash)">' + esc(b.email_normalized) + '</div>'
+      + '</div>';
+  });
+  document.getElementById('dayListItems').innerHTML = html;
+  dayCard.scrollIntoView({ behavior: 'smooth' });
+}
+
+async function showCandidateDetail(bookingId) {
+  var detailCard = document.getElementById('detailCard');
+  detailCard.classList.remove('hidden');
+  detailCard.innerHTML = '<p style="color:var(--ash);font-style:italic">Loading...</p>';
+
+  var result = await callAdmin('get_candidate_detail', { booking_id: bookingId });
+  if (!result.ok) { detailCard.innerHTML = '<p style="color:var(--red)">' + result.error + '</p>'; return; }
+
+  var b = result.booking, a = result.application;
+  var dLabel = new Date(b.session_date + 'T00:00:00').toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
+
+  var html = '<h3>' + esc(a ? a.candidate_name : b.email_normalized) + '</h3>'
+    + '<p style="color:var(--ash);margin-bottom:1rem">' + esc(b.email_normalized) + ' &middot; ' + (b.session_type === 'group' ? 'Group' : 'Individual') + ' Session &middot; ' + dLabel + ' &middot; Status: ' + b.status + ' &middot; Reschedules used: ' + b.reschedule_count + '</p>';
+
+  if (a) {
+    html += '<div style="display:flex;gap:.6rem;margin-bottom:1rem">'
+      + '<button class="btn-sm" onclick="downloadReport(\'' + a.la_report_path + '\')">Download LA Report →</button>'
+      + '<button class="btn-sm" onclick="downloadReport(\'' + a.opi_report_path + '\')">Download OPI Report →</button>'
+      + '</div>'
+      + '<div class="essay-block"><div class="essay-q">1. The Moment of Certainty</div><div class="essay-a">' + esc(a.essay_moment) + '</div></div>'
+      + '<div class="essay-block"><div class="essay-q">2. The Gap</div><div class="essay-a">' + esc(a.essay_gap) + '</div></div>'
+      + '<div class="essay-block"><div class="essay-q">3. Question for Col Rao</div><div class="essay-a">' + esc(a.essay_question) + '</div></div>';
+  } else {
+    html += '<p style="color:var(--ash);font-style:italic">No application record found for this email.</p>';
+  }
+
+  html += '<div style="margin-top:1rem"><button class="btn btn-primary" onclick="showMoveDatePicker(' + b.id + ', \'' + b.session_type + '\')">Move to a Different Date →</button></div>'
+    + '<div id="movePicker"></div>';
+
+  detailCard.innerHTML = html;
+  detailCard.scrollIntoView({ behavior: 'smooth' });
+}
+
+async function downloadReport(path) {
+  var result = await callAdmin('get_download_url', { path: path });
+  if (!result.ok) { alert('Could not generate download link.'); return; }
+  window.open(result.url, '_blank');
+}
+
+function getUpcomingWeekdays(dayNumbers, windowDays) {
+  var result = []; var today = new Date();
+  for (var i = 0; i < windowDays; i++) {
+    var d = new Date(today); d.setDate(today.getDate() + i);
+    if (dayNumbers.indexOf(d.getDay()) !== -1) result.push(d.toISOString().split('T')[0]);
+  }
+  return result;
+}
+
+async function showMoveDatePicker(bookingId, sessionType) {
+  var container = document.getElementById('movePicker');
+  container.innerHTML = '<p style="color:var(--ash);font-style:italic;margin-top:1rem">Loading dates...</p>';
+
+  var dates = sessionType === 'group' ? getUpcomingWeekdays([2, 4], 14) : getUpcomingWeekdays([1, 3, 5], 14);
+  var html = '<div style="margin-top:1rem">';
+
+  if (sessionType === 'group') {
+    var overridesRes = await fetch(supabaseUrl + '/rest/v1/group_session_overrides?select=*', { headers: { 'apikey': supabaseKey, 'Authorization': 'Bearer ' + supabaseKey } });
+    var overrides = await overridesRes.json();
+    var overrideMap = {}; (overrides || []).forEach(function(o) { overrideMap[o.session_date] = o; });
+    var seatsRes = await fetch(supabaseUrl + '/rest/v1/group_session_seats?select=*', { headers: { 'apikey': supabaseKey, 'Authorization': 'Bearer ' + supabaseKey } });
+    var seats = await seatsRes.json();
+    var seatMap = {}; (seats || []).forEach(function(s) { seatMap[s.session_date] = s.seats_taken; });
+
+    dates.forEach(function(d) {
+      var override = overrideMap[d];
+      if (override && override.is_cancelled) return;
+      var capacity = (override && override.capacity) || 30;
+      var taken = seatMap[d] || 0;
+      var remaining = capacity - taken;
+      var isFull = remaining <= 0;
+      var dLabel = new Date(d + 'T00:00:00').toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
+      html += '<div class="date-item' + (isFull ? ' full' : '') + '" ' + (isFull ? '' : 'onclick="confirmMove(' + bookingId + ',\'' + d + '\')"') + '>'
+        + '<div>' + dLabel + '</div><div>' + (isFull ? 'FULL' : remaining + ' seats left') + '</div></div>';
+    });
+  } else {
+    dates.forEach(function(d) {
+      var dLabel = new Date(d + 'T00:00:00').toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
+      html += '<div class="date-item" onclick="confirmMove(' + bookingId + ',\'' + d + '\')"><div>' + dLabel + '</div></div>';
+    });
+  }
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+async function confirmMove(bookingId, newDate) {
+  if (!confirm('Move this booking to ' + newDate + '? The candidate will be notified automatically.')) return;
+  var result = await callAdmin('admin_reschedule', { booking_id: bookingId, new_date: newDate, reason: 'admin_manual' });
+  if (result.ok && result.result[0].success) {
+    alert('Moved. Candidate has been notified.');
+    renderCalendar();
+    document.getElementById('detailCard').classList.add('hidden');
+    document.getElementById('dayListCard').classList.add('hidden');
+  } else {
+    alert('Error: ' + (result.error || result.result[0].message));
+  }
+}
+
+async function searchByEmail() {
+  var email = document.getElementById('searchBox').value.trim().toLowerCase();
+  var result = document.getElementById('searchResult');
+  if (!email) return;
+
+  var found = monthBookings.find(function(b) { return b.email_normalized === email; });
+  if (found) {
+    result.innerHTML = '<p style="margin-top:.6rem;color:var(--green)">Found in this month — opening details.</p>';
+    showCandidateDetail(found.id);
+    return;
+  }
+
+  // Not in the currently loaded month — search more broadly via list_bookings
+  var all = await callAdmin('list_bookings');
+  if (all.ok) {
+    var match = all.data.find(function(b) { return b.email_normalized === email; });
+    if (match) {
+      var d = new Date(match.session_date);
+      currentMonth = new Date(d.getFullYear(), d.getMonth(), 1);
+      await renderCalendar();
+      result.innerHTML = '<p style="margin-top:.6rem;color:var(--green)">Found — jumped to ' + currentMonth.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' }) + '.</p>';
+      showCandidateDetail(match.id);
+      return;
+    }
+  }
+  result.innerHTML = '<p style="margin-top:.6rem;color:var(--red)">No booking found for this email.</p>';
+}
+</script>
+
+</body>
+</html>
