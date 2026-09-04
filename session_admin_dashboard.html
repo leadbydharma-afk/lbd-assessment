@@ -49,25 +49,16 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 </div>
 
 <div id="dashboard" class="hidden">
+  <div class="card" style="background:rgba(201,168,76,.06);text-align:center">
+    <p style="font-size:1rem">Bookings, candidate details, essays, and report downloads now live on the <a href="session_calendar.html" style="color:var(--gold);font-weight:700">Session Calendar</a> — this page now covers the 3-day window tracker only.</p>
+  </div>
+
   <div class="card">
     <h3>3-Day Code Window — Who's Waiting</h3>
     <p style="font-size:.85rem;color:var(--ash);font-style:italic;margin-bottom:1rem">Candidates who've completed both LA and OPI, sorted by how much of their 3-day window remains.</p>
     <button class="btn-sm" onclick="loadQualifying()" style="margin-bottom:1rem">Refresh →</button>
     <div id="qualifyingList"></div>
   </div>
-
-  <div class="card">
-    <h3>Session Bookings</h3>
-    <button class="btn-sm" onclick="loadBookings()" style="margin-bottom:1rem">Refresh Bookings →</button>
-    <div id="bookingsList"></div>
-  </div>
-
-  <div style="margin-bottom:1rem">
-    <input class="inp" id="searchBox" type="text" placeholder="Search by email..." oninput="onSearch()"/>
-  </div>
-  <div class="count-bar" id="countBar"></div>
-  <div id="applicationsList"></div>
-  <div id="paginationBar" style="display:flex;justify-content:center;align-items:center;gap:1rem;margin-top:1.5rem"></div>
 </div>
 
 </div>
@@ -172,8 +163,6 @@ async function checkPassword() {
   }
   document.getElementById('gate').classList.add('hidden');
   document.getElementById('dashboard').classList.remove('hidden');
-  renderApplications(result.data.data);
-  loadBookings();
   loadQualifying();
 }
 
