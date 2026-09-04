@@ -50,6 +50,13 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 
 <div id="dashboard" class="hidden">
   <div class="card">
+    <h3>3-Day Code Window — Who's Waiting</h3>
+    <p style="font-size:.85rem;color:var(--ash);font-style:italic;margin-bottom:1rem">Candidates who've completed both LA and OPI, sorted by how much of their 3-day window remains.</p>
+    <button class="btn-sm" onclick="loadQualifying()" style="margin-bottom:1rem">Refresh →</button>
+    <div id="qualifyingList"></div>
+  </div>
+
+  <div class="card">
     <h3>Session Bookings</h3>
     <button class="btn-sm" onclick="loadBookings()" style="margin-bottom:1rem">Refresh Bookings →</button>
     <div id="bookingsList"></div>
@@ -78,6 +85,31 @@ async function callAdmin(action, params) {
     body: JSON.stringify(body)
   });
   return { status: res.status, data: await res.json() };
+}
+
+async function loadQualifying() {
+  var container = document.getElementById('qualifyingList');
+  container.innerHTML = '<p style="color:var(--ash);font-style:italic">Loading...</p>';
+  var result = await callAdmin('get_qualifying_candidates');
+  if (!result.data.ok) {
+    container.innerHTML = '<p style="color:var(--red)">' + (result.data.error || 'Error loading.') + '</p>';
+    return;
+  }
+  var rows = result.data.data;
+  if (!rows || rows.length === 0) {
+    container.innerHTML = '<p style="color:var(--ash);font-style:italic">No one currently within their 3-day window.</p>';
+    return;
+  }
+  var html = '<table><tr><th>Email</th><th>Window Started</th><th>Time Left</th></tr>';
+  rows.forEach(function(r) {
+    var daysLeft = parseFloat(r.days_remaining);
+    var color = daysLeft <= 1 ? 'var(--red)' : (daysLeft <= 2 ? 'var(--amber)' : 'var(--green)');
+    var label = daysLeft < 1 ? Math.round(daysLeft * 24) + ' hours left' : daysLeft.toFixed(1) + ' days left';
+    var startDate = new Date(r.window_start).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+    html += '<tr><td>' + esc(r.email_normalized) + '</td><td>' + startDate + '</td><td style="color:' + color + ';font-weight:700">' + label + '</td></tr>';
+  });
+  html += '</table>';
+  container.innerHTML = html;
 }
 
 async function loadBookings() {
@@ -142,6 +174,7 @@ async function checkPassword() {
   document.getElementById('dashboard').classList.remove('hidden');
   renderApplications(result.data.data);
   loadBookings();
+  loadQualifying();
 }
 
 var allApps = [];
