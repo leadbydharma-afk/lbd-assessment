@@ -107,6 +107,11 @@ td{padding:.4rem .5rem;border-bottom:1px solid var(--border)}
     <p style="font-size:1.02rem;color:var(--ash);font-style:italic;margin-bottom:1.2rem">Col Rao reads every answer and every report personally before your session. Answer in your own words &mdash; 70 words minimum each. Vague answers are easy to spot.</p>
 
     <div style="margin-bottom:1.3rem">
+      <label style="font-family:'Playfair Display',serif;font-weight:600;color:var(--navy);display:block;margin-bottom:.3rem">Your Full Name</label>
+      <input class="inp" id="candName" type="text" placeholder="As you'd like Col Rao to address you"/>
+    </div>
+
+    <div style="margin-bottom:1.3rem">
       <label style="font-family:'Playfair Display',serif;font-weight:600;color:var(--navy);display:block;margin-bottom:.3rem">1. Describe a specific moment when you knew, with certainty, that you wanted to serve as an officer &mdash; not an ambition stated in the abstract, an actual moment.</label>
       <textarea class="inp" id="essay1" rows="4" style="resize:vertical" oninput="updateWordCount('essay1')"></textarea>
       <div style="font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--ash);margin-top:.3rem" id="essay1Count">0 words (70 minimum)</div>
@@ -235,12 +240,18 @@ async function submitApplication() {
   var errEl = document.getElementById('applicationErr');
   errEl.style.display = 'none';
 
+  var candName = document.getElementById('candName').value.trim();
   var essay1 = document.getElementById('essay1').value.trim();
   var essay2 = document.getElementById('essay2').value.trim();
   var essay3 = document.getElementById('essay3').value.trim();
   var laFile = document.getElementById('laReportFile').files[0];
   var opiFile = document.getElementById('opiReportFile').files[0];
 
+  if (!candName) {
+    errEl.textContent = 'Please enter your name.';
+    errEl.style.display = 'block';
+    return;
+  }
   if (countWords(essay1) < 70 || countWords(essay2) < 70 || countWords(essay3) < 70) {
     errEl.textContent = 'Each answer needs at least 70 words. Please check all three before continuing.';
     errEl.style.display = 'block';
@@ -280,6 +291,7 @@ async function submitApplication() {
 
     var { error: insertErr } = await _supabase.from('session_applications').insert({
       email_normalized: candidateEmail.toLowerCase().trim(),
+      candidate_name: candName,
       essay_moment: essay1,
       essay_gap: essay2,
       essay_question: essay3,
