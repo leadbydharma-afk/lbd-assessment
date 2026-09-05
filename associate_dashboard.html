@@ -150,19 +150,28 @@ td{padding:.5rem .7rem;border-bottom:1px solid var(--border)}
 const ADMIN_FUNCTION_URL = 'https://cyguqfqmnjtjoztcjres.supabase.co/functions/v1/lbd-associate-admin';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Z3VxZnFtbmp0am96dGNqcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTcwMzEsImV4cCI6MjA5Mzc5MzAzMX0.sCi_iXTN18gVjXIQPqewpAjVRmM2gSgMKJpYsV1m7QM';
 var storedPassword = '';
+var storedToken = '';
 
 async function checkPassword() {
   var val = document.getElementById('gatePass').value;
   var res = await fetch(ADMIN_FUNCTION_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+    body: JSON.stringify({ password: val, action: 'list_codes' })
   });
   if (res.status === 401) {
     document.getElementById('gateErr').style.display = 'block';
+    document.getElementById('gateErr').textContent = 'Incorrect password.';
     return;
   }
-  storedPassword = val;
+  if (res.status === 429) {
+    var errData = await res.json();
+    document.getElementById('gateErr').style.display = 'block';
+    document.getElementById('gateErr').textContent = errData.error || 'Too many attempts. Please wait.';
+    return;
+  }
   var result = await res.json();
+  storedToken = result.token || '';
   document.getElementById('gate').classList.add('hidden');
   document.getElementById('dashboard').classList.remove('hidden');
   renderCodes(result.data);
@@ -170,7 +179,8 @@ async function checkPassword() {
 }
 
 async function callAdmin(action, params) {
-  var body = Object.assign({ password: storedPassword, action: action }, params || {});
+  var authField = storedToken ? { token: storedToken } : { password: storedPassword };
+  var body = Object.assign(authField, { action: action }, params || {});
   var res = await fetch(ADMIN_FUNCTION_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
