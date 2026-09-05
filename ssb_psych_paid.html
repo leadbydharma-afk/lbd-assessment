@@ -433,6 +433,21 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 
+function hashCode(str) {
+  var hash = 0;
+  for (var i = 0; i < str.length; i++) {
+    var ch = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + ch;
+    hash = hash & hash;
+  }
+  return Math.abs(hash).toString(36).toUpperCase();
+}
+
+function getSessionFingerprint() {
+  var fp = [navigator.language, screen.width + 'x' + screen.height, new Date().getTimezoneOffset(), navigator.platform || 'unknown'].join('|');
+  return hashCode(fp);
+}
+
 function showError(msg) {
   var errEl = document.getElementById('codeError') ||
               document.querySelector('.error-msg');
@@ -458,7 +473,7 @@ async function redeemCode() {
   var btn = document.querySelector('#unlockGate button');
   if (btn) { btn.textContent = 'Checking...'; btn.disabled = true; }
 
-  const { data, error } = await _supabase.rpc('verify_access_code', { input_code: enteredCode });
+  const { data, error } = await _supabase.rpc('verify_access_code_checked', { input_code: enteredCode, input_fingerprint: getSessionFingerprint() });
 
   if (btn) { btn.textContent = 'Unlock →'; btn.disabled = false; }
 
@@ -468,6 +483,10 @@ async function redeemCode() {
   }
 
   const result = data && data[0];
+  if (result && result.target_product === 'RATE_LIMITED') {
+    showError('Too many attempts from this device. Please wait 10 minutes and try again.');
+    return;
+  }
   if (!result || !result.is_valid) {
     showError('Code not recognised, expired, or already used. Check your email or contact leadbydharma@gmail.com');
     return;
