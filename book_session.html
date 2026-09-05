@@ -516,6 +516,21 @@ function toggleAssoc() {
   document.getElementById('assocBox').classList.toggle('open');
 }
 
+function hashCode(str) {
+  var hash = 0;
+  for (var i = 0; i < str.length; i++) {
+    var ch = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + ch;
+    hash = hash & hash;
+  }
+  return Math.abs(hash).toString(36).toUpperCase();
+}
+
+function getSessionFingerprint() {
+  var fp = [navigator.language, screen.width + 'x' + screen.height, new Date().getTimezoneOffset(), navigator.platform || 'unknown'].join('|');
+  return hashCode(fp);
+}
+
 async function applyAssocCode() {
   var code = document.getElementById('assocCodeInput').value.trim().toUpperCase();
   var errEl = document.getElementById('assocErr');
@@ -523,8 +538,8 @@ async function applyAssocCode() {
   if (!code) return;
 
   var product = sessionType === 'group' ? 'Group Session' : 'Individual Session';
-  const { data, error } = await _supabase.rpc('verify_associate_code', {
-    input_code: code, input_email: candidateEmail, input_phone: '', input_product: product
+  const { data, error } = await _supabase.rpc('verify_associate_code_checked', {
+    input_code: code, input_email: candidateEmail, input_phone: '', input_product: product, input_fingerprint: getSessionFingerprint()
   });
 
   if (error) { errEl.textContent = 'System error. Please try again.'; errEl.style.display = 'block'; return; }
