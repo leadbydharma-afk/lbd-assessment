@@ -294,6 +294,21 @@ var IQ_DEMO = false;
 // IQ_CODES removed — validation via Supabase
 ;;
 
+function logEvent(eventName, email, metadata) {
+  try {
+    fetch('https://cyguqfqmnjtjoztcjres.supabase.co/rest/v1/analytics_events', {
+      method: 'POST',
+      headers: {
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Z3VxZnFtbmp0am96dGNqcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTcwMzEsImV4cCI6MjA5Mzc5MzAzMX0.sCi_iXTN18gVjXIQPqewpAjVRmM2gSgMKJpYsV1m7QM',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Z3VxZnFtbmp0am96dGNqcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTcwMzEsImV4cCI6MjA5Mzc5MzAzMX0.sCi_iXTN18gVjXIQPqewpAjVRmM2gSgMKJpYsV1m7QM',
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ event_name: eventName, email_normalized: email || null, metadata: metadata || null })
+    }).catch(function(){});
+  } catch(e) {}
+}
+
 function hashCode(str) {
   var hash = 0;
   for (var i = 0; i < str.length; i++) {
@@ -355,6 +370,7 @@ async function redeemIQCode() {
   const result = data && data[0];
   if (result && result.is_valid) {
     IQ_UNLOCKED = true;
+    logEvent('opi_unlocked');
     document.getElementById('payGate').classList.add('hidden');
     document.getElementById('introPage').classList.remove('hidden');
   } else {
