@@ -552,13 +552,16 @@ async function redeemAICode(code) {
   }
 
   // Validate via Supabase
-  const { data, error } = await _supabase.rpc('verify_access_code', { input_code: code });
+  const { data, error } = await _supabase.rpc('verify_access_code_checked', { input_code: code, input_fingerprint: getSessionFingerprint() });
 
   if (error) {
     return { ok: false, msg: 'System error. Please try again or contact leadbydharma@gmail.com' };
   }
 
   const result = data && data[0];
+  if (result && result.target_product === 'RATE_LIMITED') {
+    return { ok: false, msg: 'Too many attempts from this device. Please wait 10 minutes and try again.' };
+  }
   if (!result || !result.is_valid) {
     return { ok: false, msg: 'Code not recognised, expired, or already used. Check your email or contact leadbydharma@gmail.com' };
   }
