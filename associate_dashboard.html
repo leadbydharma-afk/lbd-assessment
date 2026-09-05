@@ -245,8 +245,9 @@ function switchTab(tab) {
 async function loadLeaderboard(tab) {
   var result = await callAdmin('leaderboard', { period: tab });
   var container = document.getElementById('leaderboardTable');
+  if (!result.ok) { container.innerHTML = '<p style="color:var(--red)">' + (result.error || 'Error loading leaderboard.') + '</p>'; return; }
   var data = result.data;
-  if (!data || data.length === 0) { container.innerHTML = '<p style="color:var(--ash);font-style:italic">No redemptions recorded yet.</p>'; return; }
+  if (!data || !Array.isArray(data) || data.length === 0) { container.innerHTML = '<p style="color:var(--ash);font-style:italic">No redemptions recorded yet.</p>'; return; }
 
   var periodLabel = tab === 'quarterly' ? 'Quarter' : 'Year';
   var periodKey = tab === 'quarterly' ? 'quarter_label' : 'fiscal_year_label';
