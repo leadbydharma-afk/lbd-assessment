@@ -67,9 +67,11 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
 const ADMIN_FUNCTION_URL = 'https://cyguqfqmnjtjoztcjres.supabase.co/functions/v1/lbd-session-admin';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Z3VxZnFtbmp0am96dGNqcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTcwMzEsImV4cCI6MjA5Mzc5MzAzMX0.sCi_iXTN18gVjXIQPqewpAjVRmM2gSgMKJpYsV1m7QM';
 var storedPassword = '';
+var storedToken = '';
 
 async function callAdmin(action, params) {
-  var body = Object.assign({ password: storedPassword, action: action }, params || {});
+  var authField = storedToken ? { token: storedToken } : { password: storedPassword };
+  var body = Object.assign(authField, { action: action }, params || {});
   var res = await fetch(ADMIN_FUNCTION_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
@@ -150,17 +152,25 @@ async function adminReschedulePrompt(bookingId) {
 async function checkPassword() {
   var val = document.getElementById('gatePass').value;
   storedPassword = val;
-  var result = await callAdmin('list_applications');
+  var result = await callAdmin('get_unbooked_applications');
   if (result.status === 401) {
     document.getElementById('gateErr').style.display = 'block';
+    document.getElementById('gateErr').textContent = 'Incorrect password.';
+    storedPassword = '';
+    return;
+  }
+  if (result.status === 429) {
+    document.getElementById('gateErr').style.display = 'block';
+    document.getElementById('gateErr').textContent = result.data.error || 'Too many attempts. Please wait.';
     storedPassword = '';
     return;
   }
   if (!result.data.ok) {
     document.getElementById('gateErr').style.display = 'block';
-    document.getElementById('gateErr').textContent = result.data.error || 'Something went wrong loading applications.';
+    document.getElementById('gateErr').textContent = result.data.error || 'Something went wrong.';
     return;
   }
+  storedToken = result.data.token || '';
   document.getElementById('gate').classList.add('hidden');
   document.getElementById('dashboard').classList.remove('hidden');
   loadQualifying();
