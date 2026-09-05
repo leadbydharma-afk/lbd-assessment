@@ -350,6 +350,21 @@ var DIFF_LABELS = {
 // Logs: code hash, session fingerprint, difficulty, timestamp
 // You can view logs in Cloudflare Worker → Logs tab
 // =====================================================
+function logEvent(eventName, email, metadata) {
+  try {
+    fetch('https://cyguqfqmnjtjoztcjres.supabase.co/rest/v1/analytics_events', {
+      method: 'POST',
+      headers: {
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Z3VxZnFtbmp0am96dGNqcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTcwMzEsImV4cCI6MjA5Mzc5MzAzMX0.sCi_iXTN18gVjXIQPqewpAjVRmM2gSgMKJpYsV1m7QM',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Z3VxZnFtbmp0am96dGNqcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTcwMzEsImV4cCI6MjA5Mzc5MzAzMX0.sCi_iXTN18gVjXIQPqewpAjVRmM2gSgMKJpYsV1m7QM',
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ event_name: eventName, email_normalized: email || null, metadata: metadata || null })
+    }).catch(function(){});
+  } catch(e) {}
+}
+
 function hashCode(str) {
   // Simple hash — obfuscates real code value in transit
   var hash = 0;
@@ -574,6 +589,7 @@ async function redeemAICode(code) {
   else if (product === 'AI Special Access') { uses = 1; type = 'special'; }
   // AI Interview (standalone): uses stays at 3 (default)
 
+  logEvent('ai_interview_unlocked');
   return { ok: true, uses: uses, type: type };
 }
 
