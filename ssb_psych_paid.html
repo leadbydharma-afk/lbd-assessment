@@ -448,6 +448,21 @@ function getSessionFingerprint() {
   return hashCode(fp);
 }
 
+function logEvent(eventName, email, metadata) {
+  try {
+    fetch('https://cyguqfqmnjtjoztcjres.supabase.co/rest/v1/analytics_events', {
+      method: 'POST',
+      headers: {
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Z3VxZnFtbmp0am96dGNqcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTcwMzEsImV4cCI6MjA5Mzc5MzAzMX0.sCi_iXTN18gVjXIQPqewpAjVRmM2gSgMKJpYsV1m7QM',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Z3VxZnFtbmp0am96dGNqcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTcwMzEsImV4cCI6MjA5Mzc5MzAzMX0.sCi_iXTN18gVjXIQPqewpAjVRmM2gSgMKJpYsV1m7QM',
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ event_name: eventName, email_normalized: email || null, metadata: metadata || null })
+    }).catch(function(){});
+  } catch(e) {}
+}
+
 function showError(msg) {
   var errEl = document.getElementById('codeError') ||
               document.querySelector('.error-msg');
@@ -493,6 +508,7 @@ async function redeemCode() {
   }
 
   // Valid — determine sets from product
+  logEvent('ssb_psych_unlocked');
   var product = result.target_product || '';
   var sets = 1;
   var aiAccess = false;
