@@ -299,6 +299,7 @@ async function submitApplication() {
       opi_report_path: opiPath
     });
     if (insertErr) throw new Error('Could not save application: ' + insertErr.message);
+    logEvent('session_application_submitted', candidateEmail);
 
     document.getElementById('applicationStep').classList.add('hidden');
     document.getElementById('typeStep').classList.remove('hidden');
@@ -516,6 +517,21 @@ function toggleAssoc() {
   document.getElementById('assocBox').classList.toggle('open');
 }
 
+function logEvent(eventName, email, metadata) {
+  try {
+    fetch('https://cyguqfqmnjtjoztcjres.supabase.co/rest/v1/analytics_events', {
+      method: 'POST',
+      headers: {
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Z3VxZnFtbmp0am96dGNqcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTcwMzEsImV4cCI6MjA5Mzc5MzAzMX0.sCi_iXTN18gVjXIQPqewpAjVRmM2gSgMKJpYsV1m7QM',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Z3VxZnFtbmp0am96dGNqcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTcwMzEsImV4cCI6MjA5Mzc5MzAzMX0.sCi_iXTN18gVjXIQPqewpAjVRmM2gSgMKJpYsV1m7QM',
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ event_name: eventName, email_normalized: email || null, metadata: metadata || null })
+    }).catch(function(){});
+  } catch(e) {}
+}
+
 function hashCode(str) {
   var hash = 0;
   for (var i = 0; i < str.length; i++) {
@@ -557,6 +573,7 @@ async function applyAssocCode() {
 
 // ── STEP 4: PROCEED TO PAYMENT ─────────────────────────────
 function proceedToPayment() {
+  logEvent('session_booking_reached_payment', candidateEmail, { session_type: sessionType, price_tier: priceTier });
   var baseLink = RAZORPAY_LINKS[sessionType][priceTier];
   var params = '?notes[session_date]=' + encodeURIComponent(selectedDate)
     + '&notes[email]=' + encodeURIComponent(candidateEmail);
