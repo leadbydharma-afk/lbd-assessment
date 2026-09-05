@@ -809,6 +809,21 @@ const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 var LA_UNLOCKED = false;
 
+function hashCode(str) {
+  var hash = 0;
+  for (var i = 0; i < str.length; i++) {
+    var ch = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + ch;
+    hash = hash & hash;
+  }
+  return Math.abs(hash).toString(36).toUpperCase();
+}
+
+function getSessionFingerprint() {
+  var fp = [navigator.language, screen.width + 'x' + screen.height, new Date().getTimezoneOffset(), navigator.platform || 'unknown'].join('|');
+  return hashCode(fp);
+}
+
 function toggleAssocBox() {
   document.getElementById('pgAssocBox').classList.toggle('open');
 }
@@ -838,7 +853,7 @@ async function redeemLACode() {
 
   if (btn) { btn.textContent = 'Checking...'; btn.disabled = true; }
 
-  const { data, error } = await _supabase.rpc('verify_access_code', { input_code: code });
+  const { data, error } = await _supabase.rpc('verify_access_code_checked', { input_code: code, input_fingerprint: getSessionFingerprint() });
 
   if (btn) { btn.textContent = 'Unlock →'; btn.disabled = false; }
 
@@ -861,7 +876,9 @@ async function redeemLACode() {
     if (beginBtn) beginBtn.textContent = 'Begin Full Assessment →';
     window.scrollTo({top: 0, behavior: 'smooth'});
   } else {
-    errEl.textContent = 'Invalid, expired, or already used code. Contact leadbydharma@gmail.com';
+    errEl.textContent = (result && result.target_product === 'RATE_LIMITED')
+      ? 'Too many attempts from this device. Please wait 10 minutes and try again.'
+      : 'Invalid, expired, or already used code. Contact leadbydharma@gmail.com';
     errEl.style.display = 'block';
   }
 }
