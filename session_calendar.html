@@ -98,6 +98,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabaseUrl = 'https://cyguqfqmnjtjoztcjres.supabase.co';
 const supabaseKey = SUPABASE_ANON_KEY;
 var storedPassword = '';
+var storedToken = '';
 var currentMonth = new Date();
 var monthBookings = [];
 
@@ -108,7 +109,8 @@ function esc(str) {
 }
 
 async function callAdmin(action, params) {
-  var body = Object.assign({ password: storedPassword, action: action }, params || {});
+  var authField = storedToken ? { token: storedToken } : { password: storedPassword };
+  var body = Object.assign(authField, { action: action }, params || {});
   var res = await fetch(ADMIN_FUNCTION_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
@@ -127,6 +129,7 @@ async function checkPassword() {
     storedPassword = '';
     return;
   }
+  storedToken = result.token || '';
   document.getElementById('gate').classList.add('hidden');
   document.getElementById('dashboard').classList.remove('hidden');
   renderUnbooked(result.data);
