@@ -809,6 +809,21 @@ const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 var LA_UNLOCKED = false;
 
+function logEvent(eventName, email, metadata) {
+  try {
+    fetch('https://cyguqfqmnjtjoztcjres.supabase.co/rest/v1/analytics_events', {
+      method: 'POST',
+      headers: {
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Z3VxZnFtbmp0am96dGNqcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTcwMzEsImV4cCI6MjA5Mzc5MzAzMX0.sCi_iXTN18gVjXIQPqewpAjVRmM2gSgMKJpYsV1m7QM',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Z3VxZnFtbmp0am96dGNqcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTcwMzEsImV4cCI6MjA5Mzc5MzAzMX0.sCi_iXTN18gVjXIQPqewpAjVRmM2gSgMKJpYsV1m7QM',
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ event_name: eventName, email_normalized: email || null, metadata: metadata || null })
+    }).catch(function(){});
+  } catch(e) {}
+}
+
 function hashCode(str) {
   var hash = 0;
   for (var i = 0; i < str.length; i++) {
@@ -866,6 +881,7 @@ async function redeemLACode() {
   const result = data && data[0];
   if (result && result.is_valid) {
     LA_UNLOCKED = true;
+    logEvent('la_full_unlocked');
     window._fullModeUnlocked = true;
     document.getElementById('payGate').style.display = 'none';
     document.getElementById('introPage').classList.remove('hidden');
@@ -1718,6 +1734,7 @@ If that description resonates with you â€” if you are willing to do that work â€
 
 
 function buildSummaryReport(d1obj, d2obj, d3obj, d4obj, candidateName, verdictClass, verdictTitle, verdictText, derailerRisk) {
+  logEvent('la_sample_completed');
   var d1pct = typeof d1obj==='object' ? d1obj.pct : Math.round((d1obj/5)*100);
   var d2pct = typeof d2obj==='object' ? d2obj.pct : Math.round((d2obj/5)*100);
   var d3pct = typeof d3obj==='object' ? d3obj.pct : Math.round((d3obj/5)*100);
