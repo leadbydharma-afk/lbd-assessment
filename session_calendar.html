@@ -68,6 +68,12 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
   </div>
 
   <div class="card">
+    <h3>Funnel — Last 30 Days</h3>
+    <button class="btn-sm" onclick="loadAnalytics()" style="margin-bottom:1rem">Refresh →</button>
+    <div id="analyticsList">Loading...</div>
+  </div>
+
+  <div class="card">
     <div class="cal-nav">
       <button class="btn-sm" onclick="changeMonth(-1)">&larr; Prev</button>
       <h3 id="calMonthLabel"></h3>
@@ -119,6 +125,37 @@ async function callAdmin(action, params) {
   return await res.json();
 }
 
+var FUNNEL_ORDER = [
+  { key: 'la_sample_completed', label: 'Free LA Sample Completed' },
+  { key: 'la_full_unlocked', label: 'Full Leadership Assessment Purchased' },
+  { key: 'opi_unlocked', label: 'OPI Purchased' },
+  { key: 'ai_interview_unlocked', label: 'AI Interview Purchased' },
+  { key: 'ssb_psych_unlocked', label: 'SSB Psych Suite Purchased' },
+  { key: 'session_application_submitted', label: 'Session Application Submitted (essays + reports)' },
+  { key: 'session_booking_reached_payment', label: 'Reached Session Payment' },
+];
+
+async function loadAnalytics() {
+  var container = document.getElementById('analyticsList');
+  container.innerHTML = '<p style="color:var(--ash);font-style:italic">Loading...</p>';
+  var result = await callAdmin('get_analytics_summary', { days: 30 });
+  if (!result.ok) {
+    container.innerHTML = '<p style="color:var(--red)">' + (result.error || 'Error loading analytics.') + '</p>';
+    return;
+  }
+  var countMap = {};
+  result.data.forEach(function(r) { countMap[r.event_name] = r.event_count; });
+
+  var html = '<table style="width:100%"><tr><th style="text-align:left;font-family:JetBrains Mono,monospace;font-size:.75rem;color:var(--ash)">Stage</th><th style="text-align:right;font-family:JetBrains Mono,monospace;font-size:.75rem;color:var(--ash)">Count</th></tr>';
+  FUNNEL_ORDER.forEach(function(stage) {
+    var count = countMap[stage.key] || 0;
+    html += '<tr><td>' + stage.label + '</td><td style="text-align:right;font-weight:700">' + count + '</td></tr>';
+  });
+  html += '</table>';
+  html += '<p style="font-size:.8rem;color:var(--ash);font-style:italic;margin-top:.8rem">These are independent stage counts, not a single strict path — someone can reach any stage without necessarily passing through the ones above it (e.g. buying OPI directly without ever taking the free LA sample).</p>';
+  container.innerHTML = html;
+}
+
 async function checkPassword() {
   var val = document.getElementById('gatePass').value;
   storedPassword = val;
@@ -134,6 +171,7 @@ async function checkPassword() {
   document.getElementById('dashboard').classList.remove('hidden');
   renderUnbooked(result.data);
   renderCalendar();
+  loadAnalytics();
 }
 
 function renderUnbooked(rows) {
