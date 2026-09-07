@@ -701,7 +701,12 @@ function startTest(){
   name=document.getElementById('cName').value.trim()||'Candidate';
   document.getElementById('introPage').classList.add('hidden');
   document.getElementById('testSections').classList.remove('hidden');
-  renderSec(0);
+  if (IQ_DEMO) {
+    renderSec(0);
+  } else {
+    buildShuffledOrderOPI();
+    renderBatchOPI(0);
+  }
 }
 
 function renderSec(idx){
@@ -767,7 +772,7 @@ function recMCQ(qid,oi,score,el){
   card.querySelectorAll('.mcq-btn').forEach(b=>b.classList.remove('selected'));
   el.classList.add('selected');
   card.classList.add('answered');
-  updateProg(); chkSec();
+  updateProg(); if (IQ_DEMO) chkSec(); else chkBatchOPI();
 }
 
 function recScale(qid,val,rev,el){
@@ -779,12 +784,112 @@ function recScale(qid,val,rev,el){
     if(i+1===val) b.classList.add(`sel-${val}`);
   });
   card.classList.add('answered');
-  updateProg(); chkSec();
+  updateProg(); if (IQ_DEMO) chkSec(); else chkBatchOPI();
 }
 
 function chkSec(){
   const d=DOMAINS[curSec];
   const un=d.questions.filter(q=>resp[q.id]===undefined).length;
+  const ni=document.getElementById('navInfo');
+  if(ni) ni.textContent=un===0?'✓ All answered':`${un} remaining`;
+  const sb=document.getElementById('subBtn');
+  if(sb) sb.disabled=un>0;
+}
+
+// ═══════════════════════════════════════════
+//  SHUFFLED BATCH RENDERING — full paid test only.
+//  IQ_DEMO always uses renderSec above, untouched.
+//  VQ (Values Quotient) is OPI's closest analog to a
+//  derailer/character-under-pressure domain, spread at
+//  even intervals rather than randomly placed.
+// ═══════════════════════════════════════════
+let ALL_Q_FLAT_OPI = [];
+let curBatchOPI = 0;
+const BATCH_SIZE_OPI = 15;
+
+function shuffleArrOPI(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    const t=arr[i]; arr[i]=arr[j]; arr[j]=t;
+  }
+}
+
+function buildShuffledOrderOPI(){
+  const vqQs=[]; const otherQs=[];
+  DOMAINS.forEach(function(d){
+    d.questions.forEach(function(q){
+      if(d.id==='VQ') vqQs.push(q); else otherQs.push(q);
+    });
+  });
+  shuffleArrOPI(otherQs);
+  shuffleArrOPI(vqQs);
+
+  const result=[];
+  const interval=Math.max(1, Math.floor(otherQs.length/vqQs.length));
+  let vIdx=0;
+  for(let i=0;i<otherQs.length;i++){
+    result.push(otherQs[i]);
+    if((i+1)%interval===0 && vIdx<vqQs.length){ result.push(vqQs[vIdx]); vIdx++; }
+  }
+  while(vIdx<vqQs.length){ result.push(vqQs[vIdx]); vIdx++; }
+
+  ALL_Q_FLAT_OPI=result;
+}
+
+function renderBatchOPI(idx){
+  curBatchOPI=idx;
+  const totalBatches=Math.ceil(ALL_Q_FLAT_OPI.length/BATCH_SIZE_OPI);
+  const batchQs=ALL_Q_FLAT_OPI.slice(idx*BATCH_SIZE_OPI,(idx+1)*BATCH_SIZE_OPI);
+  const wrap=document.getElementById('testSections');
+  let h=`<div class="sec-hdr">
+    <span class="sec-badge">PART ${idx+1} / ${totalBatches}</span>
+  </div>`;
+
+  batchQs.forEach((q,qi)=>{
+    const gn=idx*BATCH_SIZE_OPI+qi+1;
+    const ans=resp[q.id]!==undefined;
+    if(q.type==='mcq'){
+      h+=`<div class="q-card ${ans?'answered':''}" id="c-${q.id}">
+        <div class="q-top"><div class="q-num">Q${gn}</div>
+        <div><div class="q-text">${q.text}</div></div></div>
+        <div class="mcq-opts">${q.opts.map((o,oi)=>{
+          const lt=['A','B','C','D'][oi];
+          const selAlt=resp[q.id+'_oi']===oi?'selected':'';
+          return`<button class="mcq-btn ${selAlt}" onclick="recMCQ('${q.id}',${oi},${q.scores[oi]},this)">
+            <span class="mcq-lt">${lt}</span>${o}</button>`;
+        }).join('')}</div></div>`;
+    } else {
+      h+=`<div class="q-card ${ans?'answered':''}" id="c-${q.id}">
+        <div class="q-top"><div class="q-num">Q${gn}</div>
+        <div><div class="q-text">${q.text}</div></div></div>
+        <div class="scale-wrap">
+          <div class="scale-lbls"><span>Strongly Disagree</span><span>Strongly Agree</span></div>
+          <div class="scale-opts">${[1,2,3,4,5].map(v=>{
+            return`<label class="scale-btn ${resp[q.id+'_raw']===v?`sel-${v}`:''}" onclick="recScale('${q.id}',${v},${q.reverse||false},this)">${v}</label>`;
+          }).join('')}</div>
+        </div></div>`;
+    }
+  });
+
+  const un=batchQs.filter(q=>resp[q.id]===undefined).length;
+  h+=`<div class="nav-wrap">
+    ${idx>0?`<button class="btn btn-outline" onclick="goBatchOPI(${idx-1})">← Previous</button>`:'<span></span>'}
+    <div class="nav-info" id="navInfo">${un===0?'✓ All answered':`${un} remaining`}</div>
+    ${idx<totalBatches-1
+      ?`<button class="btn btn-primary" onclick="goBatchOPI(${idx+1})">Next →</button>`
+      :`<button class="btn btn-primary" id="subBtn" onclick="genReport()" ${un>0?'disabled':''}>Generate Report →</button>`}
+  </div>`;
+
+  wrap.innerHTML=h;
+  window.scrollTo({top:0,behavior:'smooth'});
+  updateProg();
+}
+
+function goBatchOPI(idx){ renderBatchOPI(idx); }
+
+function chkBatchOPI(){
+  const batchQs=ALL_Q_FLAT_OPI.slice(curBatchOPI*BATCH_SIZE_OPI,(curBatchOPI+1)*BATCH_SIZE_OPI);
+  const un=batchQs.filter(q=>resp[q.id]===undefined).length;
   const ni=document.getElementById('navInfo');
   if(ni) ni.textContent=un===0?'✓ All answered':`${un} remaining`;
   const sb=document.getElementById('subBtn');
