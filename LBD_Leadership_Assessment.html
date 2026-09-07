@@ -1132,7 +1132,12 @@ function startAssessment() {
   }
   document.getElementById('introPage').classList.add('hidden');
   document.getElementById('assessmentSections').style.display = 'block';
-  renderSection(0);
+  if (typeof FREE_MODE !== 'undefined' && FREE_MODE) {
+    renderSection(0);
+  } else {
+    buildShuffledOrder();
+    renderBatch(0);
+  }
 }
 
 function renderSection(idx) {
@@ -1229,7 +1234,7 @@ function recordScale(qid, val, el, reverse) {
   });
   card.classList.add('answered');
   updateProgress();
-  checkSectionComplete();
+  if (typeof FREE_MODE !== 'undefined' && FREE_MODE) checkSectionComplete(); else checkBatchComplete();
 }
 
 function recordSJT(qid, score, el) {
@@ -1239,7 +1244,7 @@ function recordSJT(qid, score, el) {
   el.classList.add('selected');
   card.classList.add('answered-dark');
   updateProgress();
-  checkSectionComplete();
+  if (typeof FREE_MODE !== 'undefined' && FREE_MODE) checkSectionComplete(); else checkBatchComplete();
 }
 
 function checkSectionComplete() {
@@ -1251,6 +1256,130 @@ function checkSectionComplete() {
   const wrap = document.getElementById('assessmentSections');
   const navInfo = wrap ? wrap.querySelector('.nav-info') : null;
   if (navInfo) navInfo.textContent = unanswered === 0 ? '\u2713 All questions answered' : `${unanswered} remaining in this section`;
+  const submitBtn = document.getElementById('submitBtn');
+  if (submitBtn) submitBtn.disabled = unanswered > 0;
+}
+
+// ════════════════════════════════════════════════════
+//  SHUFFLED BATCH RENDERING — full paid assessment only.
+//  FREE_MODE always uses renderSection above, completely
+//  untouched. Derailer questions (Domain V / S5) are spread
+//  at even intervals through the shuffled order rather than
+//  randomly placed, so they can't cluster together by chance.
+// ════════════════════════════════════════════════════
+let ALL_QUESTIONS_FLAT = [];
+let currentBatch = 0;
+const BATCH_SIZE = 15;
+
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  }
+}
+
+function buildShuffledOrder() {
+  const derailerQs = [];
+  const otherQs = [];
+  SECTIONS.forEach(function(sec) {
+    sec.questions.forEach(function(q) {
+      if (sec.id === 'S5') derailerQs.push(q); else otherQs.push(q);
+    });
+  });
+  shuffleArray(otherQs);
+  shuffleArray(derailerQs);
+
+  const result = [];
+  const interval = Math.max(1, Math.floor(otherQs.length / derailerQs.length));
+  let dIdx = 0;
+  for (let i = 0; i < otherQs.length; i++) {
+    result.push(otherQs[i]);
+    if ((i + 1) % interval === 0 && dIdx < derailerQs.length) {
+      result.push(derailerQs[dIdx]);
+      dIdx++;
+    }
+  }
+  while (dIdx < derailerQs.length) { result.push(derailerQs[dIdx]); dIdx++; }
+
+  ALL_QUESTIONS_FLAT = result;
+}
+
+function renderBatch(idx) {
+  currentBatch = idx;
+  const totalBatches = Math.ceil(ALL_QUESTIONS_FLAT.length / BATCH_SIZE);
+  const batchQs = ALL_QUESTIONS_FLAT.slice(idx * BATCH_SIZE, (idx + 1) * BATCH_SIZE);
+  const wrap = document.getElementById('assessmentSections');
+  let html = `
+    <div class="section-header">
+      <div class="section-number">PART ${idx + 1} / ${totalBatches}</div>
+    </div>`;
+
+  batchQs.forEach((q, qi) => {
+    const globalNum = idx * BATCH_SIZE + qi + 1;
+    const answered = responses[q.id] !== undefined;
+    if (q.type === 'scale') {
+      html += `<div class="q-card ${answered ? 'answered' : ''}" id="card-${q.id}">
+        <div class="q-top">
+          <div class="q-num">Q${globalNum}</div>
+          <div><div class="q-text">${q.text}</div></div>
+        </div>
+        <div class="scale-wrap">
+          <div class="scale-labels"><span>Strongly Disagree / Never</span><span>Strongly Agree / Always</span></div>
+          <div class="scale-options">
+            ${[1,2,3,4,5].map(v => {
+              const sel = responses[q.id] === v;
+              const cls = sel ? `selected-${v}` : '';
+              return `<label class="scale-btn ${cls}" onclick="recordScale('${q.id}', ${v}, this, ${q.reverse || false})">${v}</label>`;
+            }).join('')}
+          </div>
+        </div>
+      </div>`;
+    } else {
+      html += `<div class="q-card ${answered ? 'answered-dark' : ''}" id="card-${q.id}">
+        <div class="q-top">
+          <div class="q-num">Q${globalNum}</div>
+          <div><div class="q-text">${q.text}</div></div>
+        </div>
+        <div class="sjt-scenario">Select the option that most accurately describes what you would actually do — not what you think is the 'correct' answer.</div>
+        <div class="sjt-options">
+          ${q.options.map((o, oi) => {
+            const letter = ['A','B','C','D'][oi];
+            const sel = responses[q.id] === o.score;
+            return `<button class="sjt-btn ${sel?'selected':''}" onclick="recordSJT('${q.id}', ${o.score}, this)">
+              <span class="sjt-letter">${letter}</span>${o.text}
+            </button>`;
+          }).join('')}
+        </div>
+      </div>`;
+    }
+  });
+
+  const unanswered = batchQs.filter(q => responses[q.id] === undefined).length;
+  html += `<div class="nav-wrap">
+    ${idx > 0 ? `<button class="btn btn-outline" onclick="goBatch(${idx-1})">← Previous</button>` : `<span></span>`}
+    <div class="nav-info">${unanswered === 0 ? '✓ All questions answered' : `${unanswered} remaining in this part`}</div>
+    ${idx < totalBatches - 1
+      ? `<button class="btn btn-primary" onclick="goBatch(${idx+1})">Next Part →</button>`
+      : `<button class="btn btn-primary" id="submitBtn" onclick="generateReport()" ${unanswered > 0 ? 'disabled' : ''}>Generate My Report →</button>`
+    }
+  </div>`;
+
+  wrap.innerHTML = html;
+  window.scrollTo({top: 0, behavior:'smooth'});
+  updateProgress();
+}
+
+function goBatch(idx) {
+  renderBatch(idx);
+}
+
+function checkBatchComplete() {
+  const totalBatches = Math.ceil(ALL_QUESTIONS_FLAT.length / BATCH_SIZE);
+  const batchQs = ALL_QUESTIONS_FLAT.slice(currentBatch * BATCH_SIZE, (currentBatch + 1) * BATCH_SIZE);
+  const unanswered = batchQs.filter(q => responses[q.id] === undefined).length;
+  const wrap = document.getElementById('assessmentSections');
+  const navInfo = wrap ? wrap.querySelector('.nav-info') : null;
+  if (navInfo) navInfo.textContent = unanswered === 0 ? '✓ All questions answered' : `${unanswered} remaining in this part`;
   const submitBtn = document.getElementById('submitBtn');
   if (submitBtn) submitBtn.disabled = unanswered > 0;
 }
