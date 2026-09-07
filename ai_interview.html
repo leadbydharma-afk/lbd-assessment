@@ -240,6 +240,7 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
   <div class="ir-hdr">
     <div class="ir-title">PERSONAL INTERVIEW SIMULATION &middot; LEAD BY DHARMA</div>
     <div class="ir-qcount" id="qCount">Question 1 of 12</div>
+    <a href="#" onclick="initiateEarlyExit(); return false;" style="font-size:.8rem;color:var(--ash);text-decoration:underline;font-style:italic">End interview & get my report so far</a>
   </div>
   <div class="chat-area" id="chatArea"></div>
 
@@ -266,6 +267,23 @@ body{font-family:'Crimson Pro',Georgia,serif;background:var(--cream);color:var(-
     </div>
     <textarea class="ans-inp" id="declineFreeText" rows="2" placeholder="Anything else you'd like to add (optional)..." style="margin-bottom:1rem"></textarea>
     <button class="btn btn-primary" onclick="confirmDecline()">Confirm — End Interview Here &rarr;</button>
+  </div>
+
+  <!-- EARLY EXIT REASON SELECTOR -->
+  <div id="earlyExitBox" class="hidden" style="background:var(--cream2);border:1px solid var(--border);border-radius:6px;padding:1.4rem 1.6rem;margin:1rem 0">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--navy);font-weight:700;margin-bottom:.8rem">Before you go — what's driving that? (select any that apply)</div>
+    <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem" id="earlyExitOptionsList">
+      <label style="display:flex;align-items:flex-start;gap:.5rem;font-size:1rem"><input type="checkbox" class="early-exit-opt" value="Running low on time"> Running low on time</label>
+      <label style="display:flex;align-items:flex-start;gap:.5rem;font-size:1rem"><input type="checkbox" class="early-exit-opt" value="Not feeling confident right now"> Not feeling confident right now</label>
+      <label style="display:flex;align-items:flex-start;gap:.5rem;font-size:1rem"><input type="checkbox" class="early-exit-opt" value="Prefer to try again another time"> Prefer to try again another time</label>
+      <label style="display:flex;align-items:flex-start;gap:.5rem;font-size:1rem"><input type="checkbox" class="early-exit-opt" value="Technical or environment issue"> Technical or environment issue</label>
+      <label style="display:flex;align-items:flex-start;gap:.5rem;font-size:1rem"><input type="checkbox" class="early-exit-opt" value="Prefer not to say"> Prefer not to say</label>
+    </div>
+    <textarea class="ans-inp" id="earlyExitFreeText" rows="2" placeholder="Anything else you'd like to add (optional)..." style="margin-bottom:1rem"></textarea>
+    <div style="display:flex;gap:.8rem">
+      <button class="btn btn-primary" onclick="confirmEarlyExit()">Confirm — End & Get My Report →</button>
+      <button class="btn btn-outline" onclick="cancelEarlyExit()">Never Mind, Continue</button>
+    </div>
   </div>
 
   <div class="ans-area" id="ansArea">
@@ -297,6 +315,8 @@ var interviewPhase = 'core';   // 'core' | 'bonus1' | 'bonus2'
 var phaseQuestionCount = 0;    // resets to 0 at the start of each phase
 var CORE_MAX = 12, BONUS1_MAX = 4, BONUS2_MAX = 4;
 var bonusOutcome = 'not_offered'; // 'not_offered' | 'accepted' | 'declined'
+var wasEarlyExit = false;
+var earlyExitReasons = [];
 var declineReasons = [];
 var interviewActive = false;
 var qaLog = []; // [{q, a, feedback}]
@@ -328,7 +348,8 @@ function getSystemPrompt() {
     + '- Ask ONE question at a time. Never ask multiple questions in one turn.\n'
     + '- Follow up on specific details in their answers. If they claim something, probe for evidence.\n'
     + '- After approximately ' + (interviewPhase === 'core' ? '12' : '4') + ' questions in this phase, conclude professionally.\n'
-    + '- When concluding, say: "Thank you, [name]. That concludes this part of the interview. [INTERVIEW_COMPLETE]"\n\n'
+    + '- When concluding, say ONLY a brief, warm closing sentence — for example: "Thank you, [name]. That concludes this part of the interview. [INTERVIEW_COMPLETE]"\n'
+    + '- CRITICAL: Do NOT include any evaluation, feedback, scoring, or summary of performance in this closing line. Do not say things like "you communicated clearly" or "you could improve on X." All evaluation happens separately, later. This closing line must be purely a polite sign-off, nothing more.\n\n'
     + 'ASSESSMENT NOTES TO YOURSELF (internal — do not share with candidate):\n'
     + 'After EVERY candidate response, internally assess: clarity, confidence, honesty, depth of thinking, OLQ indicators (initiative, integrity, courage, social adaptability, sense of responsibility). You will be asked for a full assessment at the end.\n\n'
     + 'Keep your questions and responses concise. One question per turn. No lengthy speeches.\n'
@@ -388,28 +409,31 @@ function getSessionFingerprint() {
   return hashCode(fp);
 }
 
-function logInterviewStart(code, difficulty) {
-  try {
-    var payload = {
-      type:        'interview_start',
-      code_hash:   hashCode(code),
-      full_code:   code,
-      code_prefix: code.substring(0, 7),  // e.g. LBD-ABC for owner to identify
-      device_fp:   getSessionFingerprint(),
-      difficulty:  difficulty,
-      timestamp:   new Date().toISOString(),
-      timezone:    Intl.DateTimeFormat().resolvedOptions().timeZone
-    };
-    // Fire and forget — does not block interview
-    fetch(PROXY_URL + '?action=log', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ log: payload })
-    }).catch(function() {});  // silently ignore if logging fails
-  } catch(e) {}  // never let logging crash the interview
+async function checkAndStartWindow(code) {
+  var payload = {
+    type:        'interview_start',
+    code_hash:   hashCode(code),
+    full_code:   code,
+    code_prefix: code.substring(0, 7),
+    device_fp:   getSessionFingerprint(),
+    difficulty:  'adaptive',
+    timestamp:   new Date().toISOString(),
+    timezone:    Intl.DateTimeFormat().resolvedOptions().timeZone
+  };
+  var res = await fetch(PROXY_URL + '?action=log', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ log: payload })
+  });
+  if (!res.ok) {
+    var text = await res.text();
+    throw new Error(text || 'This interview window has closed.');
+  }
+  var data = await res.json();
+  return data.window; // { can_start, window_started_at, hours_remaining }
 }
 
-function startInterview() {
+async function startInterview() {
   var name = document.getElementById('cName').value.trim();
   var entry = document.getElementById('cEntry').value;
   var service = document.getElementById('cService').value;
@@ -419,16 +443,24 @@ function startInterview() {
     return;
   }
 
-  // ── Code-based usage check ──────────────────────────────
   var isOwner = (currentAIType === 'owner');
-  var codedUses = isOwner ? 999 : (currentAICode ? getCodeUsage(currentAICode) : 0);
-  if (!isOwner && codedUses <= 0) {
-    alert('Your one interview session with this code has already been used. Your reports are permanently saved on this page. Contact leadbydharma@gmail.com if you need another session.');
-    return;
-  }
+  var windowInfo = null;
+
   if (!isOwner) {
-    decrementAIUses(currentAICode);
-    renderUsageDisplay();
+    var btn = document.querySelector('#setupPage .btn-primary');
+    if (btn) { btn.textContent = 'Checking...'; btn.disabled = true; }
+    try {
+      windowInfo = await checkAndStartWindow(currentAICode || 'unknown');
+    } catch (e) {
+      if (btn) { btn.textContent = 'Begin Interview →'; btn.disabled = false; }
+      alert(e.message || 'Your one interview session with this code has already been used. Your reports are permanently saved on this page. Contact leadbydharma@gmail.com if you need another session.');
+      return;
+    }
+    if (btn) { btn.textContent = 'Begin Interview →'; btn.disabled = false; }
+
+    if (!confirm('You have ' + (windowInfo ? windowInfo.hours_remaining : 24) + ' hours to complete this interview. If you need to restart within that window, you can — but you\'ll begin again from the start, not from where you left off.\n\nContinue?')) {
+      return;
+    }
   }
 
   profile = {
@@ -440,8 +472,6 @@ function startInterview() {
     hobbies: document.getElementById('cHobbies').value.trim() || 'Not specified',
     why: document.getElementById('cWhy').value.trim() || 'Not specified'
   };
-
-  logInterviewStart(currentAICode || 'unknown', 'adaptive');
 
   document.getElementById('setupPage').classList.add('hidden');
   document.getElementById('interviewRoom').style.display = 'block';
@@ -663,42 +693,15 @@ function renderUsageDisplay() {
   var container = document.getElementById('usageContainer');
   if (!container) return;
   var isOwner = currentAICode && (currentAIType === 'owner');
-  var uses = currentAICode ? getCodeUsage(currentAICode) : 0;
-  var codeType = currentAIType || '';
-  var typeLabel = codeType === 'standalone' ? ' &nbsp;·&nbsp; Standalone Pack' : '';
   var html = '<div class="usage-bar">'
-    + '<div class="usage-title">AI Interview Usage'
+    + '<div class="usage-title">AI Interview'
     + (isOwner ? ' &nbsp;·&nbsp; Owner Access — Unlimited'
-               : ' &nbsp;·&nbsp; ' + uses + ' session' + (uses !== 1 ? 's' : '') + ' remaining' + typeLabel)
+               : ' &nbsp;·&nbsp; One adaptive session, 24-hour window from first start')
     + '</div>';
   if (!isOwner) {
-    var used = 3 - uses;
-    var diffs = ['Standard', 'Demanding', 'Stress'];
-    html += '<div class="usage-slots">';
-    for (var i = 0; i < 3; i++) {
-      var slotUsed = i < used;
-      html += '<div class="usage-slot ' + (slotUsed ? 'used' : 'available') + '">'
-        + (slotUsed ? '✕' : '✓') + ' ' + diffs[i] + '</div>';
-    }
-    html += '</div>';
-    if (uses <= 0) {
-      html += '<div class="usage-exhausted">All interview sessions used. Your reports are permanently saved below.</div>'
-        + '<div style="background:rgba(184,150,62,.08);border:1px solid rgba(184,150,62,.3);border-radius:3px;'
-        + 'padding:.9rem 1rem;margin-top:.6rem">'
-        + '<div style="font-family:JetBrains Mono,monospace;font-size:.76rem;color:var(--gold2);'
-        + 'letter-spacing:.1em;margin-bottom:.4rem">WANT MORE SESSIONS?</div>'
-        + '<div style="font-size:1rem;color:var(--navy);margin-bottom:.3rem">'
-        + 'Standalone AI Interview — 3 additional sessions</div>'
-        + '<div style="font-size:.9rem;color:var(--ash);font-style:italic;margin-bottom:.6rem">'
-        + 'Rs.895 &middot; Standard, Demanding and Stress &middot; Same scored report</div>'
-        + '<a href="https://rzp.io/rzp/AukND0g" target="_blank" '
-        + 'style="display:inline-block;font-family:JetBrains Mono,monospace;font-size:.76rem;'
-        + 'letter-spacing:.1em;background:var(--gold);color:var(--navy);padding:.5rem 1.2rem;'
-        + 'border-radius:2px;text-decoration:none">Buy 3 More Sessions — Rs.895 &rarr;</a>'
-        + '<div style="font-size:.76rem;color:var(--ash);margin-top:.5rem;font-style:italic">'
-        + 'New access code emailed within minutes of payment.</div>'
-        + '</div>';
-    }
+    html += '<div style="font-size:.9rem;color:var(--ash);font-style:italic;margin-top:.4rem">'
+      + 'You can restart from the beginning as many times as needed within 24 hours of your first click. '
+      + 'Once your report is generated, this code is complete.</div>';
   }
   html += '</div>';
   container.innerHTML = html;
@@ -952,6 +955,36 @@ function confirmDecline() {
   generateReport();
 }
 
+// ── EARLY EXIT — available at any point in any phase ──
+function initiateEarlyExit() {
+  if (qaLog.length === 0) {
+    alert('Answer at least one question before ending early — there\'s nothing to report on yet.');
+    return;
+  }
+  document.getElementById('earlyExitBox').classList.remove('hidden');
+  document.getElementById('earlyExitBox').scrollIntoView({ behavior: 'smooth' });
+}
+
+function cancelEarlyExit() {
+  document.getElementById('earlyExitBox').classList.add('hidden');
+}
+
+function confirmEarlyExit() {
+  var checked = document.querySelectorAll('.early-exit-opt:checked');
+  earlyExitReasons = Array.prototype.map.call(checked, function(el) { return el.value; });
+  var freeText = document.getElementById('earlyExitFreeText').value.trim();
+  if (freeText) earlyExitReasons.push('Other: ' + freeText);
+
+  wasEarlyExit = true;
+  interviewActive = false;
+  document.getElementById('earlyExitBox').classList.add('hidden');
+  document.getElementById('bonusInviteBanner').classList.add('hidden');
+  document.getElementById('declineReasonBox').classList.add('hidden');
+  document.getElementById('ansArea').style.display = 'none';
+  addSystemMsg('Interview ended early. Generating your report on what you\'ve completed so far...');
+  generateReport();
+}
+
 // =====================================================
 // REPORT GENERATION
 // =====================================================
@@ -960,7 +993,9 @@ function confirmDecline() {
 // underlying evaluation theory to the candidate — describes
 // only what happened, in Col Rao's normal narrative voice. ──
 function bonusOutcomeContext() {
-  if (bonusOutcome === 'accepted') {
+  if (wasEarlyExit) {
+    return 'IMPORTANT CONTEXT: This candidate ended the interview early, voluntarily, before it would have naturally concluded — they answered ' + qaLog.length + ' question(s) total. Their stated reasons: ' + (earlyExitReasons.length ? earlyExitReasons.join('; ') : 'none given') + '. This report must be entirely honest that this is a PARTIAL attempt, not a completed one — do not imply full completion anywhere, and base overallVerdict and all scores only on the questions actually answered. In the bonusNarrative field, note plainly and without judgment that the candidate chose to end early, referencing their stated reasons if given.';
+  } else if (bonusOutcome === 'accepted') {
     return 'BONUS ROUND CONTEXT: This candidate was invited into a tougher round after the core interview and chose to continue through two escalating rounds of harder questioning. Note this positively in the bonusNarrative field, in a warm, direct, personal tone — describing what happened, not why it was tested.';
   } else if (bonusOutcome === 'declined') {
     return 'BONUS ROUND CONTEXT: This candidate was invited into a tougher round after the core interview and chose to stop instead. Their stated reasons: ' + (declineReasons.length ? declineReasons.join('; ') : 'none given') + '. In the bonusNarrative field, describe this observationally and honestly, in Col Rao\'s normal voice — mention that the invitation was offered and declined, reference their stated reasons if given, and note this is worth reflecting on alongside the rest of the interview. Do not moralize or lecture. Do not explain any underlying theory about opportunity versus caution — simply describe what happened plainly and let it stand.';
@@ -1013,28 +1048,43 @@ async function generateReport() {
     + 'Be honest and direct. This is a development tool — the candidate needs truth, not encouragement. '
     + 'Only mark "Recommended" if the responses genuinely demonstrate officer-like qualities across the board.';
 
-  try {
+  async function attemptGeneration() {
     var raw = await callClaude(
       [{ role: 'user', content: assessPrompt }],
       'You are an SSB assessment expert generating structured JSON reports. Return only valid JSON, no other text.',
-      4000
+      10000
     );
-
-    // Clean and parse JSON
     var jsonStr = raw.replace(/```json/g, '').replace(/```/g, '').trim();
-    var report;
     try {
-      report = JSON.parse(jsonStr);
+      return JSON.parse(jsonStr);
     } catch(e) {
-      // Try to extract JSON
       var start = jsonStr.indexOf('{');
       var end = jsonStr.lastIndexOf('}');
       if (start !== -1 && end !== -1) {
-        report = JSON.parse(jsonStr.substring(start, end + 1));
-      } else {
-        throw new Error('Could not parse report JSON');
+        return JSON.parse(jsonStr.substring(start, end + 1));
       }
+      throw new Error('Could not parse report JSON');
     }
+  }
+
+  try {
+    var report;
+    try {
+      report = await attemptGeneration();
+    } catch (firstErr) {
+      // One automatic retry — output length varies run to run, so a
+      // truncation failure on one attempt often succeeds on the next.
+      report = await attemptGeneration();
+    }
+
+    // Permanently close the 24-hour window now that a real report exists.
+    try {
+      await fetch(PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Access-Code': currentAICode || '' },
+        body: JSON.stringify({ action: 'mark_report_generated' })
+      });
+    } catch (e) { /* non-fatal — report still shown even if this call fails */ }
 
     renderReport(report);
   } catch (e) {
